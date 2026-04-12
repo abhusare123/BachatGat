@@ -1,0 +1,69 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Loans / कर्ज</h2>
+    <button mat-raised-button color="primary" (click)="requestLoan()">
+      <mat-icon>add</mat-icon> Request Loan
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>
+
+  <div *ngIf="!loading" class="loans-list">
+    <mat-card *ngFor="let loan of loans" class="loan-card">
+      <mat-card-header>
+        <mat-card-title>{{ loan.requestedByName }}</mat-card-title>
+        <mat-card-subtitle>{{ loan.requestedAt | date:'mediumDate' }}</mat-card-subtitle>
+        <div class="status-chip">
+          <mat-chip [color]="statusColor(loan.status)">{{ LoanStatus[loan.status] }}</mat-chip>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="loan-details">
+          <div class="detail">
+            <span class="label">Amount</span>
+            <span class="value">{{ loan.amount | currency:'INR':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="detail">
+            <span class="label">Tenure</span>
+            <span class="value">{{ loan.tenureMonths }} months</span>
+          </div>
+          <div class="detail">
+            <span class="label">Interest</span>
+            <span class="value">{{ loan.interestRatePercent }}% / mo</span>
+          </div>
+          <div class="detail" *ngIf="loan.purpose">
+            <span class="label">Purpose</span>
+            <span class="value">{{ loan.purpose }}</span>
+          </div>
+        </div>
+
+        <div class="vote-bar" *ngIf="loan.status === LoanStatus.Pending">
+          <span class="vote-info">
+            <mat-icon class="approve-icon">thumb_up</mat-icon> {{ loan.approveVotes }}
+            &nbsp;|&nbsp;
+            <mat-icon class="reject-icon">thumb_down</mat-icon> {{ loan.rejectVotes }}
+            &nbsp; out of {{ loan.totalEligibleVoters }} eligible
+          </span>
+          <div class="vote-actions">
+            <button mat-stroked-button color="primary" (click)="vote(loan, 1)">
+              <mat-icon>thumb_up</mat-icon> Approve
+            </button>
+            <button mat-stroked-button color="warn" (click)="vote(loan, 2)">
+              <mat-icon>thumb_down</mat-icon> Reject
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" *ngIf="loan.status === LoanStatus.Approved" (click)="disburse(loan.id)">
+          <mat-icon>payments</mat-icon> Disburse
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <div *ngIf="loans.length === 0" class="empty-state">
+      <mat-icon>account_balance_wallet</mat-icon>
+      <p>No loans yet.</p>
+    </div>
+  </div>
+</div>

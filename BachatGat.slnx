@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BachatGat.Api/BachatGat.Api.csproj" />
+    <Project Path="src/BachatGat.Application/BachatGat.Application.csproj" />
+    <Project Path="src/BachatGat.Core/BachatGat.Core.csproj" />
+    <Project Path="src/BachatGat.Infrastructure/BachatGat.Infrastructure.csproj" />
+  </Folder>
+</Solution>

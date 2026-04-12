@@ -1,0 +1,31 @@
+/* Global styles */
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Noto Sans Devanagari', "Helvetica Neue", sans-serif;
+  background: #fafafa;
+}
+
+* { box-sizing: border-box; }
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 320px;
+  padding-top: 8px;
+}
+
+.full-width { width: 100%; }
+
+.error-msg {
+  color: #c62828;
+  font-size: 13px;
+  margin-bottom: 8px;
+  padding: 8px;
+  background: #ffebee;
+  border-radius: 4px;
+}
+
+.hint { color: #666; font-size: 13px; margin-bottom: 8px; }

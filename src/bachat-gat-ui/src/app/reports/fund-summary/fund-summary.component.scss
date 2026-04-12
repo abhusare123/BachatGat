@@ -1,0 +1,28 @@
+.page-container { padding: 16px; }
+.loading-center { display: flex; justify-content: center; padding: 40px; }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.summary-card {
+  border-left: 5px solid transparent;
+  mat-card-content {
+    display: flex; flex-direction: column; align-items: flex-start; padding: 16px;
+    mat-icon { font-size: 32px; width: 32px; height: 32px; margin-bottom: 8px; }
+  }
+  .stat-label { font-size: 12px; color: #555; margin-bottom: 4px; }
+  .stat-value { font-size: 22px; font-weight: 700; }
+
+  &.green  { border-color: #2e7d32; mat-icon { color: #2e7d32; } }
+  &.blue   { border-color: #1565c0; mat-icon { color: #1565c0; } }
+  &.orange { border-color: #e65100; mat-icon { color: #e65100; } }
+  &.teal   { border-color: #00695c; mat-icon { color: #00695c; } }
+  &.purple { border-color: #6a1b9a; mat-icon { color: #6a1b9a; }
+    &.highlight { background: #f3e5f5; } }
+}
+
+.ledger-table { width: 100%; }

@@ -1,0 +1,88 @@
+.tracker-container {
+  padding: 16px;
+}
+
+.tracker-header {
+  margin-bottom: 16px;
+  h2 { margin: 0; }
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.tracker-scroll {
+  overflow-x: auto;
+}
+
+.excel-table {
+  border-collapse: collapse;
+  white-space: nowrap;
+  font-size: 13px;
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    text-align: right;
+  }
+
+  th {
+    background: #1a6b3a;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .member-col {
+    text-align: left;
+    min-width: 140px;
+  }
+
+  .sticky-col {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: #fff;
+  }
+
+  thead .sticky-col {
+    background: #1a6b3a;
+    z-index: 3;
+  }
+
+  .period-col { min-width: 90px; }
+  .cumulative-col { min-width: 80px; background-color: #f0f0f0; color: #555; }
+  .total-col { min-width: 100px; background-color: #fff9c4; }
+  .action-col { min-width: 60px; text-align: center; }
+
+  .amount-cell {
+    &.paid { color: #2e7d32; font-weight: 500; }
+    &.unpaid { color: #bdbdbd; }
+  }
+
+  .cumulative-cell {
+    color: #555;
+    font-size: 12px;
+    background-color: #fafafa;
+  }
+
+  .totals-row td {
+    background: #e8f5e9;
+    font-weight: 600;
+  }
+
+  .bold { font-weight: 700; }
+
+  .outstanding {
+    color: #c62828;
+    font-size: 11px;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+}

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet add:*)",
+      "Bash(dotnet build:*)",
+      "Bash(rm \"C:\\\\Users\\\\abhij\\\\source\\\\PloitProject\\\\BachatGat\\\\src\\\\BachatGat.Core\\\\Class1.cs\")",
+      "Bash(rm \"C:\\\\Users\\\\abhij\\\\source\\\\PloitProject\\\\BachatGat\\\\src\\\\BachatGat.Infrastructure\\\\Class1.cs\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\abhij\\\\source\\\\PloitProject\\\\BachatGat\\\\src\\\\BachatGat.Core\\\\Entities\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\abhij\\\\source\\\\PloitProject\\\\BachatGat\\\\src\\\\BachatGat.Core\\\\Enums\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\abhij\\\\source\\\\PloitProject\\\\BachatGat\\\\src\\\\BachatGat.Core\\\\Interfaces\")",
+      "Bash(dotnet --version)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet remove:*)",
+      "Bash(dotnet list:*)",
+      "Bash(dotnet ef:*)",
+      "Bash(dotnet tool:*)",
+      "Bash(ng new:*)",
+      "Bash(ng add:*)",
+      "Bash(ng generate:*)",
+      "Bash(ng build:*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+.page-container { padding: 16px; }
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  h2 { margin: 0; }
+}
+
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.group-card {
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  &:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+  .description { color: #666; font-size: 13px; }
+  p { margin: 4px 0; }
+}
+
+.loading-center { display: flex; justify-content: center; padding: 40px; }
+
+.empty-state {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 60px;
+  color: #888;
+  mat-icon { font-size: 48px; width: 48px; height: 48px; }
+}

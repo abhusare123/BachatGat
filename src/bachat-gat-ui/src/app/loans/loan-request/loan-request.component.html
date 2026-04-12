@@ -1,0 +1,33 @@
+<div class="page-container">
+  <mat-card class="request-card">
+    <mat-card-header>
+      <mat-card-title>Request Loan / कर्ज विनंती</mat-card-title>
+      <mat-card-subtitle>Your request will go to group members for voting</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="error" class="error-msg">{{ error }}</div>
+      <form [formGroup]="form" class="loan-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Loan Amount (₹)</mat-label>
+          <input matInput type="number" formControlName="amount" placeholder="50000">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tenure (months)</mat-label>
+          <input matInput type="number" formControlName="tenureMonths" placeholder="12">
+          <mat-hint>1–60 months</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Purpose (optional)</mat-label>
+          <textarea matInput formControlName="purpose" rows="3" placeholder="Medical emergency, home repair…"></textarea>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button [routerLink]="['/groups', groupId, 'loans']">Cancel</button>
+      <button mat-raised-button color="primary" [disabled]="form.invalid || saving" (click)="submit()">
+        <mat-spinner diameter="18" *ngIf="saving"></mat-spinner>
+        <span *ngIf="!saving">Submit Request</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
