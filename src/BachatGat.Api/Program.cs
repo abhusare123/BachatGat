@@ -20,7 +20,13 @@ builder.Services.AddApplication();
 builder.Services.AddControllers();
 
 // JWT Authentication
-var jwtKey = builder.Configuration["Jwt:Key"]!;
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrWhiteSpace(jwtKey) || jwtKey.Length < 32)
+    throw new InvalidOperationException(
+        "Jwt:Key is missing or too short (must be ≥ 32 characters). " +
+        "Dev: run  dotnet user-secrets set \"Jwt:Key\" \"<64-char-random>\"  in src/BachatGat.Api. " +
+        "Prod: set environment variable  Jwt__Key=<value>.");
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
