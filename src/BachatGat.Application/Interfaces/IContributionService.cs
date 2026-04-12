@@ -8,4 +8,5 @@ public interface IContributionService
     Task RecordContributionAsync(int groupId, RecordContributionRequest request, int currentUserId);
     Task UpdateContributionAsync(int groupId, int contributionId, UpdateContributionRequest request, int currentUserId);
     Task<ContributionTrackerDto> GetTrackerAsync(int groupId, int currentUserId);
+    Task ApproveContributionAsync(int groupId, int contributionId, int currentUserId);
 }

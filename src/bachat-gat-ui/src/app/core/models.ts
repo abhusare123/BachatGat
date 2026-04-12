@@ -49,6 +49,10 @@ export interface MemberTrackerRow {
   memberName: string;
   cells: ContributionCell[];
   runningTotal: number;
+  nextEmi: number;
+  nextEmiSaving: number;
+  nextEmiLoanPrincipal: number;
+  nextEmiLoanInterest: number;
 }
 
 export interface ContributionCell {
@@ -57,6 +61,7 @@ export interface ContributionCell {
   amountPaid: number;
   cumulativeTotal: number;
   isPaid: boolean;
+  isApproved: boolean;
 }
 
 export interface PeriodTotal {

@@ -79,6 +79,11 @@
         <button mat-button color="primary" *ngIf="isAdminOrTreasurer && loan.status === LoanStatus.Approved" (click)="disburse(loan.id)">
           <mat-icon>payments</mat-icon> Disburse
         </button>
+        <button mat-stroked-button color="primary"
+          *ngIf="loan.status === LoanStatus.Active || loan.status === LoanStatus.Closed"
+          [routerLink]="['/groups', groupId, 'loans', loan.id, 'repayments']">
+          <mat-icon>receipt_long</mat-icon> Repayments / हप्ते
+        </button>
       </mat-card-actions>
     </mat-card>
 

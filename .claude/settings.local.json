@@ -18,7 +18,8 @@
       "Bash(ng add:*)",
       "Bash(ng generate:*)",
       "Bash(ng build:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npx ng:*)"
     ]
   }
 }

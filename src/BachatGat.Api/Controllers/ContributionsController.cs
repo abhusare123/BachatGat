@@ -34,4 +34,11 @@ public class ContributionsController(IContributionService contributionService) :
     [HttpGet("tracker")]
     public async Task<IActionResult> GetTracker(int groupId)
         => Ok(await contributionService.GetTrackerAsync(groupId, CurrentUserId));
+
+    [HttpPost("{contributionId:int}/approve")]
+    public async Task<IActionResult> ApproveContribution(int groupId, int contributionId)
+    {
+        await contributionService.ApproveContributionAsync(groupId, contributionId, CurrentUserId);
+        return Ok(new { Message = "Contribution approved." });
+    }
 }

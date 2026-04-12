@@ -63,7 +63,8 @@ public class ReportService(IAppDbContext db) : IReportService
             .Where(c => c.GroupMemberId == membership.Id)
             .OrderBy(c => c.Period)
             .Select(c => new ContributionDto(
-                c.Id, c.GroupMemberId, membership.User.FullName, c.Period, c.AmountPaid, c.PaidAt))
+                c.Id, c.GroupMemberId, membership.User.FullName, c.Period, c.AmountPaid, c.PaidAt,
+                c.IsApproved, c.ApprovedAt))
             .ToListAsync();
 
         decimal totalContributed = contributions.Sum(c => c.AmountPaid);

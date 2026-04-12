@@ -24,7 +24,8 @@ public class ContributionService(IAppDbContext db) : IContributionService
         return await query
             .OrderByDescending(c => c.Period)
             .Select(c => new ContributionDto(
-                c.Id, c.GroupMemberId, c.GroupMember.User.FullName, c.Period, c.AmountPaid, c.PaidAt))
+                c.Id, c.GroupMemberId, c.GroupMember.User.FullName, c.Period, c.AmountPaid, c.PaidAt,
+                c.IsApproved, c.ApprovedAt))
             .ToListAsync();
     }
 
@@ -44,12 +45,17 @@ public class ContributionService(IAppDbContext db) : IContributionService
         if (existing != null)
             throw new ConflictException($"Contribution for period {request.Period} already recorded");
 
+        bool autoApprove = callerMembership.Role == GroupMemberRole.Admin;
+
         db.Contributions.Add(new Contribution
         {
             GroupMemberId = request.GroupMemberId,
             Period = request.Period,
             AmountPaid = request.AmountPaid,
-            RecordedByUserId = currentUserId
+            RecordedByUserId = currentUserId,
+            IsApproved = autoApprove,
+            ApprovedAt = autoApprove ? DateTime.UtcNow : null,
+            ApprovedByUserId = autoApprove ? currentUserId : null
         });
         await db.SaveChangesAsync();
     }
@@ -67,6 +73,39 @@ public class ContributionService(IAppDbContext db) : IContributionService
             ?? throw new NotFoundException();
 
         contribution.AmountPaid = request.AmountPaid;
+
+        // Editing resets approval (needs re-review), unless editor is Admin
+        if (callerMembership.Role == GroupMemberRole.Admin)
+        {
+            contribution.IsApproved = true;
+            contribution.ApprovedAt = DateTime.UtcNow;
+            contribution.ApprovedByUserId = currentUserId;
+        }
+        else
+        {
+            contribution.IsApproved = false;
+            contribution.ApprovedAt = null;
+            contribution.ApprovedByUserId = null;
+        }
+
+        await db.SaveChangesAsync();
+    }
+
+    public async Task ApproveContributionAsync(int groupId, int contributionId, int currentUserId)
+    {
+        var callerMembership = await db.GroupMembers
+            .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == currentUserId && m.IsActive);
+        if (callerMembership == null || callerMembership.Role != GroupMemberRole.Admin)
+            throw new ForbiddenException();
+
+        var contribution = await db.Contributions
+            .Include(c => c.GroupMember)
+            .FirstOrDefaultAsync(c => c.Id == contributionId && c.GroupMember.GroupId == groupId)
+            ?? throw new NotFoundException();
+
+        contribution.IsApproved = true;
+        contribution.ApprovedAt = DateTime.UtcNow;
+        contribution.ApprovedByUserId = currentUserId;
         await db.SaveChangesAsync();
     }
 
@@ -87,29 +126,56 @@ public class ContributionService(IAppDbContext db) : IContributionService
             .OrderBy(p => p)
             .ToList();
 
+        var group = await db.Groups.FindAsync(groupId);
+
+        // Load active loans with repayments for NextEmi calculation
+        var activeLoans = await db.Loans
+            .Include(l => l.Repayments)
+            .Where(l => l.GroupId == groupId && l.Status == LoanStatus.Active)
+            .ToListAsync();
+
         var rows = members.Select(member =>
         {
             decimal cumulative = 0;
             var cells = allPeriods.Select(period =>
             {
                 var contrib = member.Contributions.FirstOrDefault(c => c.Period == period);
+                bool isApproved = contrib?.IsApproved ?? false;
                 decimal paid = contrib?.AmountPaid ?? 0;
-                cumulative += paid;
-                return new ContributionCell(contrib?.Id, period, paid, cumulative, contrib != null);
+                // Only approved amounts count toward cumulative total
+                cumulative += isApproved ? paid : 0;
+                return new ContributionCell(contrib?.Id, period, paid, cumulative, contrib != null, isApproved);
             }).ToList();
 
-            return new MemberTrackerRow(member.Id, member.User.FullName, cells, cumulative);
+            // Calculate Next EMI
+            var memberLoan = activeLoans.FirstOrDefault(l => l.RequestedByUserId == member.UserId);
+            var nextRepayment = memberLoan?.Repayments
+                .Where(r => !r.IsPaid)
+                .OrderBy(r => r.Period)
+                .FirstOrDefault();
+
+            decimal saving = group!.MonthlyAmount;
+            decimal loanPrincipal = nextRepayment?.PrincipalAmount ?? 0;
+            decimal loanInterest = nextRepayment?.InterestAmount ?? 0;
+            decimal nextEmi = saving + loanPrincipal + loanInterest;
+
+            return new MemberTrackerRow(
+                member.Id, member.User.FullName, cells, cumulative,
+                nextEmi, saving, loanPrincipal, loanInterest);
         }).ToList();
 
-        var group = await db.Groups.FindAsync(groupId);
+        // Period totals: only count approved contributions
         var periodTotals = allPeriods.Select(period =>
         {
-            decimal total = members.Sum(m => m.Contributions.FirstOrDefault(c => c.Period == period)?.AmountPaid ?? 0);
+            decimal total = members.Sum(m =>
+                m.Contributions
+                    .Where(c => c.Period == period && c.IsApproved)
+                    .Sum(c => c.AmountPaid));
             decimal expected = group!.MonthlyAmount * members.Count;
             return new PeriodTotal(period, total, expected - total);
         }).ToList();
 
-        decimal grandTotal = members.Sum(m => m.Contributions.Sum(c => c.AmountPaid));
+        decimal grandTotal = members.Sum(m => m.Contributions.Where(c => c.IsApproved).Sum(c => c.AmountPaid));
 
         return new ContributionTrackerDto(allPeriods, rows, periodTotals, grandTotal);
     }

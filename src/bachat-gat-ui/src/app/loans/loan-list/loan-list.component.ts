@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +14,7 @@ import { GroupMemberRole, Loan, LoanStatus } from '../../core/models';
 
 @Component({
   selector: 'app-loan-list',
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule,
+  imports: [CommonModule, RouterLink, MatTableModule, MatButtonModule, MatIconModule,
     MatChipsModule, MatProgressSpinnerModule, MatCardModule, CurrencyPipe, DatePipe],
   templateUrl: './loan-list.component.html',
   styleUrl: './loan-list.component.scss'
@@ -37,7 +37,9 @@ export class LoanListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.groupId = +this.route.snapshot.paramMap.get('id')!;
+    let r = this.route.snapshot;
+    while (r && !r.paramMap.has('id')) r = r.parent!;
+    this.groupId = +(r?.paramMap.get('id') ?? 0);
     this.currentUserId = this.authSvc.currentUser()!.userId;
     this.groupSvc.getGroup(this.groupId).subscribe(g => {
       const me = g.members.find(m => m.userId === this.currentUserId);

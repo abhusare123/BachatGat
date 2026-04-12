@@ -55,6 +55,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(c => c.AmountPaid).HasPrecision(18, 2);
             e.HasOne(c => c.GroupMember).WithMany(m => m.Contributions).HasForeignKey(c => c.GroupMemberId);
             e.HasOne(c => c.RecordedBy).WithMany().HasForeignKey(c => c.RecordedByUserId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(c => c.ApprovedBy).WithMany().HasForeignKey(c => c.ApprovedByUserId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
         });
 
         modelBuilder.Entity<Loan>(e =>

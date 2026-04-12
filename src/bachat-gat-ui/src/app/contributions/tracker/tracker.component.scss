@@ -54,8 +54,22 @@
 
   .period-col { min-width: 100px; }
 
-  .total-col { min-width: 110px; font-weight: 700; }
-  td.total-col { background-color: #fff9c4; }   /* yellow only for data cells */
+  .total-col { min-width: 130px; font-weight: 700; }
+  td.total-col { background-color: #fff9c4; }   /* yellow for approved totals */
+
+  .next-emi-col {
+    min-width: 140px;
+    text-align: right;
+  }
+  td.next-emi-col {
+    background-color: #e3f2fd;   /* light blue for Next EMI */
+  }
+  .emi-sub {
+    display: block;
+    font-size: 10px;
+    color: #555;
+    font-weight: 400;
+  }
 
   .action-col { min-width: 60px; text-align: center; }
 
@@ -63,9 +77,17 @@
     position: relative;
     padding-right: 6px;
 
-    &.paid   { color: #2e7d32; font-weight: 500; }
-    &.unpaid { color: #bdbdbd; }
+    &.paid    { color: #2e7d32; font-weight: 500; background-color: #f1f8e9; }
+    &.pending { color: #e65100; font-weight: 500; background-color: #fff3e0 !important; }
+    &.unpaid  { color: #bdbdbd; }
 
+    .pending-badge {
+      font-size: 11px;
+      vertical-align: middle;
+      cursor: default;
+    }
+
+    .approve-cell-btn,
     .edit-cell-btn {
       display: none;
       position: absolute;
@@ -76,12 +98,18 @@
       height: 22px;
       line-height: 22px;
       padding: 0;
-      opacity: 0.6;
+      opacity: 0.75;
 
       mat-icon { font-size: 14px; width: 14px; height: 14px; line-height: 14px; }
     }
 
-    &:hover .edit-cell-btn { display: inline-flex; }
+    .approve-cell-btn {
+      right: 22px;   /* leave space for edit btn when both show */
+      color: #2e7d32;
+    }
+
+    &:hover .edit-cell-btn,
+    &:hover .approve-cell-btn { display: inline-flex; }
   }
 
   .totals-row td {

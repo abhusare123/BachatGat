@@ -4,7 +4,7 @@ public record RecordContributionRequest(int GroupMemberId, string Period, decima
 
 public record UpdateContributionRequest(decimal AmountPaid);
 
-public record ContributionDto(int Id, int GroupMemberId, string MemberName, string Period, decimal AmountPaid, DateTime PaidAt);
+public record ContributionDto(int Id, int GroupMemberId, string MemberName, string Period, decimal AmountPaid, DateTime PaidAt, bool IsApproved, DateTime? ApprovedAt);
 
 public record ContributionTrackerDto(
     IEnumerable<string> Periods,
@@ -17,9 +17,13 @@ public record MemberTrackerRow(
     int GroupMemberId,
     string MemberName,
     IEnumerable<ContributionCell> Cells,
-    decimal RunningTotal
+    decimal RunningTotal,
+    decimal NextEmi,
+    decimal NextEmiSaving,
+    decimal NextEmiLoanPrincipal,
+    decimal NextEmiLoanInterest
 );
 
-public record ContributionCell(int? ContributionId, string Period, decimal AmountPaid, decimal CumulativeTotal, bool IsPaid);
+public record ContributionCell(int? ContributionId, string Period, decimal AmountPaid, decimal CumulativeTotal, bool IsPaid, bool IsApproved);
 
 public record PeriodTotal(string Period, decimal Total, decimal Outstanding);

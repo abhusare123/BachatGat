@@ -10,6 +10,11 @@ public class Contribution
     public DateTime PaidAt { get; set; } = DateTime.UtcNow;
     public int RecordedByUserId { get; set; }
 
+    public bool IsApproved { get; set; } = false;
+    public DateTime? ApprovedAt { get; set; }
+    public int? ApprovedByUserId { get; set; }
+
     public GroupMember GroupMember { get; set; } = null!;
     public User RecordedBy { get; set; } = null!;
+    public User? ApprovedBy { get; set; }
 }

@@ -1,0 +1,89 @@
+.page-container {
+  padding: 16px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+
+  h2 { margin: 0; }
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.summary-cards {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  flex: 1;
+  min-width: 160px;
+
+  .summary-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+  }
+
+  .summary-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1b5e20;
+  }
+}
+
+.outstanding-card .summary-value {
+  color: #b71c1c;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.repayment-table {
+  width: 100%;
+  min-width: 600px;
+
+  th { font-weight: 700; background: #f5f5f5; }
+
+  td, th { padding: 10px 16px; }
+
+  .paid-row td {
+    background-color: #f1f8e9;
+    color: #558b2f;
+  }
+}
+
+.chip-paid {
+  background-color: #c8e6c9 !important;
+  color: #2e7d32 !important;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.chip-pending {
+  background-color: #fff3e0 !important;
+  color: #e65100 !important;
+  font-size: 12px;
+}
+
+.paid-date {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+}
