@@ -61,4 +61,13 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt) : I
         var (accessToken, newRefreshToken) = jwt.GenerateTokens(user);
         return new AuthResponse(accessToken, newRefreshToken, user.Id, user.FullName, user.PhoneNumber);
     }
+
+    public async Task<AuthResponse?> LoginAsync(string phoneNumber)
+    {
+        var user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+        if (user == null) return null;   // not registered — admin must add the user first
+
+        var (accessToken, refreshToken) = jwt.GenerateTokens(user);
+        return new AuthResponse(accessToken, refreshToken, user.Id, user.FullName, user.PhoneNumber);
+    }
 }

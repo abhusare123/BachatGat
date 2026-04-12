@@ -12,6 +12,16 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
+  login(phoneNumber: string) {
+    return this.http.post<AuthResponse>(`${this.API}/auth/login`, { phoneNumber }).pipe(
+      tap(res => {
+        localStorage.setItem('auth', JSON.stringify(res));
+        this.currentUser.set(res);
+      })
+    );
+  }
+
+  // Legacy OTP methods — kept for future SMS integration
   sendOtp(phoneNumber: string) {
     return this.http.post(`${this.API}/auth/send-otp`, { phoneNumber });
   }
