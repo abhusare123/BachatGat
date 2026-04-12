@@ -9,6 +9,8 @@ public interface ILoanService
     Task<int> RequestLoanAsync(int groupId, RequestLoanRequest request, int currentUserId);
     Task<LoanDto> GetLoanAsync(int id, int currentUserId);
     Task<LoanStatus> VoteAsync(int id, VoteLoanRequest request, int currentUserId);
+    Task ApproveLoanAsync(int id, int currentUserId);
+    Task RejectLoanAsync(int id, int currentUserId);
     Task DisburseAsync(int id, int currentUserId);
     Task<List<LoanRepaymentDto>> GetRepaymentsAsync(int id, int currentUserId);
     Task<LoanStatus> MarkRepaymentPaidAsync(int loanId, int repaymentId, int currentUserId);

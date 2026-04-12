@@ -35,7 +35,7 @@ export class LoanRequestComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groupId = +this.route.parent!.snapshot.paramMap.get('groupId')!;
+    this.groupId = +this.route.snapshot.paramMap.get('id')!;
   }
 
   submit() {

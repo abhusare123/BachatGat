@@ -33,7 +33,7 @@ export class TrackerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.groupId = +this.route.parent!.snapshot.paramMap.get('groupId')!;
+    this.groupId = +this.route.snapshot.paramMap.get('id')!;
     this.load();
   }
 
@@ -48,6 +48,13 @@ export class TrackerComponent implements OnInit {
   openRecordPayment(memberId: number, memberName: string) {
     const ref = this.dialog.open(RecordPaymentDialogComponent, {
       data: { groupId: this.groupId, groupMemberId: memberId, memberName }
+    });
+    ref.afterClosed().subscribe(saved => { if (saved) this.load(); });
+  }
+
+  openEditPayment(memberId: number, memberName: string, contributionId: number, period: string, amount: number) {
+    const ref = this.dialog.open(RecordPaymentDialogComponent, {
+      data: { groupId: this.groupId, groupMemberId: memberId, memberName, contributionId, existingPeriod: period, existingAmount: amount }
     });
     ref.afterClosed().subscribe(saved => { if (saved) this.load(); });
   }

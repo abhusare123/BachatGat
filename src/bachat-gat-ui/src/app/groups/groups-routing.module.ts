@@ -1,11 +1,34 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GroupListComponent } from './group-list/group-list.component';
+import { GroupShellComponent } from './group-shell/group-shell.component';
 import { GroupDetailComponent } from './group-detail/group-detail.component';
 
 const routes: Routes = [
+  // Group list — auto-redirects to single group
   { path: '', component: GroupListComponent },
-  { path: ':id', component: GroupDetailComponent }
+
+  // Group shell — sidebar layout wrapping all group sections
+  {
+    path: ':id',
+    component: GroupShellComponent,
+    children: [
+      { path: '', redirectTo: 'contributions', pathMatch: 'full' },
+      {
+        path: 'contributions',
+        loadChildren: () => import('../contributions/contributions.module').then(m => m.ContributionsModule)
+      },
+      {
+        path: 'loans',
+        loadChildren: () => import('../loans/loans.module').then(m => m.LoansModule)
+      },
+      {
+        path: 'reports',
+        loadChildren: () => import('../reports/reports.module').then(m => m.ReportsModule)
+      },
+      { path: 'members', component: GroupDetailComponent }
+    ]
+  }
 ];
 
 @NgModule({

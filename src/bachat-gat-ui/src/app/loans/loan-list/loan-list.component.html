@@ -44,18 +44,39 @@
             <mat-icon class="reject-icon">thumb_down</mat-icon> {{ loan.rejectVotes }}
             &nbsp; out of {{ loan.totalEligibleVoters }} eligible
           </span>
-          <div class="vote-actions">
-            <button mat-stroked-button color="primary" (click)="vote(loan, 1)">
+          <div class="vote-actions" *ngIf="loan.requestedByUserId !== currentUserId">
+            <button *ngIf="loan.currentUserVote === 1; else approveOutline" mat-flat-button color="primary" (click)="vote(loan, 1)">
               <mat-icon>thumb_up</mat-icon> Approve
             </button>
-            <button mat-stroked-button color="warn" (click)="vote(loan, 2)">
+            <ng-template #approveOutline>
+              <button mat-stroked-button color="primary" (click)="vote(loan, 1)">
+                <mat-icon>thumb_up</mat-icon> Approve
+              </button>
+            </ng-template>
+
+            <button *ngIf="loan.currentUserVote === 2; else rejectOutline" mat-flat-button color="warn" (click)="vote(loan, 2)">
               <mat-icon>thumb_down</mat-icon> Reject
             </button>
+            <ng-template #rejectOutline>
+              <button mat-stroked-button color="warn" (click)="vote(loan, 2)">
+                <mat-icon>thumb_down</mat-icon> Reject
+              </button>
+            </ng-template>
+
+            <span class="change-vote-hint" *ngIf="loan.currentUserVote">You voted — click to change</span>
           </div>
         </div>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="primary" *ngIf="loan.status === LoanStatus.Approved" (click)="disburse(loan.id)">
+        <ng-container *ngIf="isAdminOrTreasurer && loan.status === LoanStatus.Pending">
+          <button mat-raised-button color="primary" (click)="approveLoan(loan.id)">
+            <mat-icon>check_circle</mat-icon> Approve
+          </button>
+          <button mat-raised-button color="warn" (click)="rejectLoan(loan.id)">
+            <mat-icon>cancel</mat-icon> Reject
+          </button>
+        </ng-container>
+        <button mat-button color="primary" *ngIf="isAdminOrTreasurer && loan.status === LoanStatus.Approved" (click)="disburse(loan.id)">
           <mat-icon>payments</mat-icon> Disburse
         </button>
       </mat-card-actions>

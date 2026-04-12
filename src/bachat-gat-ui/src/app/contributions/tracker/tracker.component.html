@@ -12,28 +12,33 @@
       <thead>
         <tr>
           <th class="member-col sticky-col">सदस्य / Member</th>
-          <ng-container *ngFor="let period of tracker.periods">
-            <th class="period-col">{{ formatPeriod(period) }}</th>
-            <th class="cumulative-col">एकूण</th>
-          </ng-container>
-          <th class="total-col">Total</th>
+          <th *ngFor="let period of tracker.periods" class="period-col">
+            {{ formatPeriod(period) }}
+          </th>
+          <th class="total-col">एकूण / Total</th>
           <th class="action-col">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let row of tracker.rows">
           <td class="member-col sticky-col">{{ row.memberName }}</td>
-          <ng-container *ngFor="let cell of row.cells">
-            <td class="amount-cell" [class.paid]="cell.isPaid" [class.unpaid]="!cell.isPaid">
-              {{ cell.isPaid ? (cell.amountPaid | currency:'INR':'symbol':'1.0-0') : '—' }}
-            </td>
-            <td class="cumulative-cell">
-              {{ cell.cumulativeTotal | currency:'INR':'symbol':'1.0-0' }}
-            </td>
-          </ng-container>
+          <td *ngFor="let cell of row.cells"
+              class="amount-cell"
+              [class.paid]="cell.isPaid"
+              [class.unpaid]="!cell.isPaid">
+            <span class="cell-amount">{{ cell.isPaid ? (cell.amountPaid | currency:'INR':'symbol':'1.0-0') : '—' }}</span>
+            <button *ngIf="cell.isPaid && cell.contributionId"
+              mat-icon-button class="edit-cell-btn"
+              title="Edit"
+              (click)="openEditPayment(row.groupMemberId, row.memberName, cell.contributionId!, cell.period, cell.amountPaid)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
           <td class="total-col bold">{{ row.runningTotal | currency:'INR':'symbol':'1.0-0' }}</td>
           <td class="action-col">
-            <button mat-icon-button color="primary" (click)="openRecordPayment(row.groupMemberId, row.memberName)" title="Record Payment">
+            <button mat-icon-button color="primary"
+              (click)="openRecordPayment(row.groupMemberId, row.memberName)"
+              title="Record Payment">
               <mat-icon>add_circle</mat-icon>
             </button>
           </td>
@@ -42,12 +47,9 @@
         <!-- Period totals row -->
         <tr class="totals-row">
           <td class="member-col sticky-col bold">एकूण / Total</td>
-          <ng-container *ngFor="let pt of tracker.periodTotals">
-            <td class="amount-cell bold">{{ pt.total | currency:'INR':'symbol':'1.0-0' }}</td>
-            <td class="cumulative-cell">
-              <span class="outstanding" *ngIf="pt.outstanding > 0">बाकी: {{ pt.outstanding | currency:'INR':'symbol':'1.0-0' }}</span>
-            </td>
-          </ng-container>
+          <td *ngFor="let pt of tracker.periodTotals" class="amount-cell bold">
+            {{ pt.total | currency:'INR':'symbol':'1.0-0' }}
+          </td>
           <td class="total-col bold">{{ tracker.grandTotal | currency:'INR':'symbol':'1.0-0' }}</td>
           <td></td>
         </tr>

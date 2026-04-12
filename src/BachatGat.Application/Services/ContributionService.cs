@@ -54,6 +54,22 @@ public class ContributionService(IAppDbContext db) : IContributionService
         await db.SaveChangesAsync();
     }
 
+    public async Task UpdateContributionAsync(int groupId, int contributionId, UpdateContributionRequest request, int currentUserId)
+    {
+        var callerMembership = await db.GroupMembers
+            .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == currentUserId && m.IsActive);
+        if (callerMembership == null || callerMembership.Role > GroupMemberRole.Treasurer)
+            throw new ForbiddenException();
+
+        var contribution = await db.Contributions
+            .Include(c => c.GroupMember)
+            .FirstOrDefaultAsync(c => c.Id == contributionId && c.GroupMember.GroupId == groupId)
+            ?? throw new NotFoundException();
+
+        contribution.AmountPaid = request.AmountPaid;
+        await db.SaveChangesAsync();
+    }
+
     public async Task<ContributionTrackerDto> GetTrackerAsync(int groupId, int currentUserId)
     {
         if (!await IsMemberAsync(groupId, currentUserId)) throw new NotFoundException();
@@ -79,7 +95,7 @@ public class ContributionService(IAppDbContext db) : IContributionService
                 var contrib = member.Contributions.FirstOrDefault(c => c.Period == period);
                 decimal paid = contrib?.AmountPaid ?? 0;
                 cumulative += paid;
-                return new ContributionCell(period, paid, cumulative, contrib != null);
+                return new ContributionCell(contrib?.Id, period, paid, cumulative, contrib != null);
             }).ToList();
 
             return new MemberTrackerRow(member.Id, member.User.FullName, cells, cumulative);

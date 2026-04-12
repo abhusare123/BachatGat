@@ -9,6 +9,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { GroupService } from '../../core/group.service';
+import { AuthService } from '../../core/auth.service';
 import { GroupDetail, GroupMemberRole } from '../../core/models';
 import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog.component';
 
@@ -25,13 +26,23 @@ export class GroupDetailComponent implements OnInit {
   groupId!: number;
   group?: GroupDetail;
   loading = true;
-  displayedColumns = ['name', 'phone', 'role', 'joined', 'actions'];
   GroupMemberRole = GroupMemberRole;
+
+  get isAdmin(): boolean {
+    const userId = this.authSvc.currentUser()?.userId;
+    if (!userId || !this.group) return false;
+    return this.group.members.some(m => m.userId === userId && m.role === GroupMemberRole.Admin);
+  }
+
+  get displayedColumns(): string[] {
+    return this.isAdmin ? ['name', 'phone', 'role', 'joined', 'actions'] : ['name', 'phone', 'role', 'joined'];
+  }
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private groupSvc: GroupService,
+    private authSvc: AuthService,
     private dialog: MatDialog
   ) {}
 

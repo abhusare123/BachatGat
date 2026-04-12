@@ -22,3 +22,21 @@
   margin-bottom: 12px;
   font-size: 14px;
 }
+
+.resend-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.resend-btn {
+  font-size: 13px;
+}
+
+.countdown {
+  font-size: 13px;
+  color: #888;
+  min-width: 28px;
+}

@@ -10,7 +10,8 @@ public record LoanDto(
     int Id, int GroupId, int RequestedByUserId, string RequestedByName,
     decimal Amount, int TenureMonths, decimal InterestRatePercent,
     string? Purpose, LoanStatus Status, DateTime RequestedAt, DateTime? ApprovedAt,
-    int ApproveVotes, int RejectVotes, int TotalEligibleVoters
+    int ApproveVotes, int RejectVotes, int TotalEligibleVoters,
+    VoteChoice? CurrentUserVote
 );
 
 public record LoanRepaymentDto(

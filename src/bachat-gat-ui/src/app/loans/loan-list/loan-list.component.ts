@@ -8,7 +8,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { LoanService } from '../../core/loan.service';
-import { Loan, LoanStatus } from '../../core/models';
+import { GroupService } from '../../core/group.service';
+import { AuthService } from '../../core/auth.service';
+import { GroupMemberRole, Loan, LoanStatus } from '../../core/models';
 
 @Component({
   selector: 'app-loan-list',
@@ -23,11 +25,24 @@ export class LoanListComponent implements OnInit {
   loading = true;
   displayedColumns = ['member', 'amount', 'tenure', 'purpose', 'status', 'votes', 'actions'];
   LoanStatus = LoanStatus;
+  currentUserId!: number;
+  isAdminOrTreasurer = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, private loanSvc: LoanService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private loanSvc: LoanService,
+    private groupSvc: GroupService,
+    private authSvc: AuthService
+  ) {}
 
   ngOnInit() {
-    this.groupId = +this.route.parent!.snapshot.paramMap.get('groupId')!;
+    this.groupId = +this.route.snapshot.paramMap.get('id')!;
+    this.currentUserId = this.authSvc.currentUser()!.userId;
+    this.groupSvc.getGroup(this.groupId).subscribe(g => {
+      const me = g.members.find(m => m.userId === this.currentUserId);
+      this.isAdminOrTreasurer = !!me && (me.role === GroupMemberRole.Admin || me.role === GroupMemberRole.Treasurer);
+    });
     this.load();
   }
 
@@ -45,6 +60,16 @@ export class LoanListComponent implements OnInit {
 
   vote(loan: Loan, choice: number) {
     this.loanSvc.vote(loan.id, choice).subscribe(() => this.load());
+  }
+
+  approveLoan(loanId: number) {
+    if (!confirm('Approve this loan?')) return;
+    this.loanSvc.approveLoan(loanId).subscribe(() => this.load());
+  }
+
+  rejectLoan(loanId: number) {
+    if (!confirm('Reject this loan?')) return;
+    this.loanSvc.rejectLoan(loanId).subscribe(() => this.load());
   }
 
   disburse(loanId: number) {

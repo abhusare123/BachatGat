@@ -32,6 +32,12 @@
           <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
           <span *ngIf="!loading">Verify & Login</span>
         </button>
+        <div class="resend-row">
+          <button mat-button type="button" (click)="resendOtp()" [disabled]="loading || resendCountdown > 0" class="resend-btn">
+            Resend OTP
+          </button>
+          <span *ngIf="resendCountdown > 0" class="countdown">{{ resendCountdown }}s</span>
+        </div>
         <button mat-button type="button" (click)="step = 'phone'" class="full-width">Back</button>
       </form>
     </mat-card-content>

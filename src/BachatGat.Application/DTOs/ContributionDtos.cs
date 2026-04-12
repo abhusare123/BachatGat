@@ -2,6 +2,8 @@ namespace BachatGat.Application.DTOs;
 
 public record RecordContributionRequest(int GroupMemberId, string Period, decimal AmountPaid);
 
+public record UpdateContributionRequest(decimal AmountPaid);
+
 public record ContributionDto(int Id, int GroupMemberId, string MemberName, string Period, decimal AmountPaid, DateTime PaidAt);
 
 public record ContributionTrackerDto(
@@ -18,6 +20,6 @@ public record MemberTrackerRow(
     decimal RunningTotal
 );
 
-public record ContributionCell(string Period, decimal AmountPaid, decimal CumulativeTotal, bool IsPaid);
+public record ContributionCell(int? ContributionId, string Period, decimal AmountPaid, decimal CumulativeTotal, bool IsPaid);
 
 public record PeriodTotal(string Period, decimal Total, decimal Outstanding);

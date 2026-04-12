@@ -34,6 +34,20 @@ public class LoansController(ILoanService loanService) : ControllerBase
         return Ok(new { Message = "Vote recorded", Status = status });
     }
 
+    [HttpPost("api/loans/{id:int}/approve")]
+    public async Task<IActionResult> ApproveLoan(int id)
+    {
+        await loanService.ApproveLoanAsync(id, CurrentUserId);
+        return Ok(new { Message = "Loan approved" });
+    }
+
+    [HttpPost("api/loans/{id:int}/reject")]
+    public async Task<IActionResult> RejectLoan(int id)
+    {
+        await loanService.RejectLoanAsync(id, CurrentUserId);
+        return Ok(new { Message = "Loan rejected" });
+    }
+
     [HttpPost("api/loans/{id:int}/disburse")]
     public async Task<IActionResult> Disburse(int id)
     {

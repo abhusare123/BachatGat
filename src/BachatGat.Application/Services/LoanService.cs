@@ -26,7 +26,7 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanS
             .OrderByDescending(l => l.RequestedAt)
             .ToListAsync();
 
-        return loans.Select(l => MapLoan(l, eligibleVoters)).ToList();
+        return loans.Select(l => MapLoan(l, eligibleVoters, currentUserId)).ToList();
     }
 
     public async Task<int> RequestLoanAsync(int groupId, RequestLoanRequest request, int currentUserId)
@@ -69,7 +69,7 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanS
             .CountAsync(m => m.GroupId == loan.GroupId && m.IsActive
                 && m.Role != GroupMemberRole.Auditor && m.Role != GroupMemberRole.Treasurer);
 
-        return MapLoan(loan, eligibleVoters);
+        return MapLoan(loan, eligibleVoters, currentUserId);
     }
 
     public async Task<LoanStatus> VoteAsync(int id, VoteLoanRequest request, int currentUserId)
@@ -92,38 +92,63 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanS
         if (loan.RequestedByUserId == currentUserId)
             throw new BadRequestException("Cannot vote on your own loan");
 
-        if (loan.Votes.Any(v => v.VotedByUserId == currentUserId))
-            throw new ConflictException("Already voted on this loan");
+        var existingVote = loan.Votes.FirstOrDefault(v => v.VotedByUserId == currentUserId);
+        bool isNew = existingVote == null;
 
-        db.LoanVotes.Add(new LoanVote
+        if (existingVote != null)
         {
-            LoanId = id,
-            VotedByUserId = currentUserId,
-            Vote = request.Vote,
-            Comment = request.Comment
-        });
-
-        int eligibleVoters = await db.GroupMembers
-            .CountAsync(m => m.GroupId == loan.GroupId && m.IsActive
-                && m.Role != GroupMemberRole.Auditor && m.Role != GroupMemberRole.Treasurer
-                && m.UserId != loan.RequestedByUserId);
-
-        int approves = loan.Votes.Count(v => v.Vote == VoteChoice.Approve) + (request.Vote == VoteChoice.Approve ? 1 : 0);
-        int rejects  = loan.Votes.Count(v => v.Vote == VoteChoice.Reject)  + (request.Vote == VoteChoice.Reject  ? 1 : 0);
-        int majority = (eligibleVoters / 2) + 1;
-
-        if (approves >= majority)
-        {
-            loan.Status = LoanStatus.Approved;
-            loan.ApprovedAt = DateTime.UtcNow;
+            existingVote.Vote = request.Vote;
+            existingVote.VotedAt = DateTime.UtcNow;
+            existingVote.Comment = request.Comment;
         }
-        else if (rejects >= majority)
+        else
         {
-            loan.Status = LoanStatus.Rejected;
+            db.LoanVotes.Add(new LoanVote
+            {
+                LoanId = id,
+                VotedByUserId = currentUserId,
+                Vote = request.Vote,
+                Comment = request.Comment
+            });
         }
 
         await db.SaveChangesAsync();
         return loan.Status;
+    }
+
+    public async Task ApproveLoanAsync(int id, int currentUserId)
+    {
+        var loan = await db.Loans.FindAsync(id)
+            ?? throw new NotFoundException();
+
+        var membership = await db.GroupMembers
+            .FirstOrDefaultAsync(m => m.GroupId == loan.GroupId && m.UserId == currentUserId && m.IsActive);
+        if (membership == null || membership.Role > GroupMemberRole.Treasurer)
+            throw new ForbiddenException();
+
+        if (loan.Status != LoanStatus.Pending)
+            throw new BadRequestException("Only pending loans can be approved");
+
+        loan.Status = LoanStatus.Approved;
+        loan.ApprovedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+    }
+
+    public async Task RejectLoanAsync(int id, int currentUserId)
+    {
+        var loan = await db.Loans.FindAsync(id)
+            ?? throw new NotFoundException();
+
+        var membership = await db.GroupMembers
+            .FirstOrDefaultAsync(m => m.GroupId == loan.GroupId && m.UserId == currentUserId && m.IsActive);
+        if (membership == null || membership.Role > GroupMemberRole.Treasurer)
+            throw new ForbiddenException();
+
+        if (loan.Status != LoanStatus.Pending)
+            throw new BadRequestException("Only pending loans can be rejected");
+
+        loan.Status = LoanStatus.Rejected;
+        await db.SaveChangesAsync();
     }
 
     public async Task DisburseAsync(int id, int currentUserId)
@@ -204,13 +229,14 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanS
         return loan.Status;
     }
 
-    private static LoanDto MapLoan(Loan l, int eligibleVoters) => new(
+    private static LoanDto MapLoan(Loan l, int eligibleVoters, int currentUserId) => new(
         l.Id, l.GroupId, l.RequestedByUserId, l.RequestedBy.FullName,
         l.Amount, l.TenureMonths, l.InterestRatePercent, l.Purpose,
         l.Status, l.RequestedAt, l.ApprovedAt,
         l.Votes.Count(v => v.Vote == VoteChoice.Approve),
         l.Votes.Count(v => v.Vote == VoteChoice.Reject),
-        eligibleVoters);
+        eligibleVoters,
+        l.Votes.FirstOrDefault(v => v.VotedByUserId == currentUserId)?.Vote);
 
     private Task<bool> IsMemberAsync(int groupId, int userId) =>
         db.GroupMembers.AnyAsync(m => m.GroupId == groupId && m.UserId == userId && m.IsActive);

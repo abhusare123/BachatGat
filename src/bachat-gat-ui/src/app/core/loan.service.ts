@@ -21,6 +21,14 @@ export class LoanService {
     return this.http.post(`${this.API}/loans/${loanId}/vote`, { vote, comment });
   }
 
+  approveLoan(loanId: number) {
+    return this.http.post(`${this.API}/loans/${loanId}/approve`, {});
+  }
+
+  rejectLoan(loanId: number) {
+    return this.http.post(`${this.API}/loans/${loanId}/reject`, {});
+  }
+
   disburse(loanId: number) {
     return this.http.post(`${this.API}/loans/${loanId}/disburse`, {});
   }

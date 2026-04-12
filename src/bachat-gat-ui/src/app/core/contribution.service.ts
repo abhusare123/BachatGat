@@ -16,4 +16,8 @@ export class ContributionService {
   recordContribution(groupId: number, groupMemberId: number, period: string, amountPaid: number) {
     return this.http.post(`${this.API}/groups/${groupId}/contributions`, { groupMemberId, period, amountPaid });
   }
+
+  updateContribution(groupId: number, contributionId: number, amountPaid: number) {
+    return this.http.put(`${this.API}/groups/${groupId}/contributions/${contributionId}`, { amountPaid });
+  }
 }

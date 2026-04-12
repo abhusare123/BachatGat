@@ -24,6 +24,13 @@ public class ContributionsController(IContributionService contributionService) :
         return Ok(new { Message = "Contribution recorded" });
     }
 
+    [HttpPut("{contributionId:int}")]
+    public async Task<IActionResult> UpdateContribution(int groupId, int contributionId, [FromBody] UpdateContributionRequest request)
+    {
+        await contributionService.UpdateContributionAsync(groupId, contributionId, request, CurrentUserId);
+        return Ok(new { Message = "Contribution updated" });
+    }
+
     [HttpGet("tracker")]
     public async Task<IActionResult> GetTracker(int groupId)
         => Ok(await contributionService.GetTrackerAsync(groupId, CurrentUserId));

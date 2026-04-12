@@ -27,12 +27,20 @@ export class GroupListComponent implements OnInit {
   load() {
     this.loading = true;
     this.groupSvc.getGroups().subscribe({
-      next: g => { this.groups = g; this.loading = false; },
+      next: groups => {
+        this.loading = false;
+        // Auto-navigate if only one group — skip the list screen entirely
+        if (groups.length === 1) {
+          this.router.navigate(['/groups', groups[0].id, 'contributions'], { replaceUrl: true });
+          return;
+        }
+        this.groups = groups;
+      },
       error: () => this.loading = false
     });
   }
 
-  openGroup(id: number) { this.router.navigate(['/groups', id]); }
+  openGroup(id: number) { this.router.navigate(['/groups', id, 'contributions']); }
 
   openCreate() {
     this.dialog.open(CreateGroupDialogComponent).afterClosed()

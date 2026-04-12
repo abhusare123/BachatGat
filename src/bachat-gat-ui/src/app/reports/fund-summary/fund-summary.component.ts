@@ -24,7 +24,7 @@ export class FundSummaryComponent implements OnInit {
   constructor(private route: ActivatedRoute, private reportSvc: ReportService) {}
 
   ngOnInit() {
-    this.groupId = +this.route.parent!.snapshot.paramMap.get('groupId')!;
+    this.groupId = +this.route.snapshot.paramMap.get('id')!;
     this.reportSvc.getFundSummary(this.groupId).subscribe(s => { this.summary = s; this.loading = false; });
     this.reportSvc.getLoanLedger(this.groupId).subscribe(l => this.ledger = l);
   }

@@ -84,7 +84,8 @@ public class ReportService(IAppDbContext db) : IReportService
             l.Status, l.RequestedAt, l.ApprovedAt,
             l.Votes.Count(v => v.Vote == VoteChoice.Approve),
             l.Votes.Count(v => v.Vote == VoteChoice.Reject),
-            eligibleVoters)).ToList();
+            eligibleVoters,
+            CurrentUserVote: null)).ToList();
 
         return new MemberStatementDto(
             membership.User.FullName, membership.User.PhoneNumber,

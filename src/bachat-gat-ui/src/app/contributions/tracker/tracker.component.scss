@@ -37,7 +37,7 @@
 
   .member-col {
     text-align: left;
-    min-width: 140px;
+    min-width: 150px;
   }
 
   .sticky-col {
@@ -52,20 +52,36 @@
     z-index: 3;
   }
 
-  .period-col { min-width: 90px; }
-  .cumulative-col { min-width: 80px; background-color: #f0f0f0; color: #555; }
-  .total-col { min-width: 100px; background-color: #fff9c4; }
+  .period-col { min-width: 100px; }
+
+  .total-col { min-width: 110px; font-weight: 700; }
+  td.total-col { background-color: #fff9c4; }   /* yellow only for data cells */
+
   .action-col { min-width: 60px; text-align: center; }
 
   .amount-cell {
-    &.paid { color: #2e7d32; font-weight: 500; }
-    &.unpaid { color: #bdbdbd; }
-  }
+    position: relative;
+    padding-right: 6px;
 
-  .cumulative-cell {
-    color: #555;
-    font-size: 12px;
-    background-color: #fafafa;
+    &.paid   { color: #2e7d32; font-weight: 500; }
+    &.unpaid { color: #bdbdbd; }
+
+    .edit-cell-btn {
+      display: none;
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      line-height: 22px;
+      padding: 0;
+      opacity: 0.6;
+
+      mat-icon { font-size: 14px; width: 14px; height: 14px; line-height: 14px; }
+    }
+
+    &:hover .edit-cell-btn { display: inline-flex; }
   }
 
   .totals-row td {
@@ -74,11 +90,6 @@
   }
 
   .bold { font-weight: 700; }
-
-  .outstanding {
-    color: #c62828;
-    font-size: 11px;
-  }
 }
 
 .empty-state {

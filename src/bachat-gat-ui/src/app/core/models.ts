@@ -52,6 +52,7 @@ export interface MemberTrackerRow {
 }
 
 export interface ContributionCell {
+  contributionId?: number;
   period: string;
   amountPaid: number;
   cumulativeTotal: number;
@@ -79,6 +80,7 @@ export interface Loan {
   approveVotes: number;
   rejectVotes: number;
   totalEligibleVoters: number;
+  currentUserVote?: number; // 1 = Approve, 2 = Reject
 }
 
 export enum LoanStatus {

@@ -1,6 +1,20 @@
 /* Global styles */
 html, body { height: 100%; }
 
+/* ── Navbar override ────────────────────────────────────────── */
+mat-toolbar.app-navbar {
+  background: #1b5e20 !important;   /* deep green */
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  min-height: 60px;
+}
+
+mat-toolbar.app-navbar mat-icon,
+mat-toolbar.app-navbar button mat-icon {
+  color: #ffffff !important;
+}
+/* ─────────────────────────────────────────────────────────── */
+
 body {
   margin: 0;
   font-family: Roboto, 'Noto Sans Devanagari', "Helvetica Neue", sans-serif;
