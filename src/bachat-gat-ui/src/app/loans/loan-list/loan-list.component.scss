@@ -38,6 +38,8 @@
     display: flex;
     align-items: center;
     padding-bottom: var(--sp-2);
+    flex-wrap: wrap;
+    gap: var(--sp-2);
   }
 
   mat-card-title {
@@ -58,7 +60,7 @@
 .loan-details {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--sp-4);
+  gap: var(--sp-3) var(--sp-4);
   margin: var(--sp-3) 0 var(--sp-2);
 }
 
@@ -66,7 +68,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 90px;
+  min-width: 80px;
 }
 
 .label {
@@ -122,6 +124,14 @@
   font-style: italic;
 }
 
+/* ── Card actions area ── */
+mat-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3) !important;
+}
+
 /* ── Empty state ── */
 .empty-state {
   text-align: center;
@@ -138,4 +148,19 @@
   }
 
   p { font-size: var(--text-md); margin: 0; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-3);
+  }
+
+  .loan-details { gap: var(--sp-2) var(--sp-3); }
+
+  .vote-bar { flex-direction: column; align-items: flex-start; }
+
+  .vote-actions { width: 100%; justify-content: flex-end; }
 }

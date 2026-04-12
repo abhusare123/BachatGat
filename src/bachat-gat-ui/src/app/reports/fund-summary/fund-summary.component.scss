@@ -4,7 +4,7 @@
 /* ── Stat card grid ── */
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
   gap: var(--sp-4);
   margin-bottom: var(--sp-5);
 }
@@ -84,7 +84,7 @@
   }
 
   .stat-value {
-    font-size: clamp(20px, 2.5vw, 26px);
+    font-size: clamp(18px, 2.5vw, 26px);
     font-weight: 800;
     letter-spacing: -0.5px;
     font-variant-numeric: tabular-nums;
@@ -92,11 +92,19 @@
 }
 
 /* ── Ledger table ── */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--clr-border);
+  margin-top: var(--sp-4);
+}
+
 .ledger-table {
   width: 100%;
+  min-width: 480px;
   border-radius: var(--radius-md) !important;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm) !important;
 
   th {
     background: var(--clr-primary-800) !important;

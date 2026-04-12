@@ -15,7 +15,7 @@
 
 .groups-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap: var(--sp-5);
 }
 
@@ -49,6 +49,7 @@
 
   .stat-row {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--sp-4);
     margin-top: var(--sp-2);
   }
@@ -57,6 +58,7 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+    min-width: 80px;
   }
 
   .stat-label {
@@ -91,4 +93,13 @@
 
   mat-icon { font-size: 52px; width: 52px; height: 52px; opacity: 0.3; display: block; margin: 0 auto var(--sp-3); }
   p { font-size: var(--text-md); margin: 0; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-3);
+  }
 }

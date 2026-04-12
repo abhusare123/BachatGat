@@ -17,6 +17,10 @@
     height: 28px;
     filter: drop-shadow(0 1px 2px oklch(10% 0.05 148 / 0.4));
   }
+
+  .brand-text {
+    display: inline;
+  }
 }
 
 .spacer { flex: 1; }
@@ -38,3 +42,20 @@
   font-size: 12px;
   color: oklch(55% 0.04 148);
 }
+
+/* ── Mobile navbar ── */
+@media (max-width: 480px) {
+  .brand .brand-text {
+    /* Show abbreviated version */
+    display: none;
+  }
+
+  .brand-short {
+    display: inline !important;
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+}
+
+.brand-short { display: none; }

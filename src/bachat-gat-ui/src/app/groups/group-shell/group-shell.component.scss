@@ -1,11 +1,15 @@
 $sidebar-width: 210px;
+$bottom-nav-height: 64px;
 
+/* ═══════════════════════════════════════════
+   Shell Layout
+   ═══════════════════════════════════════════ */
 .shell-layout {
   display: flex;
   min-height: calc(100vh - 60px);
 }
 
-/* ── Sidebar ─────────────────────────────────── */
+/* ── Sidebar (desktop) ─────────────────────── */
 .sidebar {
   width: $sidebar-width;
   min-width: $sidebar-width;
@@ -19,7 +23,6 @@ $sidebar-width: 210px;
   height: calc(100vh - 60px);
   overflow-y: auto;
   box-shadow: var(--shadow-md);
-  /* Subtle border-right instead of harsh shadow */
   border-right: 1px solid oklch(18% 0.06 148 / 0.5);
 }
 
@@ -147,4 +150,89 @@ $sidebar-width: 210px;
   flex: 1;
   overflow-y: auto;
   background: var(--clr-bg);
+}
+
+/* ── Bottom nav (hidden on desktop) ── */
+.bottom-nav {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════
+   Mobile — ≤ 640px
+   ═══════════════════════════════════════════ */
+@media (max-width: 640px) {
+  /* Hide desktop sidebar */
+  .sidebar { display: none; }
+
+  /* Content full width, add bottom padding so last content isn't hidden under nav */
+  .shell-content {
+    width: 100%;
+    padding-bottom: $bottom-nav-height;
+  }
+
+  /* ── Bottom navigation bar ── */
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: $bottom-nav-height;
+    background: var(--clr-surface);
+    border-top: 1px solid var(--clr-border);
+    box-shadow: 0 -2px 12px oklch(15% 0.05 148 / 0.10);
+    z-index: 100;
+    /* Safe area inset for iOS notch devices */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: var(--clr-text-muted);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    padding: 6px 4px;
+    border-top: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    /* Ensure 44px touch target */
+    min-height: 44px;
+
+    mat-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      transition: color 0.15s, transform 0.15s;
+    }
+
+    span {
+      display: block;
+      white-space: nowrap;
+    }
+
+    &.active {
+      color: var(--clr-primary-700);
+      border-top-color: var(--clr-primary-600);
+
+      mat-icon { transform: scale(1.1); }
+    }
+
+    &:hover:not(.active) {
+      color: var(--clr-primary-600);
+      background: var(--clr-primary-50);
+    }
+
+    &.back-item {
+      color: var(--clr-text-muted);
+      border-left: 1px solid var(--clr-border);
+
+      &:hover { color: var(--clr-red); }
+    }
+  }
 }

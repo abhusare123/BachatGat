@@ -1,5 +1,5 @@
 .tracker-container {
-  padding: clamp(12px, 2vw, 20px);
+  padding: clamp(10px, 2vw, 20px);
 }
 
 .tracker-header {
@@ -18,11 +18,15 @@
   padding: var(--sp-8);
 }
 
+/* ── Scroll wrapper: always horizontal scroll, touch-friendly ── */
 .tracker-scroll {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--clr-border);
+  /* Scroll snap for better column browsing on touch */
+  scroll-snap-type: x proximity;
 }
 
 /* ── Excel-style table ── */
@@ -58,7 +62,7 @@
 
   .member-col {
     text-align: left;
-    min-width: 150px;
+    min-width: 130px;
     font-weight: 600;
   }
 
@@ -74,10 +78,10 @@
     z-index: 3;
   }
 
-  .period-col { min-width: 110px; }
+  .period-col { min-width: 100px; }
 
   /* ── Total column ── */
-  .total-col { min-width: 140px; font-weight: 700; }
+  .total-col { min-width: 120px; font-weight: 700; }
   td.total-col {
     background: oklch(97% 0.05 85);          /* warm yellow tint */
     border-color: oklch(88% 0.06 85);
@@ -85,7 +89,7 @@
   }
 
   /* ── Next EMI column ── */
-  .next-emi-col { min-width: 150px; text-align: right; }
+  .next-emi-col { min-width: 140px; text-align: right; }
   td.next-emi-col {
     background: var(--clr-blue-bg);
     border-color: oklch(85% 0.04 252);
@@ -191,4 +195,53 @@
   text-align: center;
   padding: clamp(32px, 5vw, 56px);
   color: var(--clr-text-muted);
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .tracker-container { padding: 8px; }
+
+  .tracker-header h2 { font-size: var(--text-lg); }
+
+  /* On touch devices, always show the cell buttons (no hover) */
+  .excel-table .amount-cell .cell-btns {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Slightly larger touch buttons */
+  .excel-table .amount-cell {
+    .approve-cell-btn,
+    .edit-cell-btn {
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+
+      mat-icon { font-size: 16px; width: 16px; height: 16px; line-height: 16px; }
+    }
+  }
+
+  /* Smaller member col on tight screens */
+  .excel-table .member-col { min-width: 100px; }
+
+  /* Hint bar to swipe */
+  .tracker-scroll::after {
+    content: '← swipe to scroll →';
+    display: block;
+    text-align: center;
+    font-size: 10px;
+    color: var(--clr-text-muted);
+    padding: 4px 0 6px;
+    background: var(--clr-surface);
+    border-top: 1px solid var(--clr-border);
+    letter-spacing: 0.5px;
+  }
+}
+
+/* ── Touch device: always-visible cell buttons ── */
+@media (hover: none) {
+  .excel-table .amount-cell .cell-btns {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }

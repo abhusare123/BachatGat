@@ -1,6 +1,6 @@
 <div class="shell-layout">
 
-  <!-- ── Sidebar ── -->
+  <!-- ── Sidebar (desktop) ── -->
   <nav class="sidebar">
     <div class="group-title">
       <mat-icon class="group-icon">savings</mat-icon>
@@ -33,3 +33,18 @@
   </main>
 
 </div>
+
+<!-- ── Bottom nav (mobile only) ── -->
+<nav class="bottom-nav">
+  <a class="bottom-nav-item"
+     *ngFor="let item of navItems"
+     [routerLink]="['/groups', groupId, item.path]"
+     routerLinkActive="active">
+    <mat-icon>{{ item.icon }}</mat-icon>
+    <span>{{ item.labelMr }}</span>
+  </a>
+  <a class="bottom-nav-item back-item" routerLink="/groups">
+    <mat-icon>arrow_back</mat-icon>
+    <span>परत</span>
+  </a>
+</nav>

@@ -20,7 +20,9 @@
       "Bash(ng build:*)",
       "Bash(npm install:*)",
       "Bash(npx ng:*)",
-      "WebFetch(domain:modern-css.com)"
+      "WebFetch(domain:modern-css.com)",
+      "Bash(cmd /c \"cd C:\\\\Users\\\\abhij\\\\source\\\\PloitProject\\\\BachatGat\\\\src\\\\bachat-gat-ui && npx ng build --configuration development 2>&1\")",
+      "Bash(cmd.exe /c \"cd /d C:\\\\Users\\\\abhij\\\\source\\\\PloitProject\\\\BachatGat\\\\src\\\\bachat-gat-ui && npx ng build --configuration development 2>&1\")"
     ]
   }
 }

@@ -95,3 +95,22 @@
   min-width: 28px;
   font-variant-numeric: tabular-nums;
 }
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 0;
+    align-items: flex-start;
+  }
+
+  .login-card {
+    max-width: 100%;
+    min-height: 100vh;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .login-header { padding: 40px 20px 28px; }
+
+  .login-body { padding: 24px 20px 32px; }
+}
