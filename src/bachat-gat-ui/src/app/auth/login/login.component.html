@@ -1,15 +1,18 @@
 <div class="login-container">
   <mat-card class="login-card">
-    <mat-card-header>
-      <mat-card-title>बचत गट | Bachat Gat</mat-card-title>
-      <mat-card-subtitle>{{ step === 'phone' ? 'Enter your phone number' : 'Enter OTP' }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
+    <div class="login-header">
+      <mat-icon class="login-logo">savings</mat-icon>
+      <h1>बचत गट</h1>
+      <p>{{ step === 'phone' ? 'Enter your phone number to continue' : 'Enter the OTP sent to your phone' }}</p>
+    </div>
+
+    <div class="login-body">
       <div *ngIf="error" class="error-message">{{ error }}</div>
 
       <form *ngIf="step === 'phone'" [formGroup]="phoneForm" (ngSubmit)="sendOtp()">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Phone Number (10 digits)</mat-label>
+          <mat-icon matPrefix>phone</mat-icon>
           <input matInput formControlName="phoneNumber" placeholder="9876543210" maxlength="10">
           <mat-error *ngIf="phoneForm.get('phoneNumber')?.hasError('pattern')">Enter a valid 10-digit number</mat-error>
         </mat-form-field>
@@ -22,15 +25,17 @@
       <form *ngIf="step === 'otp'" [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>OTP (6 digits)</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
           <input matInput formControlName="otp" maxlength="6" placeholder="123456">
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Your Name (for new users)</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
           <input matInput formControlName="fullName" placeholder="Full Name">
         </mat-form-field>
         <button mat-raised-button color="primary" type="submit" [disabled]="loading || otpForm.invalid" class="full-width">
           <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
-          <span *ngIf="!loading">Verify & Login</span>
+          <span *ngIf="!loading">Verify &amp; Login</span>
         </button>
         <div class="resend-row">
           <button mat-button type="button" (click)="resendOtp()" [disabled]="loading || resendCountdown > 0" class="resend-btn">
@@ -38,8 +43,8 @@
           </button>
           <span *ngIf="resendCountdown > 0" class="countdown">{{ resendCountdown }}s</span>
         </div>
-        <button mat-button type="button" (click)="step = 'phone'" class="full-width">Back</button>
+        <button mat-button type="button" (click)="step = 'phone'" class="full-width">← Back</button>
       </form>
-    </mat-card-content>
+    </div>
   </mat-card>
 </div>

@@ -4,32 +4,37 @@
   gap: 10px;
   color: #ffffff;
   text-decoration: none;
-  font-size: 20px;
+  font-size: clamp(16px, 2vw, 20px);
   font-weight: 700;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.88; }
 
   mat-icon {
-    font-size: 26px;
-    width: 26px;
-    height: 26px;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    filter: drop-shadow(0 1px 2px oklch(10% 0.05 148 / 0.4));
   }
 }
 
 .spacer { flex: 1; }
 
 .app-content {
-  min-height: calc(100vh - 64px);
-  background: #fafafa;
+  min-height: calc(100vh - 60px);
+  background: oklch(98% 0.004 148);
 }
 
 .user-info {
-  padding: 8px 16px 2px;
+  padding: 10px 18px 2px;
   font-weight: 600;
   font-size: 14px;
+  color: oklch(25% 0.05 148);
 }
 
 .user-phone {
-  padding: 0 16px 8px;
+  padding: 0 18px 10px;
   font-size: 12px;
-  color: #888;
+  color: oklch(55% 0.04 148);
 }

@@ -1,127 +1,194 @@
 .tracker-container {
-  padding: 16px;
+  padding: clamp(12px, 2vw, 20px);
 }
 
 .tracker-header {
-  margin-bottom: 16px;
-  h2 { margin: 0; }
+  margin-bottom: var(--sp-4);
+
+  h2 {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--clr-primary-800);
+  }
 }
 
 .loading-center {
   display: flex;
   justify-content: center;
-  padding: 40px;
+  padding: var(--sp-8);
 }
 
 .tracker-scroll {
   overflow-x: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--clr-border);
 }
 
+/* ── Excel-style table ── */
 .excel-table {
   border-collapse: collapse;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: var(--text-sm);
+  width: 100%;
+  font-variant-numeric: tabular-nums;
 
   th, td {
-    border: 1px solid #ccc;
-    padding: 6px 10px;
+    border: 1px solid oklch(88% 0.01 148);
+    padding: 7px 10px;
     text-align: right;
   }
 
+  /* ── Header ── */
   th {
-    background: #1a6b3a;
-    color: #fff;
+    background: var(--clr-primary-800);
+    color: #ffffff;
     font-weight: 600;
     text-align: center;
+    font-size: var(--text-xs);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    position: relative;
+  }
+
+  /* Hover highlight on header columns */
+  thead th:not(.member-col):hover {
+    background: var(--clr-primary-700);
   }
 
   .member-col {
     text-align: left;
     min-width: 150px;
+    font-weight: 600;
   }
 
   .sticky-col {
     position: sticky;
     left: 0;
     z-index: 2;
-    background: #fff;
+    background: #ffffff;
   }
 
   thead .sticky-col {
-    background: #1a6b3a;
+    background: var(--clr-primary-800);
     z-index: 3;
   }
 
-  .period-col { min-width: 100px; }
+  .period-col { min-width: 110px; }
 
-  .total-col { min-width: 130px; font-weight: 700; }
-  td.total-col { background-color: #fff9c4; }   /* yellow for approved totals */
-
-  .next-emi-col {
-    min-width: 140px;
-    text-align: right;
+  /* ── Total column ── */
+  .total-col { min-width: 140px; font-weight: 700; }
+  td.total-col {
+    background: oklch(97% 0.05 85);          /* warm yellow tint */
+    border-color: oklch(88% 0.06 85);
+    font-variant-numeric: tabular-nums;
   }
+
+  /* ── Next EMI column ── */
+  .next-emi-col { min-width: 150px; text-align: right; }
   td.next-emi-col {
-    background-color: #e3f2fd;   /* light blue for Next EMI */
+    background: var(--clr-blue-bg);
+    border-color: oklch(85% 0.04 252);
   }
+
   .emi-sub {
     display: block;
-    font-size: 10px;
-    color: #555;
+    font-size: var(--text-xs);
+    color: oklch(45% 0.08 252);
     font-weight: 400;
+    margin-top: 1px;
   }
 
-  .action-col { min-width: 60px; text-align: center; }
+  .action-col { min-width: 56px; text-align: center; }
 
+  /* ── Data cells ── */
   .amount-cell {
-    position: relative;
-    padding-right: 6px;
+    padding: 4px 8px;
 
-    &.paid    { color: #2e7d32; font-weight: 500; background-color: #f1f8e9; }
-    &.pending { color: #e65100; font-weight: 500; background-color: #fff3e0 !important; }
-    &.unpaid  { color: #bdbdbd; }
+    &.paid    {
+      color: var(--clr-primary-700);
+      font-weight: 600;
+      background: var(--clr-primary-50);
+    }
+    &.pending {
+      color: oklch(42% 0.17 60);
+      font-weight: 600;
+      background: var(--clr-amber-bg) !important;
+      border-color: oklch(88% 0.07 75) !important;
+    }
+    &.unpaid  { color: oklch(72% 0.02 148); }
+
+    /* Inner flex wrapper — td stays as table-cell */
+    .cell-content {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .cell-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 3px;
+    }
 
     .pending-badge {
       font-size: 11px;
-      vertical-align: middle;
+      flex-shrink: 0;
       cursor: default;
+    }
+
+    /* Action buttons — fade in on hover, never overlap text */
+    .cell-btns {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+    }
+
+    &:hover .cell-btns {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .approve-cell-btn,
     .edit-cell-btn {
-      display: none;
-      position: absolute;
-      top: 50%;
-      right: 0;
-      transform: translateY(-50%);
       width: 22px;
       height: 22px;
       line-height: 22px;
       padding: 0;
-      opacity: 0.75;
 
       mat-icon { font-size: 14px; width: 14px; height: 14px; line-height: 14px; }
     }
 
-    .approve-cell-btn {
-      right: 22px;   /* leave space for edit btn when both show */
-      color: #2e7d32;
-    }
-
-    &:hover .edit-cell-btn,
-    &:hover .approve-cell-btn { display: inline-flex; }
+    .approve-cell-btn { color: var(--clr-primary-700); }
+    .edit-cell-btn    { color: var(--clr-text-muted); }
   }
 
+  /* ── Totals row ── */
   .totals-row td {
-    background: #e8f5e9;
-    font-weight: 600;
+    background: color-mix(in oklch, var(--clr-primary-100) 60%, white);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--clr-primary-800);
   }
 
   .bold { font-weight: 700; }
+
+  /* ── Row hover ── */
+  tbody tr:not(.totals-row):hover td {
+    background: color-mix(in oklch, var(--clr-primary-50) 80%, white) !important;
+  }
+  tbody tr:not(.totals-row):hover td.pending {
+    background: color-mix(in oklch, var(--clr-amber-bg) 80%, oklch(95% 0.03 75)) !important;
+  }
 }
 
 .empty-state {
   text-align: center;
-  padding: 40px;
-  color: #888;
+  padding: clamp(32px, 5vw, 56px);
+  color: var(--clr-text-muted);
 }

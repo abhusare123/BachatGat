@@ -19,7 +19,8 @@
       "Bash(ng generate:*)",
       "Bash(ng build:*)",
       "Bash(npm install:*)",
-      "Bash(npx ng:*)"
+      "Bash(npx ng:*)",
+      "WebFetch(domain:modern-css.com)"
     ]
   }
 }

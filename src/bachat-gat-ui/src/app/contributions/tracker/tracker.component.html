@@ -28,21 +28,28 @@
               [class.paid]="cell.isPaid && cell.isApproved"
               [class.pending]="cell.isPaid && !cell.isApproved"
               [class.unpaid]="!cell.isPaid">
-            <span class="cell-amount">
-              {{ cell.isPaid ? (cell.amountPaid | currency:'INR':'symbol':'1.0-0') : '—' }}
-            </span>
-            <span *ngIf="cell.isPaid && !cell.isApproved" class="pending-badge" title="Pending approval">⏳</span>
-            <button *ngIf="cell.isPaid && !cell.isApproved && currentUserRole === GroupMemberRole.Admin"
-              mat-icon-button class="approve-cell-btn" title="Approve"
-              (click)="approveContribution(cell.contributionId!)">
-              <mat-icon>check_circle</mat-icon>
-            </button>
-            <button *ngIf="cell.isPaid && cell.contributionId"
-              mat-icon-button class="edit-cell-btn"
-              title="Edit"
-              (click)="openEditPayment(row.groupMemberId, row.memberName, cell.contributionId!, cell.period, cell.amountPaid)">
-              <mat-icon>edit</mat-icon>
-            </button>
+            <!-- Inner div carries the flex layout so td stays as table-cell -->
+            <div class="cell-content">
+              <span class="cell-main">
+                <span class="cell-amount">
+                  {{ cell.isPaid ? (cell.amountPaid | currency:'INR':'symbol':'1.0-0') : '—' }}
+                </span>
+                <span *ngIf="cell.isPaid && !cell.isApproved" class="pending-badge" title="Pending approval">⏳</span>
+              </span>
+              <span class="cell-btns">
+                <button *ngIf="cell.isPaid && !cell.isApproved && currentUserRole === GroupMemberRole.Admin"
+                  mat-icon-button class="approve-cell-btn" title="Approve"
+                  (click)="approveContribution(cell.contributionId!)">
+                  <mat-icon>check_circle</mat-icon>
+                </button>
+                <button *ngIf="cell.isPaid && cell.contributionId"
+                  mat-icon-button class="edit-cell-btn"
+                  title="Edit"
+                  (click)="openEditPayment(row.groupMemberId, row.memberName, cell.contributionId!, cell.period, cell.amountPaid)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </span>
+            </div>
           </td>
           <td class="total-col bold">{{ row.runningTotal | currency:'INR':'symbol':'1.0-0' }}</td>
           <td class="next-emi-col" [matTooltip]="emiTooltip(row)">

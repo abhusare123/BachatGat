@@ -1,33 +1,94 @@
-.page-container { padding: 16px; }
+.page-container { padding: clamp(12px, 2vw, 24px); }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
-  h2 { margin: 0; }
+  margin-bottom: var(--sp-6);
+
+  h2 {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--clr-primary-800);
+  }
 }
 
 .groups-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--sp-5);
 }
 
 .group-card {
   cursor: pointer;
-  transition: box-shadow 0.2s;
-  &:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
-  .description { color: #666; font-size: 13px; }
-  p { margin: 4px 0; }
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--clr-border) !important;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, translate 0.2s ease !important;
+
+  &:hover {
+    box-shadow: var(--shadow-lg) !important;
+    translate: 0 -2px;
+  }
+
+  /* Coloured top accent bar */
+  &::before {
+    content: '';
+    display: block;
+    height: 4px;
+    background: linear-gradient(90deg, var(--clr-primary-700), var(--clr-primary-400));
+  }
+
+  mat-card-title {
+    font-size: var(--text-md) !important;
+    font-weight: 700;
+    color: var(--clr-primary-800);
+  }
+
+  mat-card-subtitle { color: var(--clr-text-muted) !important; }
+
+  .stat-row {
+    display: flex;
+    gap: var(--sp-4);
+    margin-top: var(--sp-2);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-label {
+    font-size: var(--text-xs);
+    color: var(--clr-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  .stat-value {
+    font-size: var(--text-md);
+    font-weight: 700;
+    color: var(--clr-text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .description {
+    color: var(--clr-text-muted);
+    font-size: var(--text-sm);
+    margin-top: var(--sp-2);
+  }
 }
 
-.loading-center { display: flex; justify-content: center; padding: 40px; }
+.loading-center { display: flex; justify-content: center; padding: var(--sp-8); }
 
 .empty-state {
-  grid-column: 1/-1;
+  grid-column: 1 / -1;
   text-align: center;
-  padding: 60px;
-  color: #888;
-  mat-icon { font-size: 48px; width: 48px; height: 48px; }
+  padding: clamp(32px, 6vw, 64px);
+  color: var(--clr-text-muted);
+
+  mat-icon { font-size: 52px; width: 52px; height: 52px; opacity: 0.3; display: block; margin: 0 auto var(--sp-3); }
+  p { font-size: var(--text-md); margin: 0; }
 }

@@ -1,89 +1,133 @@
-.page-container {
-  padding: 16px;
-}
+.page-container { padding: clamp(12px, 2vw, 24px); }
 
 .page-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-5);
 
-  h2 { margin: 0; }
+  h2 {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--clr-primary-800);
+  }
 }
 
-.loading-center {
-  display: flex;
-  justify-content: center;
-  padding: 40px;
-}
+.loading-center { display: flex; justify-content: center; padding: var(--sp-8); }
 
+/* ── Summary stat cards ── */
 .summary-cards {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
 }
 
 .summary-card {
-  flex: 1;
-  min-width: 160px;
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--clr-border) !important;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    height: 3px;
+    background: linear-gradient(90deg, var(--clr-primary-700), var(--clr-primary-400));
+  }
+
+  mat-card-content { padding: 14px 16px 16px !important; }
 
   .summary-label {
-    font-size: 12px;
-    color: #666;
-    margin-bottom: 4px;
+    font-size: var(--text-xs);
+    color: var(--clr-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: var(--sp-1);
   }
 
   .summary-value {
-    font-size: 22px;
-    font-weight: 700;
-    color: #1b5e20;
+    font-size: clamp(18px, 2.2vw, 22px);
+    font-weight: 800;
+    color: var(--clr-primary-700);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.3px;
   }
 }
 
-.outstanding-card .summary-value {
-  color: #b71c1c;
+.outstanding-card {
+  &::before { background: linear-gradient(90deg, var(--clr-red), oklch(58% 0.18 25)); }
+  .summary-value { color: var(--clr-red); }
 }
 
+.paid-count-card {
+  &::before { background: linear-gradient(90deg, var(--clr-blue), oklch(60% 0.14 252)); }
+  .summary-value { color: var(--clr-blue); }
+}
+
+/* ── Repayment table ── */
 .table-scroll {
   overflow-x: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--clr-border);
 }
 
 .repayment-table {
   width: 100%;
   min-width: 600px;
+  font-variant-numeric: tabular-nums;
 
-  th { font-weight: 700; background: #f5f5f5; }
+  th {
+    background: var(--clr-primary-800) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
 
-  td, th { padding: 10px 16px; }
+  td, th { padding: 11px 16px; }
+
+  tr:nth-child(even):not(.paid-row) td {
+    background: oklch(99% 0.003 148);
+  }
+
+  tr:not(.paid-row):hover td {
+    background: var(--clr-primary-50) !important;
+    transition: background 0.1s;
+  }
 
   .paid-row td {
-    background-color: #f1f8e9;
-    color: #558b2f;
+    background: var(--clr-primary-50);
+    color: var(--clr-primary-700);
   }
 }
 
+/* ── Status chips ── */
 .chip-paid {
-  background-color: #c8e6c9 !important;
-  color: #2e7d32 !important;
-  font-weight: 600;
-  font-size: 12px;
+  background: color-mix(in oklch, var(--clr-primary-400) 20%, white) !important;
+  color: var(--clr-primary-700) !important;
+  font-weight: 700 !important;
+  font-size: var(--text-xs) !important;
 }
 
 .chip-pending {
-  background-color: #fff3e0 !important;
-  color: #e65100 !important;
-  font-size: 12px;
+  background: var(--clr-amber-bg) !important;
+  color: oklch(42% 0.17 60) !important;
+  font-weight: 600 !important;
+  font-size: var(--text-xs) !important;
 }
 
 .paid-date {
-  font-size: 11px;
-  color: #888;
+  font-size: var(--text-xs);
+  color: var(--clr-text-muted);
   margin-top: 2px;
 }
 
 .empty-state {
   text-align: center;
-  padding: 40px;
-  color: #888;
+  padding: clamp(32px, 5vw, 56px);
+  color: var(--clr-text-muted);
 }

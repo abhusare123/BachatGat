@@ -84,8 +84,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bachat Gat API v1"));
 }
 
-app.UseHttpsRedirection();
 app.UseCors();
+
+// Skip HTTPS redirect in dev — Angular calls http://localhost:5002
+// and redirecting strips the Authorization header, causing 401s.
+if (!app.Environment.IsDevelopment())
+    app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

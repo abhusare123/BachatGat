@@ -1,30 +1,141 @@
-.page-container { padding: 16px; }
+.page-container { padding: clamp(12px, 2vw, 24px); }
+
 .page-header {
-  display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-  h2 { margin: 0; }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sp-5);
+
+  h2 {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--clr-primary-800);
+  }
 }
-.loading-center { display: flex; justify-content: center; padding: 40px; }
-.loans-list { display: flex; flex-direction: column; gap: 16px; }
+
+.loading-center { display: flex; justify-content: center; padding: var(--sp-8); }
+
+.loans-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+/* ── Loan card ── */
 .loan-card {
-  mat-card-header { display: flex; align-items: center; }
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--clr-border) !important;
+  overflow: hidden;
+
+  /* Status colour strip on the left */
+  &.status-pending  { border-left: 4px solid oklch(72% 0.16 75) !important; }
+  &.status-approved { border-left: 4px solid var(--clr-primary-600) !important; }
+  &.status-active   { border-left: 4px solid var(--clr-blue) !important; }
+  &.status-closed   { border-left: 4px solid oklch(65% 0.04 148) !important; }
+  &.status-rejected { border-left: 4px solid var(--clr-red) !important; }
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: var(--sp-2);
+  }
+
+  mat-card-title {
+    font-size: var(--text-md) !important;
+    font-weight: 700;
+    color: var(--clr-text);
+  }
+
+  mat-card-subtitle {
+    font-size: var(--text-xs) !important;
+    color: var(--clr-text-muted) !important;
+  }
+
   .status-chip { margin-left: auto; }
 }
+
+/* ── Detail pills ── */
 .loan-details {
-  display: flex; flex-wrap: wrap; gap: 16px; margin: 12px 0;
-  .detail { display: flex; flex-direction: column; min-width: 100px; }
-  .label { font-size: 11px; color: #888; text-transform: uppercase; }
-  .value { font-size: 15px; font-weight: 500; }
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  margin: var(--sp-3) 0 var(--sp-2);
 }
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 90px;
+}
+
+.label {
+  font-size: var(--text-xs);
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.value {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--clr-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Vote bar ── */
 .vote-bar {
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
-  gap: 8px; margin-top: 8px; padding: 8px; background: #f9f9f9; border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: color-mix(in oklch, var(--clr-primary-50) 60%, white);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-border);
 }
-.vote-info { display: flex; align-items: center; gap: 4px; font-size: 14px; }
-.approve-icon { color: #2e7d32; font-size: 18px; }
-.reject-icon { color: #c62828; font-size: 18px; }
-.vote-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.change-vote-hint { font-size: 12px; color: #888; font-style: italic; }
+
+.vote-info {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.approve-icon { color: var(--clr-primary-700); font-size: 18px; }
+.reject-icon  { color: var(--clr-red);          font-size: 18px; }
+
+.vote-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.change-vote-hint {
+  font-size: var(--text-xs);
+  color: var(--clr-text-muted);
+  font-style: italic;
+}
+
+/* ── Empty state ── */
 .empty-state {
-  text-align: center; padding: 60px; color: #888;
-  mat-icon { font-size: 48px; width: 48px; height: 48px; }
+  text-align: center;
+  padding: clamp(32px, 6vw, 64px);
+  color: var(--clr-text-muted);
+
+  mat-icon {
+    font-size: 52px;
+    width: 52px;
+    height: 52px;
+    opacity: 0.3;
+    display: block;
+    margin: 0 auto var(--sp-3);
+  }
+
+  p { font-size: var(--text-md); margin: 0; }
 }
