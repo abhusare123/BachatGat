@@ -15,13 +15,13 @@ namespace BachatGat.Infrastructure.Migrations
                 name: "OtpCodes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
-                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsUsed = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 15, nullable: false),
+                    Code = table.Column<string>(type: "TEXT", maxLength: 6, nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    IsUsed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,11 +32,11 @@ namespace BachatGat.Infrastructure.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 15, nullable: false),
+                    FullName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,14 +47,14 @@ namespace BachatGat.Infrastructure.Migrations
                 name: "Groups",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MonthlyAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    InterestRatePercent = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
-                    CreatedByUserId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    MonthlyAmount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
+                    InterestRatePercent = table.Column<decimal>(type: "TEXT", precision: 5, scale: 2, nullable: false),
+                    CreatedByUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,13 +71,13 @@ namespace BachatGat.Infrastructure.Migrations
                 name: "GroupMembers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GroupId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false),
-                    JoinedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    GroupId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Role = table.Column<int>(type: "INTEGER", nullable: false),
+                    JoinedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,18 +100,18 @@ namespace BachatGat.Infrastructure.Migrations
                 name: "Loans",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GroupId = table.Column<int>(type: "int", nullable: false),
-                    RequestedByUserId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    TenureMonths = table.Column<int>(type: "int", nullable: false),
-                    InterestRatePercent = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
-                    Purpose = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    RequestedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ApprovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DisbursedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    GroupId = table.Column<int>(type: "INTEGER", nullable: false),
+                    RequestedByUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Amount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
+                    TenureMonths = table.Column<int>(type: "INTEGER", nullable: false),
+                    InterestRatePercent = table.Column<decimal>(type: "TEXT", precision: 5, scale: 2, nullable: false),
+                    Purpose = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    RequestedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ApprovedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DisbursedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -134,13 +134,16 @@ namespace BachatGat.Infrastructure.Migrations
                 name: "Contributions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GroupMemberId = table.Column<int>(type: "int", nullable: false),
-                    Period = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
-                    AmountPaid = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    PaidAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RecordedByUserId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    GroupMemberId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Period = table.Column<string>(type: "TEXT", maxLength: 7, nullable: false),
+                    AmountPaid = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
+                    PaidAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    RecordedByUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsApproved = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ApprovedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    ApprovedByUserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -151,6 +154,12 @@ namespace BachatGat.Infrastructure.Migrations
                         principalTable: "GroupMembers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Contributions_Users_ApprovedByUserId",
+                        column: x => x.ApprovedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Contributions_Users_RecordedByUserId",
                         column: x => x.RecordedByUserId,
@@ -163,16 +172,16 @@ namespace BachatGat.Infrastructure.Migrations
                 name: "LoanRepayments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    LoanId = table.Column<int>(type: "int", nullable: false),
-                    Period = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
-                    EMIAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    PrincipalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    InterestAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    IsPaid = table.Column<bool>(type: "bit", nullable: false),
-                    PaidAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    RecordedByUserId = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    LoanId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Period = table.Column<string>(type: "TEXT", maxLength: 7, nullable: false),
+                    EMIAmount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
+                    PrincipalAmount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
+                    InterestAmount = table.Column<decimal>(type: "TEXT", precision: 18, scale: 2, nullable: false),
+                    IsPaid = table.Column<bool>(type: "INTEGER", nullable: false),
+                    PaidAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    RecordedByUserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -195,13 +204,13 @@ namespace BachatGat.Infrastructure.Migrations
                 name: "LoanVotes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    LoanId = table.Column<int>(type: "int", nullable: false),
-                    VotedByUserId = table.Column<int>(type: "int", nullable: false),
-                    Vote = table.Column<int>(type: "int", nullable: false),
-                    VotedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    LoanId = table.Column<int>(type: "INTEGER", nullable: false),
+                    VotedByUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Vote = table.Column<int>(type: "INTEGER", nullable: false),
+                    VotedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Comment = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -219,6 +228,11 @@ namespace BachatGat.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contributions_ApprovedByUserId",
+                table: "Contributions",
+                column: "ApprovedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contributions_GroupMemberId_Period",

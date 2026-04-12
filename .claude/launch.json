@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "BachatGat API",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "src/BachatGat.Api", "--launch-profile", "http"],
+      "port": 5002
+    },
+    {
+      "name": "Angular UI",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "src/bachat-gat-ui", "start"],
+      "port": 4200
+    }
+  ]
+}
