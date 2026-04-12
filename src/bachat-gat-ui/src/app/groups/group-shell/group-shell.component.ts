@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -33,10 +33,14 @@ export class GroupShellComponent implements OnInit {
     { label: 'Members',       labelMr: 'सदस्य',  icon: 'group',           path: 'members'       },
   ];
 
-  constructor(private route: ActivatedRoute, private groupSvc: GroupService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private groupSvc: GroupService) {}
 
   ngOnInit() {
     this.groupId = +this.route.snapshot.paramMap.get('id')!;
     this.groupSvc.getGroup(this.groupId).subscribe(g => this.groupName.set(g.name));
+  }
+
+  goToAllGroups() {
+    this.router.navigate(['/groups'], { state: { showAll: true } });
   }
 }

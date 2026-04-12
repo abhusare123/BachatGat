@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using BachatGat.Application.Abstractions;
 using BachatGat.Application.DTOs;
 using BachatGat.Application.Interfaces;
@@ -46,20 +48,24 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt) : I
 
         await db.SaveChangesAsync();
 
-        var (accessToken, refreshToken) = jwt.GenerateTokens(user);
-        return new AuthResponse(accessToken, refreshToken, user.Id, user.FullName, user.PhoneNumber);
+        return await IssueTokensAsync(user);
     }
 
     public async Task<AuthResponse?> RefreshAsync(string refreshToken)
     {
-        var userId = jwt.ValidateRefreshToken(refreshToken);
-        if (userId == null) return null;
+        var tokenHash = HashToken(refreshToken);
 
-        var user = await db.Users.FindAsync(userId.Value);
-        if (user == null) return null;
+        var stored = await db.RefreshTokens
+            .Include(r => r.User)
+            .FirstOrDefaultAsync(r => r.TokenHash == tokenHash && !r.IsRevoked && r.ExpiresAt > DateTime.UtcNow);
 
-        var (accessToken, newRefreshToken) = jwt.GenerateTokens(user);
-        return new AuthResponse(accessToken, newRefreshToken, user.Id, user.FullName, user.PhoneNumber);
+        if (stored == null) return null;
+
+        // Revoke the used token (rotation — one-time use)
+        stored.IsRevoked = true;
+        await db.SaveChangesAsync();
+
+        return await IssueTokensAsync(stored.User);
     }
 
     public async Task<AuthResponse?> LoginAsync(string phoneNumber)
@@ -67,7 +73,29 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt) : I
         var user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
         if (user == null) return null;   // not registered — admin must add the user first
 
-        var (accessToken, refreshToken) = jwt.GenerateTokens(user);
+        return await IssueTokensAsync(user);
+    }
+
+    // ── helpers ──────────────────────────────────────────────────────────────
+
+    private async Task<AuthResponse> IssueTokensAsync(User user)
+    {
+        var (accessToken, refreshToken, refreshExpiresAt) = jwt.GenerateTokens(user);
+
+        db.RefreshTokens.Add(new RefreshToken
+        {
+            UserId = user.Id,
+            TokenHash = HashToken(refreshToken),
+            ExpiresAt = refreshExpiresAt
+        });
+        await db.SaveChangesAsync();
+
         return new AuthResponse(accessToken, refreshToken, user.Id, user.FullName, user.PhoneNumber);
+    }
+
+    private static string HashToken(string token)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(token));
+        return Convert.ToHexString(bytes).ToLowerInvariant();
     }
 }

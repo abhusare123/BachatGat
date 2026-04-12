@@ -21,7 +21,7 @@
       </li>
     </ul>
 
-    <a class="back-link" routerLink="/groups">
+    <a class="back-link" (click)="goToAllGroups()">
       <mat-icon>arrow_back</mat-icon>
       <span>All Groups</span>
     </a>
@@ -43,7 +43,7 @@
     <mat-icon>{{ item.icon }}</mat-icon>
     <span>{{ item.labelMr }}</span>
   </a>
-  <a class="bottom-nav-item back-item" routerLink="/groups">
+  <a class="bottom-nav-item back-item" (click)="goToAllGroups()">
     <mat-icon>arrow_back</mat-icon>
     <span>परत</span>
   </a>

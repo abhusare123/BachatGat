@@ -14,6 +14,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Loan> Loans => Set<Loan>();
     public DbSet<LoanVote> LoanVotes => Set<LoanVote>();
     public DbSet<LoanRepayment> LoanRepayments => Set<LoanRepayment>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -72,6 +73,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.HasIndex(v => new { v.LoanId, v.VotedByUserId }).IsUnique();
             e.HasOne(v => v.Loan).WithMany(l => l.Votes).HasForeignKey(v => v.LoanId);
             e.HasOne(v => v.VotedBy).WithMany().HasForeignKey(v => v.VotedByUserId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<RefreshToken>(e =>
+        {
+            e.HasIndex(r => r.TokenHash).IsUnique();
+            e.Property(r => r.TokenHash).HasMaxLength(64);
+            e.HasOne(r => r.User).WithMany().HasForeignKey(r => r.UserId).OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<LoanRepayment>(e =>

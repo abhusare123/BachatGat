@@ -30,7 +30,7 @@ export class GroupListComponent implements OnInit {
       next: groups => {
         this.loading = false;
         // Auto-navigate if only one group — skip the list screen entirely
-        if (groups.length === 1) {
+        if (groups.length === 1 && !history.state?.showAll) {
           this.router.navigate(['/groups', groups[0].id, 'contributions'], { replaceUrl: true });
           return;
         }

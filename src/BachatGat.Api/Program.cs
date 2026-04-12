@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using BachatGat.Application;
 using BachatGat.Application.Exceptions;
@@ -9,6 +10,33 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Production HTTPS certificate — loaded from config / env vars.
+// Set ONE of these pairs before deploying:
+//   PEM :  Kestrel__Certificate__Path=/etc/ssl/cert.pem  +  Kestrel__Certificate__KeyPath=/etc/ssl/key.pem
+//   PFX :  Kestrel__Certificate__Path=/etc/ssl/cert.pfx  +  Kestrel__Certificate__Password=<secret>
+if (!builder.Environment.IsDevelopment())
+{
+    builder.WebHost.ConfigureKestrel(kestrel =>
+    {
+        var cfg = builder.Configuration;
+        var certPath = cfg["Kestrel:Certificate:Path"];
+        var keyPath  = cfg["Kestrel:Certificate:KeyPath"];
+        var certPass = cfg["Kestrel:Certificate:Password"];
+
+        if (string.IsNullOrWhiteSpace(certPath))
+            throw new InvalidOperationException(
+                "Kestrel:Certificate:Path is not set. " +
+                "Provide a PEM cert+key or a PFX file via environment variables.");
+
+        kestrel.ConfigureHttpsDefaults(https =>
+        {
+            https.ServerCertificate = string.IsNullOrWhiteSpace(keyPath)
+                ? new X509Certificate2(certPath, certPass)           // PFX
+                : X509Certificate2.CreateFromPemFile(certPath, keyPath); // PEM
+        });
+    });
+}
 
 // Infrastructure (EF Core, SMS, JWT, LoanCalculator)
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -49,11 +77,14 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// CORS for Angular dev server
+// CORS — origins come from config so dev and prod can each declare their own
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? ["http://localhost:4200"];
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
@@ -92,10 +123,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors();
 
-// Skip HTTPS redirect in dev — Angular calls http://localhost:5002
-// and redirecting strips the Authorization header, causing 401s.
 if (!app.Environment.IsDevelopment())
+{
+    // HSTS tells browsers to always use HTTPS for this origin (max-age 1 year)
+    app.UseHsts();
+    // Redirect any stray HTTP requests to HTTPS
     app.UseHttpsRedirection();
+}
+// Dev: skip redirect — Angular calls http://localhost:5002 and redirecting
+// strips the Authorization header, causing 401s.
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -4,6 +4,6 @@ namespace BachatGat.Core.Interfaces;
 
 public interface IJwtService
 {
-    (string AccessToken, string RefreshToken) GenerateTokens(User user);
-    int? ValidateRefreshToken(string token);
+    /// <summary>Returns a JWT access token, an opaque refresh token, and the refresh token's expiry.</summary>
+    (string AccessToken, string RefreshToken, DateTime RefreshExpiresAt) GenerateTokens(User user);
 }
