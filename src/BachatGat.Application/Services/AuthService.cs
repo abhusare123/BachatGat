@@ -6,10 +6,11 @@ using BachatGat.Application.Interfaces;
 using BachatGat.Core.Entities;
 using BachatGat.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BachatGat.Application.Services;
 
-public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt) : IAuthService
+public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt, ILogger<AuthService> logger) : IAuthService
 {
     public async Task SendOtpAsync(string phoneNumber)
     {
@@ -22,6 +23,8 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt) : I
         });
         await db.SaveChangesAsync();
         await sms.SendOtpAsync(phoneNumber, otp);
+
+        logger.LogInformation("OTP sent to {PhoneNumber}", phoneNumber);
     }
 
     public async Task<AuthResponse?> VerifyOtpAsync(string phoneNumber, string otp, string fullName)
@@ -31,11 +34,17 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt) : I
             .OrderByDescending(o => o.CreatedAt)
             .FirstOrDefaultAsync();
 
-        if (otpRecord == null) return null;
+        if (otpRecord == null)
+        {
+            logger.LogWarning("OTP verification failed for {PhoneNumber} — invalid or expired code", phoneNumber);
+            return null;
+        }
 
         otpRecord.IsUsed = true;
 
         var user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+        bool isNew = user == null;
+
         if (user == null)
         {
             user = new User { PhoneNumber = phoneNumber, FullName = fullName };
@@ -48,6 +57,11 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt) : I
 
         await db.SaveChangesAsync();
 
+        if (isNew)
+            logger.LogInformation("New user registered via OTP — UserId {UserId}, Phone {PhoneNumber}", user.Id, phoneNumber);
+        else
+            logger.LogInformation("User {UserId} authenticated via OTP", user.Id);
+
         return await IssueTokensAsync(user);
     }
 
@@ -59,20 +73,30 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt) : I
             .Include(r => r.User)
             .FirstOrDefaultAsync(r => r.TokenHash == tokenHash && !r.IsRevoked && r.ExpiresAt > DateTime.UtcNow);
 
-        if (stored == null) return null;
+        if (stored == null)
+        {
+            logger.LogWarning("Refresh token validation failed — token not found, revoked, or expired");
+            return null;
+        }
 
         // Revoke the used token (rotation — one-time use)
         stored.IsRevoked = true;
         await db.SaveChangesAsync();
 
+        logger.LogInformation("Refresh token rotated for UserId {UserId}", stored.User.Id);
         return await IssueTokensAsync(stored.User);
     }
 
     public async Task<AuthResponse?> LoginAsync(string phoneNumber)
     {
         var user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
-        if (user == null) return null;   // not registered — admin must add the user first
+        if (user == null)
+        {
+            logger.LogWarning("Login attempted for unregistered phone {PhoneNumber}", phoneNumber);
+            return null;
+        }
 
+        logger.LogInformation("User {UserId} logged in via direct login", user.Id);
         return await IssueTokensAsync(user);
     }
 

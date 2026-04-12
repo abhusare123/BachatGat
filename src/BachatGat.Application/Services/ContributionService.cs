@@ -5,10 +5,11 @@ using BachatGat.Application.Interfaces;
 using BachatGat.Core.Entities;
 using BachatGat.Core.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BachatGat.Application.Services;
 
-public class ContributionService(IAppDbContext db) : IContributionService
+public class ContributionService(IAppDbContext db, ILogger<ContributionService> logger) : IContributionService
 {
     public async Task<List<ContributionDto>> GetContributionsAsync(int groupId, string? period, int currentUserId)
     {
@@ -58,6 +59,10 @@ public class ContributionService(IAppDbContext db) : IContributionService
             ApprovedByUserId = autoApprove ? currentUserId : null
         });
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Contribution recorded — GroupId {GroupId}, MemberId {MemberId}, Period {Period}, Amount {Amount:C}, AutoApproved {AutoApproved}, by UserId {UserId}",
+            groupId, request.GroupMemberId, request.Period, request.AmountPaid, autoApprove, currentUserId);
     }
 
     public async Task UpdateContributionAsync(int groupId, int contributionId, UpdateContributionRequest request, int currentUserId)
@@ -72,6 +77,7 @@ public class ContributionService(IAppDbContext db) : IContributionService
             .FirstOrDefaultAsync(c => c.Id == contributionId && c.GroupMember.GroupId == groupId)
             ?? throw new NotFoundException();
 
+        var oldAmount = contribution.AmountPaid;
         contribution.AmountPaid = request.AmountPaid;
 
         // Editing resets approval (needs re-review), unless editor is Admin
@@ -89,6 +95,10 @@ public class ContributionService(IAppDbContext db) : IContributionService
         }
 
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Contribution {ContributionId} updated — Amount {OldAmount:C} → {NewAmount:C}, ApprovalReset {ApprovalReset}, by UserId {UserId}",
+            contributionId, oldAmount, request.AmountPaid, callerMembership.Role != GroupMemberRole.Admin, currentUserId);
     }
 
     public async Task ApproveContributionAsync(int groupId, int contributionId, int currentUserId)
@@ -107,6 +117,10 @@ public class ContributionService(IAppDbContext db) : IContributionService
         contribution.ApprovedAt = DateTime.UtcNow;
         contribution.ApprovedByUserId = currentUserId;
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Contribution {ContributionId} approved by UserId {UserId} (GroupId {GroupId})",
+            contributionId, currentUserId, groupId);
     }
 
     public async Task<ContributionTrackerDto> GetTrackerAsync(int groupId, int currentUserId)

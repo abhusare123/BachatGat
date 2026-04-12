@@ -6,10 +6,11 @@ using BachatGat.Core.Entities;
 using BachatGat.Core.Enums;
 using BachatGat.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BachatGat.Application.Services;
 
-public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanService
+public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<LoanService> logger) : ILoanService
 {
     public async Task<List<LoanDto>> GetLoansAsync(int groupId, int currentUserId)
     {
@@ -51,6 +52,10 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanS
         };
         db.Loans.Add(loan);
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Loan requested — LoanId {LoanId}, GroupId {GroupId}, UserId {UserId}, Amount {Amount:C}, Tenure {TenureMonths} months",
+            loan.Id, groupId, currentUserId, request.Amount, request.TenureMonths);
 
         return loan.Id;
     }
@@ -113,6 +118,11 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanS
         }
 
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Vote {Action} on LoanId {LoanId} by UserId {UserId} — choice: {Vote}",
+            isNew ? "cast" : "changed", id, currentUserId, request.Vote);
+
         return loan.Status;
     }
 
@@ -132,6 +142,10 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanS
         loan.Status = LoanStatus.Approved;
         loan.ApprovedAt = DateTime.UtcNow;
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "LoanId {LoanId} approved by UserId {UserId} (GroupId {GroupId})",
+            id, currentUserId, loan.GroupId);
     }
 
     public async Task RejectLoanAsync(int id, int currentUserId)
@@ -149,6 +163,10 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanS
 
         loan.Status = LoanStatus.Rejected;
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "LoanId {LoanId} rejected by UserId {UserId} (GroupId {GroupId})",
+            id, currentUserId, loan.GroupId);
     }
 
     public async Task DisburseAsync(int id, int currentUserId)
@@ -184,6 +202,10 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanS
         }
 
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "LoanId {LoanId} disbursed by UserId {UserId} — Amount {Amount:C}, {Instalments} instalments from {StartPeriod}",
+            id, currentUserId, loan.Amount, schedule.Count, startPeriod);
     }
 
     public async Task<List<LoanRepaymentDto>> GetRepaymentsAsync(int id, int currentUserId)
@@ -226,6 +248,14 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc) : ILoanS
         if (allPaid) loan.Status = LoanStatus.Closed;
 
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Repayment {RepaymentId} for LoanId {LoanId} marked paid by UserId {UserId} (period {Period})",
+            repaymentId, loanId, currentUserId, repayment.Period);
+
+        if (loan.Status == LoanStatus.Closed)
+            logger.LogInformation("LoanId {LoanId} fully repaid — status set to Closed", loanId);
+
         return loan.Status;
     }
 

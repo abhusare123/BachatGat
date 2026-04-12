@@ -5,10 +5,11 @@ using BachatGat.Application.Interfaces;
 using BachatGat.Core.Entities;
 using BachatGat.Core.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BachatGat.Application.Services;
 
-public class GroupService(IAppDbContext db) : IGroupService
+public class GroupService(IAppDbContext db, ILogger<GroupService> logger) : IGroupService
 {
     public async Task<List<GroupDto>> GetGroupsAsync(int currentUserId)
     {
@@ -42,6 +43,10 @@ public class GroupService(IAppDbContext db) : IGroupService
             Role = GroupMemberRole.Admin
         });
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Group created — GroupId {GroupId}, Name '{GroupName}', by UserId {UserId}",
+            group.Id, group.Name, currentUserId);
 
         return new GroupDto(group.Id, group.Name, group.Description,
             group.MonthlyAmount, group.InterestRatePercent, group.CreatedAt, 1);
@@ -81,6 +86,10 @@ public class GroupService(IAppDbContext db) : IGroupService
         group.MonthlyAmount = request.MonthlyAmount;
         group.InterestRatePercent = request.InterestRatePercent;
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Group {GroupId} updated by UserId {UserId} — new name '{GroupName}'",
+            groupId, currentUserId, request.Name);
     }
 
     public async Task AddMemberAsync(int groupId, AddMemberRequest request, int currentUserId)
@@ -91,6 +100,8 @@ public class GroupService(IAppDbContext db) : IGroupService
             throw new ForbiddenException();
 
         var user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
+        bool newUser = user == null;
+
         if (user == null)
         {
             if (string.IsNullOrWhiteSpace(request.FullName))
@@ -99,6 +110,10 @@ public class GroupService(IAppDbContext db) : IGroupService
             user = new User { PhoneNumber = request.PhoneNumber, FullName = request.FullName.Trim() };
             db.Users.Add(user);
             await db.SaveChangesAsync();
+
+            logger.LogInformation(
+                "New user account created for phone {PhoneNumber} while adding to GroupId {GroupId} by UserId {UserId}",
+                request.PhoneNumber, groupId, currentUserId);
         }
 
         var existing = await db.GroupMembers
@@ -109,10 +124,18 @@ public class GroupService(IAppDbContext db) : IGroupService
             if (existing.IsActive) throw new ConflictException("User is already a member");
             existing.IsActive = true;
             existing.Role = request.Role;
+
+            logger.LogInformation(
+                "Member UserId {TargetUserId} reactivated in GroupId {GroupId} with role {Role} by UserId {UserId}",
+                user.Id, groupId, request.Role, currentUserId);
         }
         else
         {
             db.GroupMembers.Add(new GroupMember { GroupId = groupId, UserId = user.Id, Role = request.Role });
+
+            logger.LogInformation(
+                "Member UserId {TargetUserId} added to GroupId {GroupId} with role {Role} by UserId {UserId}",
+                user.Id, groupId, request.Role, currentUserId);
         }
 
         await db.SaveChangesAsync();
@@ -131,5 +154,9 @@ public class GroupService(IAppDbContext db) : IGroupService
 
         target.IsActive = false;
         await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "MemberId {MemberId} (UserId {TargetUserId}) removed from GroupId {GroupId} by UserId {UserId}",
+            memberId, target.UserId, groupId, currentUserId);
     }
 }
