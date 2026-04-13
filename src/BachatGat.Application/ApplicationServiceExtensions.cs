@@ -13,6 +13,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IContributionService, ContributionService>();
         services.AddScoped<ILoanService, LoanService>();
         services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<IExpenseService, ExpenseService>();
         return services;
     }
 }

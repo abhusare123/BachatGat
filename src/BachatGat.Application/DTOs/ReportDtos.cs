@@ -5,6 +5,7 @@ public record FundSummaryDto(
     decimal TotalLoansDisbursed,
     decimal TotalLoanOutstanding,
     decimal TotalInterestCollected,
+    decimal TotalExpenses,
     decimal AvailableBalance
 );
 

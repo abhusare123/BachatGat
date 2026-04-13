@@ -26,9 +26,14 @@ public class ReportService(IAppDbContext db) : IReportService
         decimal totalInterestCollected = activeLoans.SelectMany(l => l.Repayments.Where(r => r.IsPaid)).Sum(r => r.InterestAmount);
         decimal totalPrincipalRepaid   = activeLoans.SelectMany(l => l.Repayments.Where(r => r.IsPaid)).Sum(r => r.PrincipalAmount);
         decimal outstanding            = totalDisbursed - totalPrincipalRepaid;
-        decimal available              = totalCollected + totalInterestCollected - totalDisbursed + totalPrincipalRepaid;
 
-        return new FundSummaryDto(totalCollected, totalDisbursed, outstanding, totalInterestCollected, available);
+        decimal totalExpenses = await db.Expenses
+            .Where(e => e.GroupId == groupId)
+            .SumAsync(e => e.Amount);
+
+        decimal available = totalCollected + totalInterestCollected - totalDisbursed + totalPrincipalRepaid - totalExpenses;
+
+        return new FundSummaryDto(totalCollected, totalDisbursed, outstanding, totalInterestCollected, totalExpenses, available);
     }
 
     public async Task<List<LoanLedgerItemDto>> GetLoanLedgerAsync(int groupId, int currentUserId)
