@@ -1,8 +1,20 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BachatGat.Application.DTOs;
 
-public record RecordContributionRequest(int GroupMemberId, string Period, decimal AmountPaid);
+public record RecordContributionRequest(
+    [Range(1, int.MaxValue, ErrorMessage = "GroupMemberId must be a valid member ID")]
+    int GroupMemberId,
 
-public record UpdateContributionRequest(decimal AmountPaid);
+    [Required, RegularExpression(@"^\d{4}-\d{2}$", ErrorMessage = "Period must be in YYYY-MM format")]
+    string Period,
+
+    [Range(0.01, double.MaxValue, ErrorMessage = "AmountPaid must be greater than 0")]
+    decimal AmountPaid);
+
+public record UpdateContributionRequest(
+    [Range(0.01, double.MaxValue, ErrorMessage = "AmountPaid must be greater than 0")]
+    decimal AmountPaid);
 
 public record ContributionDto(int Id, int GroupMemberId, string MemberName, string Period, decimal AmountPaid, DateTime PaidAt, bool IsApproved, DateTime? ApprovedAt);
 

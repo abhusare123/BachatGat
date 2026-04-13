@@ -1,10 +1,24 @@
+using System.ComponentModel.DataAnnotations;
 using BachatGat.Core.Enums;
 
 namespace BachatGat.Application.DTOs;
 
-public record RequestLoanRequest(decimal Amount, int TenureMonths, string? Purpose);
+public record RequestLoanRequest(
+    [Range(1, double.MaxValue, ErrorMessage = "Amount must be greater than 0")]
+    decimal Amount,
 
-public record VoteLoanRequest(VoteChoice Vote, string? Comment);
+    [Range(1, 360, ErrorMessage = "TenureMonths must be between 1 and 360")]
+    int TenureMonths,
+
+    [MaxLength(500)]
+    string? Purpose);
+
+public record VoteLoanRequest(
+    [EnumDataType(typeof(VoteChoice))]
+    VoteChoice Vote,
+
+    [MaxLength(500)]
+    string? Comment);
 
 public record LoanDto(
     int Id, int GroupId, int RequestedByUserId, string RequestedByName,
