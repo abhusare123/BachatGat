@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>Add Expense / खर्च नोंदवा</h2>
+<mat-dialog-content>
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+  <form [formGroup]="form" class="dialog-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description / वर्णन</mat-label>
+      <input matInput formControlName="description" placeholder="e.g. Meeting snacks">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Amount (₹) / रक्कम</mat-label>
+      <input matInput type="number" formControlName="amount" min="0.01">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Category / प्रकार</mat-label>
+      <mat-select formControlName="category">
+        <mat-option *ngFor="let c of categories" [value]="c.value">{{ c.label }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Date / तारीख</mat-label>
+      <input matInput type="date" formControlName="date">
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="form.invalid || saving" (click)="save()">
+    Save
+  </button>
+</mat-dialog-actions>

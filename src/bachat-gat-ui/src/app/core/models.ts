@@ -123,3 +123,20 @@ export interface LoanLedgerItem {
   status: string;
   requestedAt: string;
 }
+
+export interface ExpenseDto {
+  id: number;
+  description: string;
+  amount: number;
+  category: string;
+  date: string;
+  recordedAt: string;
+  recordedByName: string;
+}
+
+export interface AddExpenseRequest {
+  description: string;
+  amount: number;
+  category: number;
+  date: string;
+}
