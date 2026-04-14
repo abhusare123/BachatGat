@@ -31,7 +31,7 @@ try
     // Set ONE of these pairs before deploying:
     //   PEM :  Kestrel__Certificate__Path=/etc/ssl/cert.pem  +  Kestrel__Certificate__KeyPath=/etc/ssl/key.pem
     //   PFX :  Kestrel__Certificate__Path=/etc/ssl/cert.pfx  +  Kestrel__Certificate__Password=<secret>
-    if (!builder.Environment.IsDevelopment())
+    if (!builder.Environment.IsDevelopment() && !builder.Environment.IsEnvironment("Docker"))
     {
         builder.WebHost.ConfigureKestrel(kestrel =>
         {

@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+src/bachat-gat-ui/
+**/logs/
+.vs/
+**/*.user
+**/*.suo
+.env
+.env.*
+.git/
+.gitignore
+docs/
+README.md
+**/*Tests*/

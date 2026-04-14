@@ -36,10 +36,18 @@
       </mat-card-content>
     </mat-card>
 
+    <mat-card class="summary-card red">
+      <mat-card-content>
+        <mat-icon>payments</mat-icon>
+        <div class="stat-label">Total Expenses / एकूण खर्च</div>
+        <div class="stat-value">{{ summary.totalExpenses | currency:'INR':'symbol':'1.0-0' }}</div>
+      </mat-card-content>
+    </mat-card>
+
     <mat-card class="summary-card purple highlight">
       <mat-card-content>
         <mat-icon>account_balance_wallet</mat-icon>
-        <div class="stat-label">Available Balance / उपलब्ध शिल्लक</div>
+        <div class="stat-label">Remaining Balance / निव्वळ शिल्लक</div>
         <div class="stat-value">{{ summary.availableBalance | currency:'INR':'symbol':'1.0-0' }}</div>
       </mat-card-content>
     </mat-card>

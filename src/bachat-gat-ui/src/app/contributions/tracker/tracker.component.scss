@@ -3,8 +3,7 @@
 }
 
 .tracker-header {
-  margin-bottom: var(--sp-4);
-
+  margin-bottom: 16px;
   h2 {
     margin: 0;
     font-size: var(--text-xl);
@@ -15,181 +14,170 @@
 .loading-center {
   display: flex;
   justify-content: center;
-  padding: var(--sp-8);
+  padding: 48px;
 }
 
-/* ── Scroll wrapper: always horizontal scroll, touch-friendly ── */
-.tracker-scroll {
+/* ── Outer table ── */
+.table-scroll {
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--clr-border);
-  /* Scroll snap for better column browsing on touch */
-  scroll-snap-type: x proximity;
 }
 
-/* ── Excel-style table ── */
-.excel-table {
-  border-collapse: collapse;
-  white-space: nowrap;
-  font-size: var(--text-sm);
+.tracker-table {
   width: 100%;
-  font-variant-numeric: tabular-nums;
+  min-width: 560px;
 
-  th, td {
-    border: 1px solid oklch(88% 0.01 148);
-    padding: 7px 10px;
-    text-align: right;
-  }
-
-  /* ── Header ── */
-  th {
+  /* Sticky header */
+  thead tr th {
     background: var(--clr-primary-800);
-    color: #ffffff;
-    font-weight: 600;
-    text-align: center;
+    color: #fff;
     font-size: var(--text-xs);
-    letter-spacing: 0.3px;
+    font-weight: 700;
     text-transform: uppercase;
-    position: relative;
+    letter-spacing: 0.4px;
   }
 
-  /* Hover highlight on header columns */
-  thead th:not(.member-col):hover {
-    background: var(--clr-primary-700);
+  /* Compact cell height — override Material's default 52px */
+  td.mat-mdc-cell, th.mat-mdc-header-cell, td.mat-mdc-footer-cell {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
   }
+}
 
-  .member-col {
-    text-align: left;
-    min-width: 130px;
-    font-weight: 600;
-  }
+/* ── Member summary rows ── */
+.member-row {
+  cursor: pointer;
+  transition: background 0.12s;
 
-  .sticky-col {
-    position: sticky;
-    left: 0;
-    z-index: 2;
-    background: #ffffff;
-  }
+  &:hover { background: color-mix(in oklch, var(--clr-primary-50) 70%, white); }
+  &.expanded-row { background: var(--clr-primary-50); }
+}
 
-  thead .sticky-col {
-    background: var(--clr-primary-800);
-    z-index: 3;
-  }
+.right-align { text-align: right !important; }
 
-  .period-col { min-width: 100px; }
+.expand-cell { width: 48px; padding: 0 4px !important; }
 
-  /* ── Total column ── */
-  .total-col { min-width: 120px; font-weight: 700; }
-  td.total-col {
-    background: oklch(97% 0.05 85);          /* warm yellow tint */
-    border-color: oklch(88% 0.06 85);
-    font-variant-numeric: tabular-nums;
-  }
+.member-name-cell {
+  font-weight: 600;
+  color: var(--clr-primary-900);
+}
 
-  /* ── Next EMI column ── */
-  .next-emi-col { min-width: 140px; text-align: right; }
-  td.next-emi-col {
-    background: var(--clr-blue-bg);
-    border-color: oklch(85% 0.04 252);
-  }
+.total-cell {
+  font-weight: 700;
+  background: oklch(97% 0.05 85);
+  color: oklch(40% 0.12 80);
+}
+
+.emi-cell {
+  background: var(--clr-blue-bg);
+  color: oklch(35% 0.10 252);
+  font-weight: 700;
 
   .emi-sub {
     display: block;
     font-size: var(--text-xs);
-    color: oklch(45% 0.08 252);
     font-weight: 400;
+    color: oklch(50% 0.08 252);
     margin-top: 1px;
   }
+}
 
-  .action-col { min-width: 56px; text-align: center; }
+.action-cell { text-align: center !important; padding: 4px !important; }
 
-  /* ── Data cells ── */
-  .amount-cell {
-    padding: 4px 8px;
+/* Status colour helpers used in summary row */
+.paid    { color: var(--clr-primary-700); font-weight: 600; }
+.pending { color: oklch(42% 0.17 60);     font-weight: 600; }
+.unpaid  { color: var(--clr-text-muted); }
+.badge   { font-size: 11px; margin-left: 2px; }
 
-    &.paid    {
-      color: var(--clr-primary-700);
-      font-weight: 600;
-      background: var(--clr-primary-50);
-    }
-    &.pending {
-      color: oklch(42% 0.17 60);
-      font-weight: 600;
-      background: var(--clr-amber-bg) !important;
-      border-color: oklch(88% 0.07 75) !important;
-    }
-    &.unpaid  { color: oklch(72% 0.02 148); }
+/* ── Detail / expand row — no height when collapsed ── */
+.detail-row {
+  height: 0 !important;
+  overflow: hidden;
 
-    /* Inner flex wrapper — td stays as table-cell */
-    .cell-content {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-    }
-
-    .cell-main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 3px;
-    }
-
-    .pending-badge {
-      font-size: 11px;
-      flex-shrink: 0;
-      cursor: default;
-    }
-
-    /* Action buttons — fade in on hover, never overlap text */
-    .cell-btns {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.12s ease;
-    }
-
-    &:hover .cell-btns {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .approve-cell-btn,
-    .edit-cell-btn {
-      width: 22px;
-      height: 22px;
-      line-height: 22px;
-      padding: 0;
-
-      mat-icon { font-size: 14px; width: 14px; height: 14px; line-height: 14px; }
-    }
-
-    .approve-cell-btn { color: var(--clr-primary-700); }
-    .edit-cell-btn    { color: var(--clr-text-muted); }
-  }
-
-  /* ── Totals row ── */
-  .totals-row td {
-    background: color-mix(in oklch, var(--clr-primary-100) 60%, white);
-    font-weight: 700;
-    font-size: var(--text-sm);
-    color: var(--clr-primary-800);
-  }
-
-  .bold { font-weight: 700; }
-
-  /* ── Row hover ── */
-  tbody tr:not(.totals-row):hover td {
-    background: color-mix(in oklch, var(--clr-primary-50) 80%, white) !important;
-  }
-  tbody tr:not(.totals-row):hover td.pending {
-    background: color-mix(in oklch, var(--clr-amber-bg) 80%, oklch(95% 0.03 75)) !important;
+  td {
+    padding: 0 !important;
+    border-bottom: none !important;
   }
 }
+
+.detail-cell { padding: 0 !important; }
+
+/* Collapsed by default — height 0, overflow hidden */
+.tx-panel {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 220ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Expanded state */
+  &.tx-panel--open {
+    max-height: 2000px; /* large enough for any number of rows */
+  }
+}
+
+/* ── Child transaction table ── */
+.tx-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+
+  th {
+    background: color-mix(in oklch, var(--clr-primary-800) 85%, white);
+    color: #fff;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 6px 12px;
+    border: 1px solid var(--clr-primary-700);
+  }
+
+  td {
+    padding: 6px 12px;
+    border: 1px solid oklch(90% 0.01 148);
+    vertical-align: middle;
+  }
+
+  tbody tr:nth-child(even) td { background: oklch(97.5% 0.01 148); }
+  tr.tx-pending td             { background: var(--clr-amber-bg) !important; }
+  tr.tx-unpaid td              { color: var(--clr-text-muted); }
+
+  .tx-period  { font-weight: 600; min-width: 70px; }
+  .tx-amount  { min-width: 90px; }
+  .tx-status  { min-width: 100px; }
+  .tx-actions { white-space: nowrap; min-width: 80px; padding: 2px 8px !important; }
+
+  .chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.2px;
+
+    &.approved { background: var(--clr-primary-100); color: var(--clr-primary-800); }
+    &.pending  { background: oklch(95% 0.09 80);     color: oklch(42% 0.17 60);     }
+    &.unpaid   { background: oklch(93% 0.01 148);    color: var(--clr-text-muted);  }
+  }
+
+  .approve-btn { color: var(--clr-primary-700); width: 28px; height: 28px;
+    mat-icon { font-size: 16px; width: 16px; height: 16px; } }
+  .edit-btn    { color: var(--clr-text-muted);   width: 28px; height: 28px;
+    mat-icon { font-size: 16px; width: 16px; height: 16px; } }
+}
+
+/* ── Footer row ── */
+.footer-row td {
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--clr-primary-800);
+  background: color-mix(in oklch, var(--clr-primary-100) 60%, white);
+  border-top: 2px solid var(--clr-primary-200);
+  font-variant-numeric: tabular-nums;
+}
+
+.footer-label { font-weight: 700; }
 
 .empty-state {
   text-align: center;
@@ -198,50 +186,7 @@
 }
 
 /* ── Mobile ── */
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   .tracker-container { padding: 8px; }
-
-  .tracker-header h2 { font-size: var(--text-lg); }
-
-  /* On touch devices, always show the cell buttons (no hover) */
-  .excel-table .amount-cell .cell-btns {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  /* Slightly larger touch buttons */
-  .excel-table .amount-cell {
-    .approve-cell-btn,
-    .edit-cell-btn {
-      width: 28px;
-      height: 28px;
-      line-height: 28px;
-
-      mat-icon { font-size: 16px; width: 16px; height: 16px; line-height: 16px; }
-    }
-  }
-
-  /* Smaller member col on tight screens */
-  .excel-table .member-col { min-width: 100px; }
-
-  /* Hint bar to swipe */
-  .tracker-scroll::after {
-    content: '← swipe to scroll →';
-    display: block;
-    text-align: center;
-    font-size: 10px;
-    color: var(--clr-text-muted);
-    padding: 4px 0 6px;
-    background: var(--clr-surface);
-    border-top: 1px solid var(--clr-border);
-    letter-spacing: 0.5px;
-  }
-}
-
-/* ── Touch device: always-visible cell buttons ── */
-@media (hover: none) {
-  .excel-table .amount-cell .cell-btns {
-    opacity: 1;
-    pointer-events: auto;
-  }
+  .tracker-header h2  { font-size: var(--text-lg); }
 }

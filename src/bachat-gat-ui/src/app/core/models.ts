@@ -111,6 +111,7 @@ export interface FundSummary {
   totalLoansDisbursed: number;
   totalLoanOutstanding: number;
   totalInterestCollected: number;
+  totalExpenses: number;
   availableBalance: number;
 }
 

@@ -6,21 +6,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ContributionService } from '../../core/contribution.service';
 import { GroupService } from '../../core/group.service';
 import { AuthService } from '../../core/auth.service';
-import { ContributionTracker, GroupMemberRole } from '../../core/models';
+import { ContributionTracker, ContributionCell, MemberTrackerRow, GroupMemberRole } from '../../core/models';
 import { RecordPaymentDialogComponent } from '../record-payment-dialog/record-payment-dialog.component';
 
 @Component({
   selector: 'app-tracker',
   imports: [
     CommonModule, MatTableModule, MatButtonModule, MatIconModule,
-    MatDialogModule, MatProgressSpinnerModule, MatCardModule, MatChipsModule,
-    MatTooltipModule, CurrencyPipe
+    MatDialogModule, MatProgressSpinnerModule, MatTooltipModule, CurrencyPipe
   ],
   templateUrl: './tracker.component.html',
   styleUrl: './tracker.component.scss'
@@ -31,6 +28,28 @@ export class TrackerComponent implements OnInit {
   loading = true;
   currentUserRole: GroupMemberRole | null = null;
   GroupMemberRole = GroupMemberRole;
+  expandedRows = new Set<number>();
+
+  displayedColumns = ['expand', 'member', 'lastPeriod', 'total', 'nextEmi', 'action'];
+
+  toggleExpand(memberId: number) {
+    if (this.expandedRows.has(memberId)) this.expandedRows.delete(memberId);
+    else this.expandedRows.add(memberId);
+  }
+
+  isExpanded(memberId: number): boolean {
+    return this.expandedRows.has(memberId);
+  }
+
+  getLastCell(row: MemberTrackerRow): ContributionCell | null {
+    if (!row.cells.length) return null;
+    return row.cells[row.cells.length - 1];
+  }
+
+  getLastPeriod(): string {
+    const periods = this.tracker?.periods;
+    return periods?.length ? this.formatPeriod(periods[periods.length - 1]) : '—';
+  }
 
   constructor(
     private route: ActivatedRoute,

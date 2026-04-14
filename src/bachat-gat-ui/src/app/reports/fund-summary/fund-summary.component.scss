@@ -51,6 +51,11 @@
     .stat-value { color: var(--clr-teal); }
     mat-icon    { color: var(--clr-teal); }
   }
+  &.red {
+    &::before { background: linear-gradient(90deg, oklch(40% 0.20 25), oklch(55% 0.20 25)); }
+    .stat-value { color: oklch(40% 0.20 25); }
+    mat-icon    { color: oklch(45% 0.20 25); }
+  }
   &.purple {
     &::before { background: linear-gradient(90deg, oklch(40% 0.16 300), oklch(55% 0.16 300)); }
     .stat-value { color: oklch(42% 0.16 300); }
