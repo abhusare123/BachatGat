@@ -1,7 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { AuthResponse } from './models';
 import { environment } from '../../environments/environment';
 
@@ -14,9 +15,22 @@ export class AuthService {
 
   login(phoneNumber: string) {
     return this.http.post<AuthResponse>(`${this.API}/auth/login`, { phoneNumber }).pipe(
-      tap(res => {
-        localStorage.setItem('auth', JSON.stringify(res));
-        this.currentUser.set(res);
+      tap(res => this.saveUser(res))
+    );
+  }
+
+  refresh(): Observable<AuthResponse> {
+    const stored = this.loadUser();
+    if (!stored?.refreshToken) {
+      this.logout();
+      return throwError(() => new Error('No refresh token available'));
+    }
+    return this.http.post<AuthResponse>(`${this.API}/auth/refresh`, { refreshToken: stored.refreshToken }).pipe(
+      tap(res => this.saveUser(res)),
+      catchError(err => {
+        // Refresh token itself is invalid/expired — must re-login
+        this.logout();
+        return throwError(() => err);
       })
     );
   }
@@ -28,10 +42,7 @@ export class AuthService {
 
   verifyOtp(phoneNumber: string, otp: string, fullName: string) {
     return this.http.post<AuthResponse>(`${this.API}/auth/verify-otp`, { phoneNumber, otp, fullName }).pipe(
-      tap(res => {
-        localStorage.setItem('auth', JSON.stringify(res));
-        this.currentUser.set(res);
-      })
+      tap(res => this.saveUser(res))
     );
   }
 
@@ -47,6 +58,11 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  private saveUser(res: AuthResponse) {
+    localStorage.setItem('auth', JSON.stringify(res));
+    this.currentUser.set(res);
   }
 
   private loadUser(): AuthResponse | null {
