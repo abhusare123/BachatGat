@@ -12,12 +12,12 @@
 
       <form [formGroup]="form" (ngSubmit)="login()">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Phone Number (10 digits)</mat-label>
+          <mat-label>Phone Number</mat-label>
           <mat-icon matPrefix>phone</mat-icon>
           <input matInput formControlName="phoneNumber" placeholder="9876543210"
-                 maxlength="10" inputmode="numeric" autocomplete="tel">
+                 maxlength="15" inputmode="numeric" autocomplete="tel">
           <mat-error *ngIf="form.get('phoneNumber')?.hasError('required')">Phone number is required</mat-error>
-          <mat-error *ngIf="form.get('phoneNumber')?.hasError('pattern')">Enter a valid 10-digit number</mat-error>
+          <mat-error *ngIf="form.get('phoneNumber')?.hasError('pattern')">Enter a valid 10–15 digit number</mat-error>
         </mat-form-field>
 
         <button mat-raised-button color="primary" type="submit"
