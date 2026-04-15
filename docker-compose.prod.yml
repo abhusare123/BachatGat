@@ -1,0 +1,15 @@
+# Production overrides — apply with:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+services:
+
+  sqlserver:
+    ports: !reset []          # don't bind 1433 to host in production
+
+  api:
+    ports: !reset []          # API only reachable via nginx proxy
+    environment:
+      Cors__AllowedOrigins__0: "${PUBLIC_URL}"
+
+  ui:
+    ports: !reset             # replace dev port 4200 with production port 80
+      - "80:80"
