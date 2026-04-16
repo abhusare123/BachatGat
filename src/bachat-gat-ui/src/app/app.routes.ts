@@ -16,5 +16,11 @@ export const routes: Routes = [
     loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule)
   },
 
+  {
+    path: 'profile',
+    canActivate: [authGuard],
+    loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)
+  },
+
   { path: '**', redirectTo: 'groups' }
 ];

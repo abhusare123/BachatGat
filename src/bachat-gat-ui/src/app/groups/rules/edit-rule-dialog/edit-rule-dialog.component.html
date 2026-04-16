@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>
+  {{ data.rule.label }}
+  <span class="subtitle">{{ data.rule.labelMr }}</span>
+</h2>
+
+<mat-dialog-content>
+  <p class="rule-description">{{ data.rule.description }}</p>
+
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Value ({{ data.rule.unit }})</mat-label>
+      <input matInput type="number" min="0" formControlName="value" />
+      <mat-hint>{{ data.rule.unit === '%' ? 'Enter a percentage (0–100)' : 'Enter amount in ₹' }}</mat-hint>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="form.invalid || saving" (click)="save()">
+    {{ saving ? 'Saving…' : 'Save' }}
+  </button>
+</mat-dialog-actions>

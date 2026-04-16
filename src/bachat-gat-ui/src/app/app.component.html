@@ -11,6 +11,9 @@
   <mat-menu #userMenu="matMenu">
     <div class="user-info">{{ auth.currentUser()?.fullName }}</div>
     <div class="user-phone">{{ auth.currentUser()?.phoneNumber }}</div>
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>manage_accounts</mat-icon> User Profile
+    </button>
     <button mat-menu-item (click)="auth.logout()">
       <mat-icon>logout</mat-icon> Logout
     </button>

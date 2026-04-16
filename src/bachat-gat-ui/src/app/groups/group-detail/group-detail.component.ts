@@ -72,6 +72,10 @@ export class GroupDetailComponent implements OnInit {
       .afterClosed().subscribe(added => { if (added) this.load(); });
   }
 
+  viewProfile(userId: number) {
+    this.router.navigate(['/profile', userId]);
+  }
+
   removeMember(memberId: number) {
     if (!confirm('Remove this member from the group?')) return;
     this.groupSvc.removeMember(this.groupId, memberId).subscribe(() => this.load());

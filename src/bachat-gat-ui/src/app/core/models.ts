@@ -141,3 +141,37 @@ export interface AddExpenseRequest {
   category: number;
   date: string;
 }
+
+export interface UserProfile {
+  id: number;
+  fullName: string;
+  phoneNumber: string;
+  email: string | null;
+  address: string | null;
+  createdAt: string;
+}
+
+export interface UpdateUserProfileRequest {
+  fullName: string;
+  email: string | null;
+  address: string | null;
+}
+
+export interface ConfigurableRule {
+  key: string;
+  label: string;
+  labelMr: string;
+  value: string;
+  unit: string;
+  description: string;
+  descriptionMr: string;
+}
+
+export interface GroupRulesResponse {
+  configurableRules: ConfigurableRule[];
+  interestRatePercent: number;
+}
+
+export interface UpdateRuleRequest {
+  value: string;
+}

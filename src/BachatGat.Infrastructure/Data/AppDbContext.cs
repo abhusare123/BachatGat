@@ -16,6 +16,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<LoanRepayment> LoanRepayments => Set<LoanRepayment>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Expense> Expenses => Set<Expense>();
+    public DbSet<GroupRuleConfig> GroupRuleConfigs => Set<GroupRuleConfig>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -100,6 +101,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(r => r.InterestAmount).HasPrecision(18, 2);
             e.HasOne(r => r.Loan).WithMany(l => l.Repayments).HasForeignKey(r => r.LoanId);
             e.HasOne(r => r.RecordedBy).WithMany().HasForeignKey(r => r.RecordedByUserId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+        });
+
+        modelBuilder.Entity<GroupRuleConfig>(e =>
+        {
+            e.HasIndex(r => new { r.GroupId, r.RuleKey }).IsUnique();
+            e.Property(r => r.RuleKey).HasMaxLength(100);
+            e.Property(r => r.Value).HasMaxLength(500);
+            e.HasOne(r => r.Group).WithMany().HasForeignKey(r => r.GroupId).OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

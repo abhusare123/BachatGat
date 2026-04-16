@@ -1,0 +1,99 @@
+<div class="rules-container">
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-wrap">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading && rulesData">
+
+    <!-- Group Configuration -->
+    <section class="config-section">
+      <div class="section-header">
+        <mat-icon>tune</mat-icon>
+        <div>
+          <h2>Group Configuration</h2>
+          <p class="section-sub">गटाची विशिष्ट मूल्ये · Values specific to this group</p>
+        </div>
+      </div>
+
+      <table mat-table [dataSource]="rulesData.configurableRules" class="config-table">
+        <!-- Rule column -->
+        <ng-container matColumnDef="rule">
+          <th mat-header-cell *matHeaderCellDef>Rule / नियम</th>
+          <td mat-cell *matCellDef="let rule">
+            <div class="rule-label">{{ rule.label }}</div>
+            <div class="rule-label-mr">{{ rule.labelMr }}</div>
+            <div class="rule-desc">{{ rule.description }}</div>
+          </td>
+        </ng-container>
+
+        <!-- Value column -->
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef>Current Value</th>
+          <td mat-cell *matCellDef="let rule">
+            <span class="rule-value">{{ formatValue(rule) }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Actions column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let rule">
+            <button *ngIf="isAdmin" mat-icon-button color="primary"
+              (click)="editRule(rule)"
+              matTooltip="Edit value">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="isAdmin ? ['rule','value','actions'] : ['rule','value']"></tr>
+        <tr mat-row *matRowDef="let row; columns: isAdmin ? ['rule','value','actions'] : ['rule','value']"></tr>
+      </table>
+
+      <!-- Interest Rate (read-only from group settings) -->
+      <div class="interest-row">
+        <div>
+          <div class="rule-label">Monthly interest rate</div>
+          <div class="rule-label-mr">मासिक व्याजदर</div>
+          <div class="rule-desc">Set in group settings. Maximum allowed is 3%.</div>
+        </div>
+        <span class="rule-value">{{ rulesData.interestRatePercent }}%</span>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- Fixed Rules Reference -->
+    <section class="fixed-section">
+      <div class="section-header">
+        <mat-icon>menu_book</mat-icon>
+        <div>
+          <h2>Standard SHG Rules</h2>
+          <p class="section-sub">बचत गटाचे सर्वसाधारण नियम · Standard rules applicable to all groups</p>
+        </div>
+      </div>
+
+      <mat-accordion multi>
+        <mat-expansion-panel *ngFor="let cat of ruleCategories">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="cat-icon">{{ cat.icon }}</mat-icon>
+              {{ cat.labelEn }} / {{ cat.labelMr }}
+            </mat-panel-title>
+            <mat-panel-description>{{ rulesFor(cat.key).length }} items</mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <ol class="rule-list">
+            <li *ngFor="let rule of rulesFor(cat.key)" class="rule-item">
+              <p class="rule-en">{{ rule.text }}</p>
+              <p class="rule-mr">{{ rule.textMr }}</p>
+            </li>
+          </ol>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </section>
+
+  </ng-container>
+</div>

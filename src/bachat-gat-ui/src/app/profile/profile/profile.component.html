@@ -1,0 +1,65 @@
+<div class="profile-container">
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="profile-avatar-icon">account_circle</mat-icon>
+      <mat-card-title>
+        {{ targetUserId ? 'Edit User Profile' : 'My Profile' }}
+      </mat-card-title>
+      <mat-card-subtitle *ngIf="profile">
+        Member since {{ profile.createdAt | date:'mediumDate' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="loading" class="spinner-wrap">
+        <mat-spinner diameter="48"></mat-spinner>
+      </div>
+
+      <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="save()">
+
+        <!-- Phone — read-only -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Mobile Number</mat-label>
+          <mat-icon matPrefix>phone</mat-icon>
+          <input matInput [value]="profile?.phoneNumber ?? ''" readonly />
+          <mat-hint>Phone number cannot be changed</mat-hint>
+        </mat-form-field>
+
+        <!-- Full Name -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Full Name</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <input matInput formControlName="fullName" placeholder="Your full name" />
+          <mat-error *ngIf="form.get('fullName')?.hasError('required')">Name is required</mat-error>
+          <mat-error *ngIf="form.get('fullName')?.hasError('maxlength')">Max 100 characters</mat-error>
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email Address</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input matInput formControlName="email" type="email" placeholder="you@example.com" />
+          <mat-error *ngIf="form.get('email')?.hasError('email')">Enter a valid email address</mat-error>
+          <mat-error *ngIf="form.get('email')?.hasError('maxlength')">Max 200 characters</mat-error>
+        </mat-form-field>
+
+        <!-- Address -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Address</mat-label>
+          <mat-icon matPrefix>home</mat-icon>
+          <textarea matInput formControlName="address" rows="3"
+                    placeholder="House / Street, Village, District"></textarea>
+          <mat-error *ngIf="form.get('address')?.hasError('maxlength')">Max 500 characters</mat-error>
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-flat-button color="primary" type="submit"
+                  [disabled]="form.invalid || saving">
+            <mat-icon>save</mat-icon>
+            {{ saving ? 'Saving…' : 'Save Changes' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

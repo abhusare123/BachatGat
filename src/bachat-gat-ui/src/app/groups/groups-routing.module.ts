@@ -30,7 +30,11 @@ const routes: Routes = [
         path: 'expenses',
         loadChildren: () => import('../expenses/expenses.module').then(m => m.ExpensesModule)
       },
-      { path: 'members', component: GroupDetailComponent }
+      { path: 'members', component: GroupDetailComponent },
+      {
+        path: 'rules',
+        loadChildren: () => import('./rules/rules.module').then(m => m.RulesModule)
+      }
     ]
   }
 ];

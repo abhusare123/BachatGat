@@ -1,0 +1,116 @@
+.rules-container {
+  padding: 16px;
+  max-width: 900px;
+}
+
+.loading-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    margin-top: 4px;
+    color: var(--mat-sys-primary);
+  }
+
+  h2 {
+    margin: 0 0 2px;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .section-sub {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.config-section {
+  margin-bottom: 24px;
+}
+
+.config-table {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.rule-label {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.rule-label-mr {
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.rule-desc {
+  font-size: 0.78rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 2px;
+}
+
+.rule-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mat-sys-primary);
+}
+
+.interest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+mat-divider {
+  margin: 24px 0;
+}
+
+.fixed-section {
+  margin-top: 8px;
+}
+
+.cat-icon {
+  margin-right: 8px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+.rule-list {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.rule-item {
+  margin-bottom: 12px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rule-en {
+  margin: 0 0 2px;
+  font-size: 0.88rem;
+}
+
+.rule-mr {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant);
+}

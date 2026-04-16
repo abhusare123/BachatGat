@@ -63,6 +63,9 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let m">
+        <button *ngIf="isAdmin" mat-icon-button (click)="viewProfile(m.userId)" title="View/Edit Profile">
+          <mat-icon>manage_accounts</mat-icon>
+        </button>
         <button *ngIf="isAdmin" mat-icon-button color="warn" (click)="removeMember(m.id)" title="Remove member">
           <mat-icon>person_remove</mat-icon>
         </button>
