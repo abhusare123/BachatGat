@@ -2,6 +2,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using BachatGat.Application;
 using BachatGat.Application.Exceptions;
+using BachatGat.Core.Entities;
+using BachatGat.Core.Enums;
 using BachatGat.Infrastructure;
 using BachatGat.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -112,6 +114,18 @@ try
     {
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         db.Database.Migrate();
+
+        if (!db.Users.Any())
+        {
+            db.Users.Add(new User
+            {
+                FullName = "System User",
+                PhoneNumber = "9876543210",
+                Role = UserRole.Admin,
+                CreatedAt = DateTime.UtcNow
+            });
+            await db.SaveChangesAsync();
+        }
     }
 
     // Global exception handler — maps application exceptions to HTTP status codes
