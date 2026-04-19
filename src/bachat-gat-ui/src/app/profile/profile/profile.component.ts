@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -44,7 +45,8 @@ export class ProfileComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     public auth: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -97,10 +99,10 @@ export class ProfileComponent implements OnInit {
       : this.userService.updateMyProfile(request);
 
     obs.subscribe({
-      next: (updated) => {
-        this.profile = updated;
+      next: () => {
         this.saving = false;
         this.snackBar.open('Profile updated successfully', 'Close', { duration: 3000 });
+        this.location.back();
       },
       error: (err) => {
         this.saving = false;
@@ -108,5 +110,9 @@ export class ProfileComponent implements OnInit {
         this.snackBar.open(msg, 'Close', { duration: 4000 });
       }
     });
+  }
+
+  cancel(): void {
+    this.location.back();
   }
 }

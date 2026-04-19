@@ -53,6 +53,10 @@
         </mat-form-field>
 
         <div class="actions">
+          <button mat-stroked-button type="button" (click)="cancel()">
+            <mat-icon>cancel</mat-icon>
+            Cancel
+          </button>
           <button mat-flat-button color="primary" type="submit"
                   [disabled]="form.invalid || saving">
             <mat-icon>save</mat-icon>
