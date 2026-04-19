@@ -15,7 +15,8 @@
           <mat-label>Phone Number</mat-label>
           <mat-icon matPrefix>phone</mat-icon>
           <input matInput formControlName="phoneNumber" placeholder="9876543210"
-                 maxlength="15" inputmode="numeric" autocomplete="tel">
+                 type="tel" maxlength="15" inputmode="numeric" autocomplete="tel"
+                 (keydown)="$event.key.length === 1 && !/[0-9]/.test($event.key) && $event.preventDefault()">
           <mat-error *ngIf="form.get('phoneNumber')?.hasError('required')">Phone number is required</mat-error>
           <mat-error *ngIf="form.get('phoneNumber')?.hasError('pattern')">Enter a valid 10–15 digit number</mat-error>
         </mat-form-field>

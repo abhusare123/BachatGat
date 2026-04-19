@@ -5,7 +5,9 @@
   <form [formGroup]="form" class="dialog-form">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Phone Number (10 digits)</mat-label>
-      <input matInput formControlName="phoneNumber" placeholder="9876543210" maxlength="10">
+      <input matInput formControlName="phoneNumber" placeholder="9876543210"
+             type="tel" maxlength="10" inputmode="numeric"
+             (keydown)="$event.key.length === 1 && !/[0-9]/.test($event.key) && $event.preventDefault()">
     </mat-form-field>
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>User Name (required for new users)</mat-label>
