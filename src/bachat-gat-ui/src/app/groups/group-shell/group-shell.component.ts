@@ -30,6 +30,7 @@ export class GroupShellComponent implements OnInit {
     { label: 'Contributions', labelMr: 'बचत',   icon: 'savings',         path: 'contributions' },
     { label: 'Loans',         labelMr: 'कर्ज',   icon: 'account_balance', path: 'loans'         },
     { label: 'Expenses',      labelMr: 'खर्च',   icon: 'receipt_long',    path: 'expenses'      },
+    { label: 'Penalties',     labelMr: 'दंड',    icon: 'gavel',           path: 'penalties'     },
     { label: 'Reports',       labelMr: 'अहवाल',  icon: 'bar_chart',       path: 'reports'       },
     { label: 'Members',       labelMr: 'सदस्य',  icon: 'group',           path: 'members'       },
     { label: 'Rules',         labelMr: 'नियम',   icon: 'gavel',           path: 'rules'         },

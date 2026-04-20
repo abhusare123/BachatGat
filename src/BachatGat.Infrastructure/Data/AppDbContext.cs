@@ -16,6 +16,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<LoanRepayment> LoanRepayments => Set<LoanRepayment>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Expense> Expenses => Set<Expense>();
+    public DbSet<Penalty> Penalties => Set<Penalty>();
     public DbSet<GroupRuleConfig> GroupRuleConfigs => Set<GroupRuleConfig>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -109,6 +110,15 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(r => r.RuleKey).HasMaxLength(100);
             e.Property(r => r.Value).HasMaxLength(500);
             e.HasOne(r => r.Group).WithMany().HasForeignKey(r => r.GroupId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Penalty>(e =>
+        {
+            e.Property(p => p.Purpose).HasMaxLength(500);
+            e.Property(p => p.Amount).HasPrecision(18, 2);
+            e.HasOne(p => p.Group).WithMany().HasForeignKey(p => p.GroupId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(p => p.Member).WithMany().HasForeignKey(p => p.GroupMemberId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(p => p.AddedBy).WithMany().HasForeignKey(p => p.AddedByUserId).OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

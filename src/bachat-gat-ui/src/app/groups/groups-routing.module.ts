@@ -32,6 +32,10 @@ const routes: Routes = [
       },
       { path: 'members', component: GroupDetailComponent },
       {
+        path: 'penalties',
+        loadChildren: () => import('../penalties/penalties.module').then(m => m.PenaltiesModule)
+      },
+      {
         path: 'rules',
         loadChildren: () => import('./rules/rules.module').then(m => m.RulesModule)
       }

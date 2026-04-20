@@ -33,7 +33,13 @@
       "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddLoanClosedAt --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api)",
       "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet build src/BachatGat.Api/BachatGat.Api.csproj -c Release)",
       "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddLoanClosedAt --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api -c Release)",
-      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddLoanClosedAt --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --no-build)"
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddLoanClosedAt --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --no-build)",
+      "Bash(ls -la)",
+      "Bash(find . -maxdepth 1 -type f)",
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddPenalties --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --no-build)",
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations remove --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --no-build)",
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddPenalties --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --no-build -c Release)",
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddPenalties --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --configuration Release --no-build)"
     ]
   }
 }

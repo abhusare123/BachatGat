@@ -1,0 +1,8 @@
+.page-container { padding: 16px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.loading-center { display: flex; justify-content: center; padding: 40px; }
+.total-banner { background: #f5f5f5; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 1rem; }
+.table-scroll { overflow-x: auto; }
+.penalties-table { width: 100%; }
+.empty-state { text-align: center; padding: 48px 16px; color: #888; }
+.empty-state mat-icon { font-size: 48px; width: 48px; height: 48px; }

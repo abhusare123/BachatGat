@@ -44,6 +44,14 @@
       </mat-card-content>
     </mat-card>
 
+    <mat-card class="summary-card amber">
+      <mat-card-content>
+        <mat-icon>gavel</mat-icon>
+        <div class="stat-label">Total Penalties / एकूण दंड</div>
+        <div class="stat-value">{{ summary.totalPenalties | currency:'INR':'symbol':'1.0-0' }}</div>
+      </mat-card-content>
+    </mat-card>
+
     <mat-card class="summary-card purple highlight">
       <mat-card-content>
         <mat-icon>account_balance_wallet</mat-icon>

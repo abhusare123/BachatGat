@@ -31,9 +31,13 @@ public class ReportService(IAppDbContext db) : IReportService
             .Where(e => e.GroupId == groupId)
             .SumAsync(e => e.Amount);
 
-        decimal available = totalCollected + totalInterestCollected - totalDisbursed + totalPrincipalRepaid - totalExpenses;
+        decimal totalPenalties = await db.Penalties
+            .Where(p => p.GroupId == groupId)
+            .SumAsync(p => p.Amount);
 
-        return new FundSummaryDto(totalCollected, totalDisbursed, outstanding, totalInterestCollected, totalExpenses, available);
+        decimal available = totalCollected + totalInterestCollected + totalPenalties - totalDisbursed + totalPrincipalRepaid - totalExpenses;
+
+        return new FundSummaryDto(totalCollected, totalDisbursed, outstanding, totalInterestCollected, totalExpenses, totalPenalties, available);
     }
 
     public async Task<List<LoanLedgerItemDto>> GetLoanLedgerAsync(int groupId, int currentUserId)
