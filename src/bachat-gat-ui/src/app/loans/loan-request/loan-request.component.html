@@ -20,6 +20,22 @@
           <mat-label>Purpose (optional)</mat-label>
           <textarea matInput formControlName="purpose" rows="3" placeholder="Medical emergency, home repair…"></textarea>
         </mat-form-field>
+        <mat-form-field *ngIf="isAdminOrTreasurer" appearance="outline" class="full-width">
+          <mat-label>Loan For (leave blank for yourself)</mat-label>
+          <mat-select formControlName="borrowerId">
+            <mat-option [value]="null">{{ currentUserName }} (Me)</mat-option>
+            <mat-option *ngFor="let m of members" [value]="m.userId">
+              {{ m.fullName }} — {{ m.phoneNumber }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="isAdminOrTreasurer" appearance="outline" class="full-width">
+          <mat-label>Loan Date (leave blank for today)</mat-label>
+          <input matInput [matDatepicker]="loanDatePicker" formControlName="loanDate" [max]="today">
+          <mat-datepicker-toggle matIconSuffix [for]="loanDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #loanDatePicker></mat-datepicker>
+          <mat-hint>Set a past date to record an existing loan</mat-hint>
+        </mat-form-field>
       </form>
     </mat-card-content>
     <mat-card-actions align="end">

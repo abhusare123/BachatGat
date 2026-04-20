@@ -37,6 +37,10 @@ export class AddMemberDialogComponent {
     });
   }
 
+  allowOnlyDigits(event: KeyboardEvent): void {
+    if (event.key.length === 1 && (event.key < '0' || event.key > '9')) event.preventDefault();
+  }
+
   save() {
     if (this.form.invalid) return;
     this.saving = true;

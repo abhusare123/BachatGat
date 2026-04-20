@@ -27,6 +27,10 @@ export class LoginComponent {
     });
   }
 
+  allowOnlyDigits(event: KeyboardEvent): void {
+    if (event.key.length === 1 && (event.key < '0' || event.key > '9')) event.preventDefault();
+  }
+
   login() {
     if (this.form.invalid) return;
     this.loading = true;

@@ -11,7 +11,11 @@ public record RequestLoanRequest(
     int TenureMonths,
 
     [MaxLength(500)]
-    string? Purpose);
+    string? Purpose,
+
+    DateTime? LoanDate,
+
+    int? BorrowerId);
 
 public record VoteLoanRequest(
     [EnumDataType(typeof(VoteChoice))]

@@ -13,8 +13,8 @@ export class LoanService {
     return this.http.get<Loan[]>(`${this.API}/groups/${groupId}/loans`);
   }
 
-  requestLoan(groupId: number, amount: number, tenureMonths: number, purpose?: string) {
-    return this.http.post(`${this.API}/groups/${groupId}/loans`, { amount, tenureMonths, purpose });
+  requestLoan(groupId: number, amount: number, tenureMonths: number, purpose?: string, loanDate?: Date, borrowerId?: number) {
+    return this.http.post(`${this.API}/groups/${groupId}/loans`, { amount, tenureMonths, purpose, loanDate: loanDate ?? null, borrowerId: borrowerId ?? null });
   }
 
   vote(loanId: number, vote: number, comment?: string) {

@@ -41,14 +41,30 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
         var group = await db.Groups.FindAsync(groupId)
             ?? throw new NotFoundException();
 
+        bool isAdminOrTreasurer = membership.Role == GroupMemberRole.Admin || membership.Role == GroupMemberRole.Treasurer;
+
+        int borrowerId = currentUserId;
+        if (isAdminOrTreasurer && request.BorrowerId.HasValue && request.BorrowerId.Value != currentUserId)
+        {
+            var borrowerMembership = await db.GroupMembers
+                .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == request.BorrowerId.Value && m.IsActive)
+                ?? throw new BadRequestException("Selected member is not an active member of this group.");
+            if (borrowerMembership.Role == GroupMemberRole.Auditor)
+                throw new BadRequestException("Auditors cannot be assigned a loan.");
+            borrowerId = request.BorrowerId.Value;
+        }
+
         var loan = new Loan
         {
             GroupId = groupId,
-            RequestedByUserId = currentUserId,
+            RequestedByUserId = borrowerId,
             Amount = request.Amount,
             TenureMonths = request.TenureMonths,
             InterestRatePercent = group.InterestRatePercent,
-            Purpose = request.Purpose
+            Purpose = request.Purpose,
+            RequestedAt = isAdminOrTreasurer && request.LoanDate.HasValue
+                ? DateTime.SpecifyKind(request.LoanDate.Value, DateTimeKind.Utc)
+                : DateTime.UtcNow
         };
         db.Loans.Add(loan);
         await db.SaveChangesAsync();
@@ -185,8 +201,7 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
         loan.Status = LoanStatus.Active;
         loan.DisbursedAt = DateTime.UtcNow;
 
-        var now = DateTime.UtcNow;
-        string startPeriod = $"{now.Year:D4}-{now.Month:D2}";
+        string startPeriod = $"{loan.RequestedAt.Year:D4}-{loan.RequestedAt.Month:D2}";
 
         var schedule = calc.GenerateSchedule(loan.Amount, loan.InterestRatePercent, loan.TenureMonths, startPeriod);
         foreach (var entry in schedule)

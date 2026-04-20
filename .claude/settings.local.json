@@ -26,7 +26,8 @@
       "Bash(findstr /n \".\")",
       "Bash(ls -la /c/Users/abhij/source/PloitProject/BachatGat/src/bachat-gat-ui/.*)",
       "Bash(grep -E \"\\\\.\\(ts|html|scss|css\\)$\")",
-      "Bash(grep -E \"\\\\.\\(ts|html\\)$\")"
+      "Bash(grep -E \"\\\\.\\(ts|html\\)$\")",
+      "Bash(xargs grep *)"
     ]
   }
 }
