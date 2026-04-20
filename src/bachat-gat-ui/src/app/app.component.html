@@ -14,6 +14,16 @@
     <button mat-menu-item routerLink="/profile">
       <mat-icon>manage_accounts</mat-icon> User Profile
     </button>
+    <ng-container *ngIf="currentGroupId">
+      <mat-divider></mat-divider>
+      <button mat-menu-item [routerLink]="['/groups', currentGroupId, 'members']">
+        <mat-icon>group</mat-icon> Members / सदस्य
+      </button>
+      <button mat-menu-item [routerLink]="['/groups', currentGroupId, 'rules']">
+        <mat-icon>gavel</mat-icon> Rules / नियम
+      </button>
+    </ng-container>
+    <mat-divider></mat-divider>
     <button mat-menu-item (click)="auth.logout()">
       <mat-icon>logout</mat-icon> Logout
     </button>
