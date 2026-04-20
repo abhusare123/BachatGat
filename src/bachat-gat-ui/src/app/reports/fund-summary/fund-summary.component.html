@@ -1,5 +1,10 @@
 <div class="page-container">
-  <h2>Reports / अहवाल</h2>
+  <div class="page-header">
+    <h2>Reports / अहवाल</h2>
+    <button mat-raised-button color="primary" [disabled]="loading || !summary" (click)="exportPdf()">
+      <mat-icon>download</mat-icon> Export PDF
+    </button>
+  </div>
 
   <div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>
 
