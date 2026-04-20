@@ -65,4 +65,15 @@ public class LoansController(ILoanService loanService) : ControllerBase
         var status = await loanService.MarkRepaymentPaidAsync(id, repaymentId, CurrentUserId);
         return Ok(new { Message = "Repayment recorded", LoanStatus = status });
     }
+
+    [HttpGet("api/loans/{id:int}/foreclosure-preview")]
+    public async Task<IActionResult> ForeclosurePreview(int id)
+        => Ok(await loanService.GetForeclosurePreviewAsync(id, CurrentUserId));
+
+    [HttpPost("api/loans/{id:int}/close")]
+    public async Task<IActionResult> CloseLoan(int id)
+    {
+        var summary = await loanService.CloseLoanEarlyAsync(id, CurrentUserId);
+        return Ok(summary);
+    }
 }

@@ -15,6 +15,7 @@ public class Loan
     public DateTime RequestedAt { get; set; } = DateTime.UtcNow;
     public DateTime? ApprovedAt { get; set; }
     public DateTime? DisbursedAt { get; set; }
+    public DateTime? ClosedAt { get; set; }
 
     public Group Group { get; set; } = null!;
     public User RequestedBy { get; set; } = null!;

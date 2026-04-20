@@ -27,14 +27,20 @@ public record VoteLoanRequest(
 public record LoanDto(
     int Id, int GroupId, int RequestedByUserId, string RequestedByName,
     decimal Amount, int TenureMonths, decimal InterestRatePercent,
-    string? Purpose, LoanStatus Status, DateTime RequestedAt, DateTime? ApprovedAt,
+    string? Purpose, LoanStatus Status, DateTime RequestedAt, DateTime? ApprovedAt, DateTime? ClosedAt,
     int ApproveVotes, int RejectVotes, int TotalEligibleVoters,
     VoteChoice? CurrentUserVote
 );
 
 public record LoanRepaymentDto(
     int Id, string Period, decimal EMIAmount, decimal PrincipalAmount,
-    decimal InterestAmount, bool IsPaid, DateTime? PaidAt
+    decimal InterestAmount, bool IsPaid, bool IsForeclosed, DateTime? PaidAt
 );
 
 public record LoanVoteDto(int VotedByUserId, string VotedByName, VoteChoice Vote, DateTime VotedAt, string? Comment);
+
+public record ForeclosureSummaryDto(
+    decimal OutstandingPrincipal,
+    decimal ForeclosureInterest,
+    decimal TotalAmount
+);

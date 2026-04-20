@@ -10,6 +10,7 @@ public class LoanRepayment
     public decimal PrincipalAmount { get; set; }
     public decimal InterestAmount { get; set; }
     public bool IsPaid { get; set; }
+    public bool IsForeclosed { get; set; }
     public DateTime? PaidAt { get; set; }
     public int? RecordedByUserId { get; set; }
 

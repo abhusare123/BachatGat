@@ -27,7 +27,13 @@
       "Bash(ls -la /c/Users/abhij/source/PloitProject/BachatGat/src/bachat-gat-ui/.*)",
       "Bash(grep -E \"\\\\.\\(ts|html|scss|css\\)$\")",
       "Bash(grep -E \"\\\\.\\(ts|html\\)$\")",
-      "Bash(xargs grep *)"
+      "Bash(xargs grep *)",
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddIsForeclosedToRepayment --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api)",
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet build src/BachatGat.Api/BachatGat.Api.csproj)",
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddLoanClosedAt --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api)",
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet build src/BachatGat.Api/BachatGat.Api.csproj -c Release)",
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddLoanClosedAt --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api -c Release)",
+      "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddLoanClosedAt --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --no-build)"
     ]
   }
 }

@@ -82,6 +82,7 @@ export interface Loan {
   status: LoanStatus;
   requestedAt: string;
   approvedAt?: string;
+  closedAt?: string;
   approveVotes: number;
   rejectVotes: number;
   totalEligibleVoters: number;
@@ -96,6 +97,12 @@ export enum LoanStatus {
   Closed = 5
 }
 
+export interface ForeclosureSummary {
+  outstandingPrincipal: number;
+  foreclosureInterest: number;
+  totalAmount: number;
+}
+
 export interface LoanRepayment {
   id: number;
   period: string;
@@ -103,6 +110,7 @@ export interface LoanRepayment {
   principalAmount: number;
   interestAmount: number;
   isPaid: boolean;
+  isForeclosed: boolean;
   paidAt?: string;
 }
 

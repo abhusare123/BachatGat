@@ -7,15 +7,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoanService } from '../../core/loan.service';
 import { GroupService } from '../../core/group.service';
 import { AuthService } from '../../core/auth.service';
 import { GroupMemberRole, Loan, LoanStatus } from '../../core/models';
+import { CloseLoanDialogComponent } from '../close-loan-dialog/close-loan-dialog.component';
 
 @Component({
   selector: 'app-loan-list',
   imports: [CommonModule, RouterLink, MatTableModule, MatButtonModule, MatIconModule,
-    MatChipsModule, MatProgressSpinnerModule, MatCardModule, CurrencyPipe, DatePipe],
+    MatChipsModule, MatProgressSpinnerModule, MatCardModule, CurrencyPipe, DatePipe,
+    MatDialogModule, MatSnackBarModule],
   templateUrl: './loan-list.component.html',
   styleUrl: './loan-list.component.scss'
 })
@@ -33,7 +37,9 @@ export class LoanListComponent implements OnInit {
     private router: Router,
     private loanSvc: LoanService,
     private groupSvc: GroupService,
-    private authSvc: AuthService
+    private authSvc: AuthService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -77,6 +83,31 @@ export class LoanListComponent implements OnInit {
   disburse(loanId: number) {
     if (!confirm('Mark this loan as disbursed and generate repayment schedule?')) return;
     this.loanSvc.disburse(loanId).subscribe(() => this.load());
+  }
+
+  closeLoan(loan: Loan) {
+    this.loanSvc.getForeclosurePreview(loan.id).subscribe({
+      next: summary => {
+        const ref = this.dialog.open(CloseLoanDialogComponent, {
+          width: '420px',
+          data: { borrowerName: loan.requestedByName, summary }
+        });
+        ref.afterClosed().subscribe(confirmed => {
+          if (!confirmed) return;
+          this.loanSvc.closeLoan(loan.id).subscribe({
+            next: s => {
+              this.snackBar.open(
+                `Loan closed. Collected ₹${s.totalAmount.toFixed(2)} (Principal ₹${s.outstandingPrincipal.toFixed(2)} + Interest ₹${s.foreclosureInterest.toFixed(2)})`,
+                'OK', { duration: 6000 }
+              );
+              this.load();
+            },
+            error: err => this.snackBar.open(err?.error?.message ?? 'Failed to close loan', 'Close', { duration: 4000 })
+          });
+        });
+      },
+      error: err => this.snackBar.open(err?.error?.message ?? 'Failed to load foreclosure details', 'Close', { duration: 4000 })
+    });
   }
 
   statusColor(status: LoanStatus): string {

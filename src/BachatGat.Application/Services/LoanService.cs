@@ -234,7 +234,7 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
             .Where(r => r.LoanId == id)
             .OrderBy(r => r.Period)
             .Select(r => new LoanRepaymentDto(
-                r.Id, r.Period, r.EMIAmount, r.PrincipalAmount, r.InterestAmount, r.IsPaid, r.PaidAt))
+                r.Id, r.Period, r.EMIAmount, r.PrincipalAmount, r.InterestAmount, r.IsPaid, r.IsForeclosed, r.PaidAt))
             .ToListAsync();
     }
 
@@ -260,7 +260,7 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
 
         bool allPaid = await db.LoanRepayments
             .AllAsync(r => r.LoanId == loanId && (r.IsPaid || r.Id == repaymentId));
-        if (allPaid) loan.Status = LoanStatus.Closed;
+        if (allPaid) { loan.Status = LoanStatus.Closed; loan.ClosedAt = DateTime.UtcNow; }
 
         await db.SaveChangesAsync();
 
@@ -274,10 +274,85 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
         return loan.Status;
     }
 
+    public async Task<ForeclosureSummaryDto> GetForeclosurePreviewAsync(int id, int currentUserId)
+    {
+        var loan = await db.Loans.FindAsync(id) ?? throw new NotFoundException();
+
+        var membership = await db.GroupMembers
+            .FirstOrDefaultAsync(m => m.GroupId == loan.GroupId && m.UserId == currentUserId && m.IsActive);
+        if (membership == null || membership.Role > GroupMemberRole.Treasurer)
+            throw new ForbiddenException();
+
+        if (loan.Status != LoanStatus.Active)
+            throw new BadRequestException("Only active loans can be foreclosed");
+
+        return await CalculateForeclosureAsync(id);
+    }
+
+    public async Task<ForeclosureSummaryDto> CloseLoanEarlyAsync(int id, int currentUserId)
+    {
+        var loan = await db.Loans.FindAsync(id) ?? throw new NotFoundException();
+
+        var membership = await db.GroupMembers
+            .FirstOrDefaultAsync(m => m.GroupId == loan.GroupId && m.UserId == currentUserId && m.IsActive);
+        if (membership == null || membership.Role > GroupMemberRole.Treasurer)
+            throw new ForbiddenException();
+
+        if (loan.Status != LoanStatus.Active)
+            throw new BadRequestException("Only active loans can be closed early");
+
+        var summary = await CalculateForeclosureAsync(id);
+
+        var now = DateTime.UtcNow;
+        var currentPeriod = $"{now.Year:D4}-{now.Month:D2}";
+
+        var unpaid = await db.LoanRepayments
+            .Where(r => r.LoanId == id && !r.IsPaid)
+            .ToListAsync();
+
+        foreach (var r in unpaid)
+        {
+            r.IsPaid = true;
+            r.IsForeclosed = true;
+            r.PaidAt = now;
+            r.RecordedByUserId = currentUserId;
+            // Future interest is waived on foreclosure — zero it out so reports reflect actual collection
+            if (string.Compare(r.Period, currentPeriod, StringComparison.Ordinal) > 0)
+                r.InterestAmount = 0;
+        }
+
+        loan.Status = LoanStatus.Closed;
+        loan.ClosedAt = now;
+        await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "LoanId {LoanId} closed early by UserId {UserId} — Principal {Principal:C}, Interest {Interest:C}, Total {Total:C}",
+            id, currentUserId, summary.OutstandingPrincipal, summary.ForeclosureInterest, summary.TotalAmount);
+
+        return summary;
+    }
+
+    private async Task<ForeclosureSummaryDto> CalculateForeclosureAsync(int loanId)
+    {
+        var currentPeriod = $"{DateTime.UtcNow.Year:D4}-{DateTime.UtcNow.Month:D2}";
+
+        var unpaid = await db.LoanRepayments
+            .Where(r => r.LoanId == loanId && !r.IsPaid)
+            .ToListAsync();
+
+        var principal = unpaid.Sum(r => r.PrincipalAmount);
+        // Interest is charged only up to the current period; future EMI interest is waived
+        var interest = unpaid
+            .Where(r => string.Compare(r.Period, currentPeriod, StringComparison.Ordinal) <= 0)
+            .Sum(r => r.InterestAmount);
+
+        return new ForeclosureSummaryDto(principal, interest, principal + interest);
+    }
+
     private static LoanDto MapLoan(Loan l, int eligibleVoters, int currentUserId) => new(
         l.Id, l.GroupId, l.RequestedByUserId, l.RequestedBy.FullName,
         l.Amount, l.TenureMonths, l.InterestRatePercent, l.Purpose,
-        l.Status, l.RequestedAt, l.ApprovedAt,
+        l.Status, l.RequestedAt, l.ApprovedAt, l.ClosedAt,
         l.Votes.Count(v => v.Vote == VoteChoice.Approve),
         l.Votes.Count(v => v.Vote == VoteChoice.Reject),
         eligibleVoters,

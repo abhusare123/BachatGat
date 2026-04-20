@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Loan, LoanRepayment } from './models';
+import { ForeclosureSummary, Loan, LoanRepayment } from './models';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -39,5 +39,13 @@ export class LoanService {
 
   markRepaymentPaid(loanId: number, repaymentId: number) {
     return this.http.post(`${this.API}/loans/${loanId}/repayments/${repaymentId}/pay`, {});
+  }
+
+  getForeclosurePreview(loanId: number) {
+    return this.http.get<ForeclosureSummary>(`${this.API}/loans/${loanId}/foreclosure-preview`);
+  }
+
+  closeLoan(loanId: number) {
+    return this.http.post<ForeclosureSummary>(`${this.API}/loans/${loanId}/close`, {});
   }
 }

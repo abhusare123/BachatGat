@@ -87,7 +87,7 @@ public class ReportService(IAppDbContext db) : IReportService
         var loanDtos = loans.Select(l => new LoanDto(
             l.Id, l.GroupId, l.RequestedByUserId, l.RequestedBy.FullName,
             l.Amount, l.TenureMonths, l.InterestRatePercent, l.Purpose,
-            l.Status, l.RequestedAt, l.ApprovedAt,
+            l.Status, l.RequestedAt, l.ApprovedAt, l.ClosedAt,
             l.Votes.Count(v => v.Vote == VoteChoice.Approve),
             l.Votes.Count(v => v.Vote == VoteChoice.Reject),
             eligibleVoters,
