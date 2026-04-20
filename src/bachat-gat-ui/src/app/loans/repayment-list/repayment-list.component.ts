@@ -8,7 +8,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoanService } from '../../core/loan.service';
-import { LoanRepayment } from '../../core/models';
+import { GroupService } from '../../core/group.service';
+import { AuthService } from '../../core/auth.service';
+import { GroupMemberRole, LoanRepayment } from '../../core/models';
 
 @Component({
   selector: 'app-repayment-list',
@@ -25,9 +27,15 @@ export class RepaymentListComponent implements OnInit {
   repayments: LoanRepayment[] = [];
   loading = true;
   payingId: number | null = null;
+  isAdminOrTreasurer = false;
   displayedColumns = ['period', 'emiAmount', 'principalAmount', 'interestAmount', 'status', 'action'];
 
-  constructor(private route: ActivatedRoute, private loanSvc: LoanService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private loanSvc: LoanService,
+    private groupSvc: GroupService,
+    private authSvc: AuthService
+  ) {}
 
   ngOnInit() {
     // traverse route tree for group id
@@ -35,6 +43,16 @@ export class RepaymentListComponent implements OnInit {
     while (r && !r.paramMap.has('id')) r = r.parent!;
     this.groupId = +(r?.paramMap.get('id') ?? 0);
     this.loanId = +this.route.snapshot.paramMap.get('loanId')!;
+
+    const currentUserId = this.authSvc.currentUser()!.userId;
+    this.groupSvc.getGroup(this.groupId).subscribe(g => {
+      const me = g.members.find(m => m.userId === currentUserId);
+      this.isAdminOrTreasurer = !!me && (me.role === GroupMemberRole.Admin || me.role === GroupMemberRole.Treasurer);
+      this.displayedColumns = this.isAdminOrTreasurer
+        ? ['period', 'emiAmount', 'principalAmount', 'interestAmount', 'status', 'action']
+        : ['period', 'emiAmount', 'principalAmount', 'interestAmount', 'status'];
+    });
+
     this.load();
   }
 
