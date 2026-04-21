@@ -25,9 +25,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<User>(e =>
         {
-            e.HasIndex(u => u.PhoneNumber).IsUnique();
             e.Property(u => u.PhoneNumber).HasMaxLength(15);
+            e.Property(u => u.FirebaseUid).HasMaxLength(128);
             e.Property(u => u.FullName).HasMaxLength(100);
+            // Unique only when non-null so Firebase-only users (no phone) don't conflict
+            e.HasIndex(u => u.PhoneNumber).IsUnique().HasFilter("[PhoneNumber] IS NOT NULL AND [PhoneNumber] <> ''");
+            e.HasIndex(u => u.FirebaseUid).IsUnique().HasFilter("[FirebaseUid] IS NOT NULL");
         });
 
         modelBuilder.Entity<OtpCode>(e =>

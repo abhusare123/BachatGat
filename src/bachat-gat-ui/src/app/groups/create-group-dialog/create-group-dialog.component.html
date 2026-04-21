@@ -17,6 +17,20 @@
       <mat-label>Interest Rate (% per month)</mat-label>
       <input matInput type="number" formControlName="interestRatePercent" step="0.5">
     </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Interest Rate Type</mat-label>
+      <mat-select formControlName="interestRateType">
+        <mat-option *ngFor="let t of rateTypes" [value]="t.value">
+          {{ t.label }}
+        </mat-option>
+      </mat-select>
+      <mat-hint *ngIf="form.get('interestRateType')?.value === InterestRateType.Reducing">
+        Interest calculated on outstanding balance — lower total cost
+      </mat-hint>
+      <mat-hint *ngIf="form.get('interestRateType')?.value === InterestRateType.Fixed">
+        Interest calculated on original principal — same every month
+      </mat-hint>
+    </mat-form-field>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

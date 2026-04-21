@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BachatGat.Application.Services;
 
-public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt, ILogger<AuthService> logger) : IAuthService
+public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt, IFirebaseTokenValidator firebaseValidator, ILogger<AuthService> logger) : IAuthService
 {
     public async Task SendOtpAsync(string phoneNumber)
     {
@@ -27,8 +27,21 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt, ILo
         logger.LogInformation("OTP sent to {PhoneNumber}", phoneNumber);
     }
 
-    public async Task<AuthResponse?> VerifyOtpAsync(string phoneNumber, string otp, string fullName)
+    public Task<bool> PhoneExistsAsync(string phoneNumber) =>
+        db.Users.AnyAsync(u => u.PhoneNumber == phoneNumber);
+
+    public async Task<AuthResponse?> VerifyOtpAsync(string phoneNumber, string otp, string? fullName)
     {
+        var user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+        bool isNew = user == null;
+
+        // New user must supply a name before we consume the OTP
+        if (isNew && string.IsNullOrWhiteSpace(fullName))
+        {
+            logger.LogWarning("OTP verify rejected for new user {PhoneNumber} — full name not provided", phoneNumber);
+            return null;
+        }
+
         var otpRecord = await db.OtpCodes
             .Where(o => o.PhoneNumber == phoneNumber && o.Code == otp && !o.IsUsed && o.ExpiresAt > DateTime.UtcNow)
             .OrderByDescending(o => o.CreatedAt)
@@ -42,12 +55,9 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt, ILo
 
         otpRecord.IsUsed = true;
 
-        var user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
-        bool isNew = user == null;
-
         if (user == null)
         {
-            user = new User { PhoneNumber = phoneNumber, FullName = fullName };
+            user = new User { PhoneNumber = phoneNumber, FullName = fullName! };
             db.Users.Add(user);
         }
         else if (!string.IsNullOrWhiteSpace(fullName))
@@ -97,6 +107,45 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt, ILo
         }
 
         logger.LogInformation("User {UserId} logged in via direct login", user.Id);
+        return await IssueTokensAsync(user);
+    }
+
+    public async Task<AuthResponse?> FirebaseLoginAsync(string idToken)
+    {
+        var info = await firebaseValidator.ValidateAsync(idToken);
+        if (info == null) return null;
+
+        var user = await db.Users.FirstOrDefaultAsync(u => u.FirebaseUid == info.Uid);
+
+        if (user == null && info.PhoneNumber != null)
+            user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == info.PhoneNumber);
+
+        if (user == null && info.Email != null)
+            user = await db.Users.FirstOrDefaultAsync(u => u.Email != null && u.Email == info.Email);
+
+        if (user == null)
+        {
+            user = new User
+            {
+                FirebaseUid = info.Uid,
+                PhoneNumber = info.PhoneNumber,
+                Email = info.Email,
+                FullName = info.Name ?? info.PhoneNumber ?? "User"
+            };
+            db.Users.Add(user);
+            await db.SaveChangesAsync();
+            logger.LogInformation("New user registered via Firebase ({Provider}) — UserId {UserId}", info.SignInProvider, user.Id);
+        }
+        else
+        {
+            if (user.FirebaseUid == null)
+            {
+                user.FirebaseUid = info.Uid;
+                await db.SaveChangesAsync();
+            }
+            logger.LogInformation("User {UserId} authenticated via Firebase ({Provider})", user.Id, info.SignInProvider);
+        }
+
         return await IssueTokensAsync(user);
     }
 

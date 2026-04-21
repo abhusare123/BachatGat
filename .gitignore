@@ -367,3 +367,5 @@ appsettings.Production.json
 .env
 .env.*
 secrets.json
+# Firebase service account key (contains secrets)
+firebase-service-account.json

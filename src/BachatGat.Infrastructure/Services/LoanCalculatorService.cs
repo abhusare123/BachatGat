@@ -1,13 +1,19 @@
+using BachatGat.Core.Enums;
 using BachatGat.Core.Interfaces;
 
 namespace BachatGat.Infrastructure.Services;
 
 public class LoanCalculatorService : ILoanCalculatorService
 {
-    public decimal CalculateEmi(decimal principal, decimal monthlyRatePercent, int tenureMonths)
+    public decimal CalculateEmi(decimal principal, decimal monthlyRatePercent, int tenureMonths, InterestRateType rateType)
     {
-        if (monthlyRatePercent == 0)
-            return Math.Round(principal / tenureMonths, 2);
+        if (monthlyRatePercent == 0 || rateType == InterestRateType.Fixed)
+        {
+            decimal totalInterest = rateType == InterestRateType.Fixed
+                ? principal * (monthlyRatePercent / 100m) * tenureMonths
+                : 0m;
+            return Math.Round((principal + totalInterest) / tenureMonths, 2);
+        }
 
         double r = (double)monthlyRatePercent / 100.0;
         double p = (double)principal;
@@ -17,29 +23,46 @@ public class LoanCalculatorService : ILoanCalculatorService
     }
 
     public IReadOnlyList<AmortizationEntry> GenerateSchedule(
-        decimal principal, decimal monthlyRatePercent, int tenureMonths, string startPeriod)
+        decimal principal, decimal monthlyRatePercent, int tenureMonths, string startPeriod, InterestRateType rateType)
     {
-        decimal emi = CalculateEmi(principal, monthlyRatePercent, tenureMonths);
-        decimal r = monthlyRatePercent / 100m;
-        decimal outstanding = principal;
         var schedule = new List<AmortizationEntry>(tenureMonths);
-
         var (year, month) = ParsePeriod(startPeriod);
 
-        for (int i = 0; i < tenureMonths; i++)
+        if (rateType == InterestRateType.Fixed)
         {
-            decimal interest = Math.Round(outstanding * r, 2);
-            decimal principalPart = i == tenureMonths - 1
-                ? outstanding           // last instalment clears remainder
-                : Math.Round(emi - interest, 2);
+            decimal monthlyInterest = Math.Round(principal * monthlyRatePercent / 100m, 2);
+            decimal monthlyPrincipal = Math.Round(principal / tenureMonths, 2);
+            decimal emi = monthlyPrincipal + monthlyInterest;
+            decimal outstanding = principal;
 
-            outstanding = Math.Round(outstanding - principalPart, 2);
+            for (int i = 0; i < tenureMonths; i++)
+            {
+                decimal principalPart = i == tenureMonths - 1 ? outstanding : monthlyPrincipal;
+                outstanding = Math.Round(outstanding - principalPart, 2);
+                string period = $"{year:D4}-{month:D2}";
+                schedule.Add(new AmortizationEntry(period, emi, principalPart, monthlyInterest, outstanding));
+                month++;
+                if (month > 12) { month = 1; year++; }
+            }
+        }
+        else
+        {
+            decimal emi = CalculateEmi(principal, monthlyRatePercent, tenureMonths, InterestRateType.Reducing);
+            decimal r = monthlyRatePercent / 100m;
+            decimal outstanding = principal;
 
-            string period = $"{year:D4}-{month:D2}";
-            schedule.Add(new AmortizationEntry(period, emi, principalPart, interest, outstanding));
-
-            month++;
-            if (month > 12) { month = 1; year++; }
+            for (int i = 0; i < tenureMonths; i++)
+            {
+                decimal interest = Math.Round(outstanding * r, 2);
+                decimal principalPart = i == tenureMonths - 1
+                    ? outstanding
+                    : Math.Round(emi - interest, 2);
+                outstanding = Math.Round(outstanding - principalPart, 2);
+                string period = $"{year:D4}-{month:D2}";
+                schedule.Add(new AmortizationEntry(period, emi, principalPart, interest, outstanding));
+                month++;
+                if (month > 12) { month = 1; year++; }
+            }
         }
 
         return schedule;

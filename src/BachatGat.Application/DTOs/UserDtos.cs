@@ -5,7 +5,7 @@ namespace BachatGat.Application.DTOs;
 public record UserProfileDto(
     int Id,
     string FullName,
-    string PhoneNumber,
+    string? PhoneNumber,
     string? Email,
     string? Address,
     DateTime CreatedAt);

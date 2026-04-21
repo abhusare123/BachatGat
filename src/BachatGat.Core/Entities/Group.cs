@@ -1,3 +1,5 @@
+using BachatGat.Core.Enums;
+
 namespace BachatGat.Core.Entities;
 
 public class Group
@@ -7,6 +9,7 @@ public class Group
     public string? Description { get; set; }
     public decimal MonthlyAmount { get; set; }
     public decimal InterestRatePercent { get; set; }
+    public InterestRateType InterestRateType { get; set; } = InterestRateType.Reducing;
     public int CreatedByUserId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

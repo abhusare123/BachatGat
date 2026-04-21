@@ -12,6 +12,7 @@ export interface Group {
   description?: string;
   monthlyAmount: number;
   interestRatePercent: number;
+  interestRateType: InterestRateType;
   createdAt: string;
   memberCount: number;
 }
@@ -28,6 +29,11 @@ export interface GroupMember {
   role: GroupMemberRole;
   joinedAt: string;
   isActive: boolean;
+}
+
+export enum InterestRateType {
+  Fixed = 1,
+  Reducing = 2
 }
 
 export enum GroupMemberRole {
@@ -78,6 +84,7 @@ export interface Loan {
   amount: number;
   tenureMonths: number;
   interestRatePercent: number;
+  interestRateType: InterestRateType;
   purpose?: string;
   status: LoanStatus;
   requestedAt: string;

@@ -13,8 +13,8 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  login(phoneNumber: string) {
-    return this.http.post<AuthResponse>(`${this.API}/auth/login`, { phoneNumber }).pipe(
+  firebaseLogin(idToken: string) {
+    return this.http.post<AuthResponse>(`${this.API}/auth/firebase`, { idToken }).pipe(
       tap(res => this.saveUser(res))
     );
   }
@@ -35,16 +35,6 @@ export class AuthService {
     );
   }
 
-  // Legacy OTP methods — kept for future SMS integration
-  sendOtp(phoneNumber: string) {
-    return this.http.post(`${this.API}/auth/send-otp`, { phoneNumber });
-  }
-
-  verifyOtp(phoneNumber: string, otp: string, fullName: string) {
-    return this.http.post<AuthResponse>(`${this.API}/auth/verify-otp`, { phoneNumber, otp, fullName }).pipe(
-      tap(res => this.saveUser(res))
-    );
-  }
 
   logout() {
     localStorage.removeItem('auth');

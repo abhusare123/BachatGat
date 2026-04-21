@@ -19,7 +19,19 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpRequest request)
     {
         var result = await authService.VerifyOtpAsync(request.PhoneNumber, request.Otp, request.FullName);
-        if (result == null) return BadRequest(new { Message = "Invalid or expired OTP" });
+        if (result == null) return BadRequest(new { Message = "Invalid or expired OTP. New users must provide a name." });
+        return Ok(result);
+    }
+
+    [HttpGet("check-phone")]
+    public async Task<IActionResult> CheckPhone([FromQuery] string phone)
+        => Ok(new { exists = await authService.PhoneExistsAsync(phone) });
+
+    [HttpPost("firebase")]
+    public async Task<IActionResult> FirebaseLogin([FromBody] FirebaseLoginRequest request)
+    {
+        var result = await authService.FirebaseLoginAsync(request.IdToken);
+        if (result == null) return Unauthorized(new { Message = "Invalid Firebase token." });
         return Ok(result);
     }
 

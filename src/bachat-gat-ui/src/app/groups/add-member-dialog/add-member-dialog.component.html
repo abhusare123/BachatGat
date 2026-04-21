@@ -1,25 +1,41 @@
 <h2 mat-dialog-title>Add Member / सदस्य जोडा</h2>
 <mat-dialog-content>
-  <p class="hint">Enter the phone number. If this person has not logged in yet, provide their name to create an account for them.</p>
+  <p class="hint">Provide a phone number or email to find or create the member account.</p>
   <div *ngIf="error" class="error-msg">{{ error }}</div>
   <form [formGroup]="form" class="dialog-form">
+
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Phone Number (10 digits)</mat-label>
+      <mat-label>Phone Number</mat-label>
       <input matInput formControlName="phoneNumber" placeholder="9876543210"
-             type="tel" maxlength="10" inputmode="numeric"
-             (keydown)="allowOnlyDigits($event)">
+             type="tel" maxlength="15" inputmode="numeric">
+      <mat-hint>Optional if email is provided</mat-hint>
+      <mat-error *ngIf="form.get('phoneNumber')?.hasError('pattern')">Enter 10–15 digits only</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>User Name (required for new users)</mat-label>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" placeholder="member@example.com" type="email">
+      <mat-hint>Optional if phone number is provided</mat-hint>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">Enter a valid email address</mat-error>
+    </mat-form-field>
+
+    <div *ngIf="form.hasError('phoneOrEmailRequired') && form.touched" class="error-msg">
+      At least a phone number or email is required.
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Full Name (required for new users)</mat-label>
       <input matInput formControlName="fullName" placeholder="e.g. Priya Sharma">
       <mat-hint>Leave blank if the person has already logged in</mat-hint>
     </mat-form-field>
+
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Role</mat-label>
       <mat-select formControlName="role">
         <mat-option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</mat-option>
       </mat-select>
     </mat-form-field>
+
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

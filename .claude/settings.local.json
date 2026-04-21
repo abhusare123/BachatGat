@@ -40,7 +40,8 @@
       "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations remove --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --no-build)",
       "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddPenalties --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --no-build -c Release)",
       "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddPenalties --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --configuration Release --no-build)",
-      "Bash(npm list *)"
+      "Bash(npm list *)",
+      "Bash(npx tsc *)"
     ]
   }
 }

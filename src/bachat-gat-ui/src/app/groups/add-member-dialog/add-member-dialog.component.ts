@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -7,6 +7,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { GroupService } from '../../core/group.service';
 import { GroupMemberRole } from '../../core/models';
+
+function phoneOrEmailRequired(group: AbstractControl): ValidationErrors | null {
+  const phone = group.get('phoneNumber')?.value?.trim();
+  const email = group.get('email')?.value?.trim();
+  return phone || email ? null : { phoneOrEmailRequired: true };
+}
 
 @Component({
   selector: 'app-add-member-dialog',
@@ -31,22 +37,25 @@ export class AddMemberDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: { groupId: number }
   ) {
     this.form = this.fb.group({
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      phoneNumber: ['', Validators.pattern(/^\d{10,15}$/)],
+      email: ['', Validators.email],
       fullName: [''],
       role: [GroupMemberRole.Member, Validators.required]
-    });
-  }
-
-  allowOnlyDigits(event: KeyboardEvent): void {
-    if (event.key.length === 1 && (event.key < '0' || event.key > '9')) event.preventDefault();
+    }, { validators: phoneOrEmailRequired });
   }
 
   save() {
     if (this.form.invalid) return;
     this.saving = true;
     this.error = '';
-    const { phoneNumber, fullName, role } = this.form.value;
-    this.groupSvc.addMember(this.data.groupId, phoneNumber, role, fullName || undefined).subscribe({
+    const { phoneNumber, email, fullName, role } = this.form.value;
+    this.groupSvc.addMember(
+      this.data.groupId,
+      phoneNumber?.trim() || undefined,
+      email?.trim() || undefined,
+      role,
+      fullName?.trim() || undefined
+    ).subscribe({
       next: () => this.dialogRef.close(true),
       error: (err) => {
         this.error = err?.error?.message ?? 'Failed to add member.';

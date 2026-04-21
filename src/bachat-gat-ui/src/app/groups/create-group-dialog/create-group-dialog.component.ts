@@ -2,18 +2,26 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { GroupService } from '../../core/group.service';
+import { InterestRateType } from '../../core/models';
 
 @Component({
   selector: 'app-create-group-dialog',
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatButtonModule],
   templateUrl: './create-group-dialog.component.html'
 })
 export class CreateGroupDialogComponent {
   form: FormGroup;
   saving = false;
+  InterestRateType = InterestRateType;
+
+  rateTypes = [
+    { value: InterestRateType.Reducing, label: 'Reducing Balance', hint: 'Interest on outstanding principal (lower total interest)' },
+    { value: InterestRateType.Fixed, label: 'Fixed (Flat Rate)', hint: 'Interest on original principal each month' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -24,7 +32,8 @@ export class CreateGroupDialogComponent {
       name: ['', Validators.required],
       description: [''],
       monthlyAmount: [2000, [Validators.required, Validators.min(1)]],
-      interestRatePercent: [2, [Validators.required, Validators.min(0)]]
+      interestRatePercent: [2, [Validators.required, Validators.min(0)]],
+      interestRateType: [InterestRateType.Reducing, Validators.required]
     });
   }
 

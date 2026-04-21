@@ -61,6 +61,7 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
             Amount = request.Amount,
             TenureMonths = request.TenureMonths,
             InterestRatePercent = group.InterestRatePercent,
+            InterestRateType = group.InterestRateType,
             Purpose = request.Purpose,
             RequestedAt = isAdminOrTreasurer && request.LoanDate.HasValue
                 ? DateTime.SpecifyKind(request.LoanDate.Value, DateTimeKind.Utc)
@@ -203,7 +204,7 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
 
         string startPeriod = $"{loan.RequestedAt.Year:D4}-{loan.RequestedAt.Month:D2}";
 
-        var schedule = calc.GenerateSchedule(loan.Amount, loan.InterestRatePercent, loan.TenureMonths, startPeriod);
+        var schedule = calc.GenerateSchedule(loan.Amount, loan.InterestRatePercent, loan.TenureMonths, startPeriod, loan.InterestRateType);
         foreach (var entry in schedule)
         {
             db.LoanRepayments.Add(new LoanRepayment
@@ -351,7 +352,7 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
 
     private static LoanDto MapLoan(Loan l, int eligibleVoters, int currentUserId) => new(
         l.Id, l.GroupId, l.RequestedByUserId, l.RequestedBy.FullName,
-        l.Amount, l.TenureMonths, l.InterestRatePercent, l.Purpose,
+        l.Amount, l.TenureMonths, l.InterestRatePercent, l.InterestRateType, l.Purpose,
         l.Status, l.RequestedAt, l.ApprovedAt, l.ClosedAt,
         l.Votes.Count(v => v.Vote == VoteChoice.Approve),
         l.Votes.Count(v => v.Vote == VoteChoice.Reject),

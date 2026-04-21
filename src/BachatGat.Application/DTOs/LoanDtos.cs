@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using BachatGat.Core.Enums;
+using InterestRateType = BachatGat.Core.Enums.InterestRateType;
 
 namespace BachatGat.Application.DTOs;
 
@@ -26,7 +27,7 @@ public record VoteLoanRequest(
 
 public record LoanDto(
     int Id, int GroupId, int RequestedByUserId, string RequestedByName,
-    decimal Amount, int TenureMonths, decimal InterestRatePercent,
+    decimal Amount, int TenureMonths, decimal InterestRatePercent, InterestRateType InterestRateType,
     string? Purpose, LoanStatus Status, DateTime RequestedAt, DateTime? ApprovedAt, DateTime? ClosedAt,
     int ApproveVotes, int RejectVotes, int TotalEligibleVoters,
     VoteChoice? CurrentUserVote

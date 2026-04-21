@@ -4,6 +4,7 @@ using BachatGat.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BachatGat.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260420092344_SyncModelSnapshot")]
+    partial class SyncModelSnapshot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,9 +134,6 @@ namespace BachatGat.Infrastructure.Migrations
                         .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<int>("InterestRateType")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("MonthlyAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -245,9 +245,6 @@ namespace BachatGat.Infrastructure.Migrations
                     b.Property<decimal>("InterestRatePercent")
                         .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)");
-
-                    b.Property<int>("InterestRateType")
-                        .HasColumnType("int");
 
                     b.Property<string>("Purpose")
                         .HasMaxLength(500)
@@ -486,14 +483,14 @@ namespace BachatGat.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirebaseUid")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("GoogleSubjectId")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(15)
@@ -504,9 +501,9 @@ namespace BachatGat.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FirebaseUid")
+                    b.HasIndex("GoogleSubjectId")
                         .IsUnique()
-                        .HasFilter("[FirebaseUid] IS NOT NULL");
+                        .HasFilter("[GoogleSubjectId] IS NOT NULL");
 
                     b.HasIndex("PhoneNumber")
                         .IsUnique()

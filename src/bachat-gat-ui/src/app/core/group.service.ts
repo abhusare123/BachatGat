@@ -25,8 +25,10 @@ export class GroupService {
     return this.http.put(`${this.API}/groups/${id}`, payload);
   }
 
-  addMember(groupId: number, phoneNumber: string, role: number, fullName?: string) {
-    const body: any = { phoneNumber, role };
+  addMember(groupId: number, phoneNumber: string | undefined, email: string | undefined, role: number, fullName?: string) {
+    const body: any = { role };
+    if (phoneNumber) body.phoneNumber = phoneNumber;
+    if (email) body.email = email;
     if (fullName) body.fullName = fullName;
     return this.http.post(`${this.API}/groups/${groupId}/members`, body);
   }

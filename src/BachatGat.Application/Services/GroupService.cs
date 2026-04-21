@@ -18,7 +18,7 @@ public class GroupService(IAppDbContext db, ILogger<GroupService> logger) : IGro
             .Include(m => m.Group).ThenInclude(g => g.Members)
             .Select(m => new GroupDto(
                 m.Group.Id, m.Group.Name, m.Group.Description,
-                m.Group.MonthlyAmount, m.Group.InterestRatePercent,
+                m.Group.MonthlyAmount, m.Group.InterestRatePercent, m.Group.InterestRateType,
                 m.Group.CreatedAt, m.Group.Members.Count(x => x.IsActive)))
             .ToListAsync();
     }
@@ -31,6 +31,7 @@ public class GroupService(IAppDbContext db, ILogger<GroupService> logger) : IGro
             Description = request.Description,
             MonthlyAmount = request.MonthlyAmount,
             InterestRatePercent = request.InterestRatePercent,
+            InterestRateType = request.InterestRateType,
             CreatedByUserId = currentUserId
         };
         db.Groups.Add(group);
@@ -49,7 +50,7 @@ public class GroupService(IAppDbContext db, ILogger<GroupService> logger) : IGro
             group.Id, group.Name, currentUserId);
 
         return new GroupDto(group.Id, group.Name, group.Description,
-            group.MonthlyAmount, group.InterestRatePercent, group.CreatedAt, 1);
+            group.MonthlyAmount, group.InterestRatePercent, group.InterestRateType, group.CreatedAt, 1);
     }
 
     public async Task<GroupDetailDto> GetGroupAsync(int groupId, int currentUserId)
@@ -66,9 +67,9 @@ public class GroupService(IAppDbContext db, ILogger<GroupService> logger) : IGro
 
         return new GroupDetailDto(
             group.Id, group.Name, group.Description,
-            group.MonthlyAmount, group.InterestRatePercent, group.CreatedAt,
+            group.MonthlyAmount, group.InterestRatePercent, group.InterestRateType, group.CreatedAt,
             group.Members.Select(m => new GroupMemberDto(
-                m.Id, m.UserId, m.User.FullName, m.User.PhoneNumber, m.Role, m.JoinedAt, m.IsActive)));
+                m.Id, m.UserId, m.User.FullName, m.User.PhoneNumber, m.User.Email, m.Role, m.JoinedAt, m.IsActive)));
     }
 
     public async Task UpdateGroupAsync(int groupId, UpdateGroupRequest request, int currentUserId)
@@ -85,6 +86,7 @@ public class GroupService(IAppDbContext db, ILogger<GroupService> logger) : IGro
         group.Description = request.Description;
         group.MonthlyAmount = request.MonthlyAmount;
         group.InterestRatePercent = request.InterestRatePercent;
+        group.InterestRateType = request.InterestRateType;
         await db.SaveChangesAsync();
 
         logger.LogInformation(
@@ -99,21 +101,32 @@ public class GroupService(IAppDbContext db, ILogger<GroupService> logger) : IGro
         if (membership == null || membership.Role != GroupMemberRole.Admin)
             throw new ForbiddenException();
 
-        var user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
-        bool newUser = user == null;
+        if (string.IsNullOrWhiteSpace(request.PhoneNumber) && string.IsNullOrWhiteSpace(request.Email))
+            throw new BadRequestException("Provide at least a phone number or email to add a member.");
+
+        User? user = null;
+        if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+            user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
+        if (user == null && !string.IsNullOrWhiteSpace(request.Email))
+            user = await db.Users.FirstOrDefaultAsync(u => u.Email != null && u.Email == request.Email);
 
         if (user == null)
         {
             if (string.IsNullOrWhiteSpace(request.FullName))
-                throw new BadRequestException("No user found with this phone number. Provide a name to create a new user account.");
+                throw new BadRequestException("No existing user found. Provide a name to create a new account.");
 
-            user = new User { PhoneNumber = request.PhoneNumber, FullName = request.FullName.Trim() };
+            user = new User
+            {
+                PhoneNumber = string.IsNullOrWhiteSpace(request.PhoneNumber) ? null : request.PhoneNumber,
+                Email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email,
+                FullName = request.FullName.Trim()
+            };
             db.Users.Add(user);
             await db.SaveChangesAsync();
 
             logger.LogInformation(
-                "New user account created for phone {PhoneNumber} while adding to GroupId {GroupId} by UserId {UserId}",
-                request.PhoneNumber, groupId, currentUserId);
+                "New user account created while adding to GroupId {GroupId} by UserId {UserId}",
+                groupId, currentUserId);
         }
 
         var existing = await db.GroupMembers

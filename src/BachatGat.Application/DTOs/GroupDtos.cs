@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using BachatGat.Core.Enums;
 
+
 namespace BachatGat.Application.DTOs;
 
 public record CreateGroupRequest(
@@ -14,7 +15,10 @@ public record CreateGroupRequest(
     decimal MonthlyAmount,
 
     [Range(0, 100, ErrorMessage = "InterestRatePercent must be between 0 and 100")]
-    decimal InterestRatePercent);
+    decimal InterestRatePercent,
+
+    [EnumDataType(typeof(InterestRateType))]
+    InterestRateType InterestRateType = InterestRateType.Reducing);
 
 public record UpdateGroupRequest(
     [Required, MaxLength(200)]
@@ -27,11 +31,17 @@ public record UpdateGroupRequest(
     decimal MonthlyAmount,
 
     [Range(0, 100, ErrorMessage = "InterestRatePercent must be between 0 and 100")]
-    decimal InterestRatePercent);
+    decimal InterestRatePercent,
+
+    [EnumDataType(typeof(InterestRateType))]
+    InterestRateType InterestRateType = InterestRateType.Reducing);
 
 public record AddMemberRequest(
-    [Required, RegularExpression(@"^\d{10,15}$", ErrorMessage = "PhoneNumber must be 10–15 digits")]
-    string PhoneNumber,
+    [RegularExpression(@"^\d{10,15}$", ErrorMessage = "PhoneNumber must be 10–15 digits")]
+    string? PhoneNumber,
+
+    [EmailAddress, MaxLength(200)]
+    string? Email,
 
     [EnumDataType(typeof(GroupMemberRole))]
     GroupMemberRole Role,
@@ -39,8 +49,8 @@ public record AddMemberRequest(
     [MaxLength(100)]
     string? FullName);
 
-public record GroupDto(int Id, string Name, string? Description, decimal MonthlyAmount, decimal InterestRatePercent, DateTime CreatedAt, int MemberCount);
+public record GroupDto(int Id, string Name, string? Description, decimal MonthlyAmount, decimal InterestRatePercent, InterestRateType InterestRateType, DateTime CreatedAt, int MemberCount);
 
-public record GroupDetailDto(int Id, string Name, string? Description, decimal MonthlyAmount, decimal InterestRatePercent, DateTime CreatedAt, IEnumerable<GroupMemberDto> Members);
+public record GroupDetailDto(int Id, string Name, string? Description, decimal MonthlyAmount, decimal InterestRatePercent, InterestRateType InterestRateType, DateTime CreatedAt, IEnumerable<GroupMemberDto> Members);
 
-public record GroupMemberDto(int Id, int UserId, string FullName, string PhoneNumber, GroupMemberRole Role, DateTime JoinedAt, bool IsActive);
+public record GroupMemberDto(int Id, int UserId, string FullName, string? PhoneNumber, string? Email, GroupMemberRole Role, DateTime JoinedAt, bool IsActive);

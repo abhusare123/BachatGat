@@ -10,6 +10,7 @@ public class Loan
     public decimal Amount { get; set; }
     public int TenureMonths { get; set; }
     public decimal InterestRatePercent { get; set; }
+    public InterestRateType InterestRateType { get; set; } = InterestRateType.Reducing;
     public string? Purpose { get; set; }
     public LoanStatus Status { get; set; } = LoanStatus.Pending;
     public DateTime RequestedAt { get; set; } = DateTime.UtcNow;
