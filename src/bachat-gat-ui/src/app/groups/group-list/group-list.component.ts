@@ -31,7 +31,7 @@ export class GroupListComponent implements OnInit {
         this.loading = false;
         // Auto-navigate if only one group — skip the list screen entirely
         if (groups.length === 1 && !history.state?.showAll) {
-          this.router.navigate(['/groups', groups[0].id, 'contributions'], { replaceUrl: true });
+          this.router.navigate(['/groups', groups[0].id, 'reports'], { replaceUrl: true });
           return;
         }
         this.groups = groups;
@@ -40,7 +40,7 @@ export class GroupListComponent implements OnInit {
     });
   }
 
-  openGroup(id: number) { this.router.navigate(['/groups', id, 'contributions']); }
+  openGroup(id: number) { this.router.navigate(['/groups', id, 'reports']); }
 
   openCreate() {
     this.dialog.open(CreateGroupDialogComponent).afterClosed()
