@@ -16,7 +16,6 @@ public static class InfrastructureServiceExtensions
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
-        services.AddHttpClient<ISmsService, Msg91SmsService>();
         services.AddScoped<IFirebaseTokenValidator, FirebaseTokenValidator>();
         services.AddSingleton<ILoanCalculatorService, LoanCalculatorService>();
         services.AddSingleton<IJwtService, JwtService>();

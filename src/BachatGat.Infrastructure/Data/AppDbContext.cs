@@ -7,7 +7,6 @@ namespace BachatGat.Infrastructure.Data;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IAppDbContext
 {
     public DbSet<User> Users => Set<User>();
-    public DbSet<OtpCode> OtpCodes => Set<OtpCode>();
     public DbSet<Group> Groups => Set<Group>();
     public DbSet<GroupMember> GroupMembers => Set<GroupMember>();
     public DbSet<Contribution> Contributions => Set<Contribution>();
@@ -31,13 +30,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             // Unique only when non-null so Firebase-only users (no phone) don't conflict
             e.HasIndex(u => u.PhoneNumber).IsUnique().HasFilter("[PhoneNumber] IS NOT NULL AND [PhoneNumber] <> ''");
             e.HasIndex(u => u.FirebaseUid).IsUnique().HasFilter("[FirebaseUid] IS NOT NULL");
-        });
-
-        modelBuilder.Entity<OtpCode>(e =>
-        {
-            e.HasIndex(o => new { o.PhoneNumber, o.IsUsed });
-            e.Property(o => o.PhoneNumber).HasMaxLength(15);
-            e.Property(o => o.Code).HasMaxLength(6);
         });
 
         modelBuilder.Entity<Group>(e =>

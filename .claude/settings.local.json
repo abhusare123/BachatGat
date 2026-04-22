@@ -41,7 +41,10 @@
       "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddPenalties --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --no-build -c Release)",
       "Bash(Jwt__Key=\"abcdefghijklmnopqrstuvwxyz1234567890abcd\" dotnet ef migrations add AddPenalties --project src/BachatGat.Infrastructure --startup-project src/BachatGat.Api --configuration Release --no-build)",
       "Bash(npm list *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(npm uninstall *)",
+      "Bash(Get-ChildItem -Recurse -Path \"C:\\\\Users\\\\Dell\\\\source\\\\repos\\\\abhusare123\\\\BachatGat\\\\src\\\\BachatGat.Infrastructure\" -Filter \"*Sms*\")",
+      "Bash(Select-Object FullName)"
     ]
   }
 }

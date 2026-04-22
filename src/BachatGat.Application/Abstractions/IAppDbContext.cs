@@ -6,7 +6,6 @@ namespace BachatGat.Application.Abstractions;
 public interface IAppDbContext
 {
     DbSet<User> Users { get; }
-    DbSet<OtpCode> OtpCodes { get; }
     DbSet<Group> Groups { get; }
     DbSet<GroupMember> GroupMembers { get; }
     DbSet<Contribution> Contributions { get; }
