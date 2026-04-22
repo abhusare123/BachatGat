@@ -32,4 +32,12 @@ public class UsersController(IUserService userService) : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateUserProfile(int id, [FromBody] UpdateUserProfileRequest request)
         => Ok(await userService.UpdateProfileByIdAsync(CurrentUserId, id, request));
+
+    /// <summary>Set or update the current user's PIN.</summary>
+    [HttpPut("me/pin")]
+    public async Task<IActionResult> UpdatePin([FromBody] UpdatePinRequest request)
+    {
+        await userService.UpdatePinAsync(CurrentUserId, request);
+        return NoContent();
+    }
 }

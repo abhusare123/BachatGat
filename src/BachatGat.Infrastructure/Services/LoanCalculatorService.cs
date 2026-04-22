@@ -7,6 +7,14 @@ public class LoanCalculatorService : ILoanCalculatorService
 {
     public decimal CalculateEmi(decimal principal, decimal monthlyRatePercent, int tenureMonths, InterestRateType rateType)
     {
+        // EqualPrincipal has a varying EMI — return the first (highest) instalment
+        if (rateType == InterestRateType.EqualPrincipal)
+        {
+            decimal monthlyPrincipal = Math.Round(principal / tenureMonths, 2);
+            decimal firstInterest = Math.Round(principal * monthlyRatePercent / 100m, 2);
+            return monthlyPrincipal + firstInterest;
+        }
+
         if (monthlyRatePercent == 0 || rateType == InterestRateType.Fixed)
         {
             decimal totalInterest = rateType == InterestRateType.Fixed
@@ -27,6 +35,27 @@ public class LoanCalculatorService : ILoanCalculatorService
     {
         var schedule = new List<AmortizationEntry>(tenureMonths);
         var (year, month) = ParsePeriod(startPeriod);
+
+        if (rateType == InterestRateType.EqualPrincipal)
+        {
+            decimal monthlyPrincipal = Math.Round(principal / tenureMonths, 2);
+            decimal outstanding = principal;
+            decimal r = monthlyRatePercent / 100m;
+
+            for (int i = 0; i < tenureMonths; i++)
+            {
+                decimal principalPart = i == tenureMonths - 1 ? outstanding : monthlyPrincipal;
+                decimal interest = Math.Round(outstanding * r, 2);
+                decimal emi = principalPart + interest;
+                outstanding = Math.Round(outstanding - principalPart, 2);
+                string period = $"{year:D4}-{month:D2}";
+                schedule.Add(new AmortizationEntry(period, emi, principalPart, interest, outstanding));
+                month++;
+                if (month > 12) { month = 1; year++; }
+            }
+
+            return schedule;
+        }
 
         if (rateType == InterestRateType.Fixed)
         {

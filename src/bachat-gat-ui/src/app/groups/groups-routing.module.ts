@@ -13,7 +13,7 @@ const routes: Routes = [
     path: ':id',
     component: GroupShellComponent,
     children: [
-      { path: '', redirectTo: 'contributions', pathMatch: 'full' },
+      { path: '', redirectTo: 'reports', pathMatch: 'full' },
       {
         path: 'contributions',
         loadChildren: () => import('../contributions/contributions.module').then(m => m.ContributionsModule)

@@ -19,6 +19,18 @@ export class AuthService {
     );
   }
 
+  loginWithPin(phoneNumber: string, pin: string) {
+    return this.http.post<AuthResponse>(`${this.API}/auth/login-pin`, { phoneNumber, pin }).pipe(
+      tap(res => this.saveUser(res))
+    );
+  }
+
+  registerWithPin(phoneNumber: string, fullName: string, pin: string) {
+    return this.http.post<AuthResponse>(`${this.API}/auth/register-pin`, { phoneNumber, fullName, pin }).pipe(
+      tap(res => this.saveUser(res))
+    );
+  }
+
   refresh(): Observable<AuthResponse> {
     const stored = this.loadUser();
     if (!stored?.refreshToken) {

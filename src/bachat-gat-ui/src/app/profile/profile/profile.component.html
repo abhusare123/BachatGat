@@ -15,55 +15,115 @@
         <mat-spinner diameter="48"></mat-spinner>
       </div>
 
-      <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="save()">
+      <ng-container *ngIf="!loading">
 
-        <!-- Phone — read-only -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Mobile Number</mat-label>
-          <mat-icon matPrefix>phone</mat-icon>
-          <input matInput [value]="profile?.phoneNumber ?? ''" readonly />
-          <mat-hint>Phone number cannot be changed</mat-hint>
-        </mat-form-field>
+        <!-- Profile Details Form -->
+        <form [formGroup]="form" (ngSubmit)="save()">
 
-        <!-- Full Name -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Full Name</mat-label>
-          <mat-icon matPrefix>person</mat-icon>
-          <input matInput formControlName="fullName" placeholder="Your full name" />
-          <mat-error *ngIf="form.get('fullName')?.hasError('required')">Name is required</mat-error>
-          <mat-error *ngIf="form.get('fullName')?.hasError('maxlength')">Max 100 characters</mat-error>
-        </mat-form-field>
+          <!-- Phone -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mobile Number</mat-label>
+            <mat-icon matPrefix>phone</mat-icon>
+            <input matInput formControlName="phoneNumber" type="tel" placeholder="10-digit mobile number" inputmode="numeric" />
+            <mat-hint *ngIf="!form.get('phoneNumber')?.value">Add your mobile number to enable PIN login</mat-hint>
+            <mat-error *ngIf="form.get('phoneNumber')?.hasError('pattern')">Enter a valid 10–15 digit number</mat-error>
+          </mat-form-field>
 
-        <!-- Email -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email Address</mat-label>
-          <mat-icon matPrefix>email</mat-icon>
-          <input matInput formControlName="email" type="email" placeholder="you@example.com" />
-          <mat-error *ngIf="form.get('email')?.hasError('email')">Enter a valid email address</mat-error>
-          <mat-error *ngIf="form.get('email')?.hasError('maxlength')">Max 200 characters</mat-error>
-        </mat-form-field>
+          <!-- Full Name -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Full Name</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput formControlName="fullName" placeholder="Your full name" />
+            <mat-error *ngIf="form.get('fullName')?.hasError('required')">Name is required</mat-error>
+            <mat-error *ngIf="form.get('fullName')?.hasError('maxlength')">Max 100 characters</mat-error>
+          </mat-form-field>
 
-        <!-- Address -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Address</mat-label>
-          <mat-icon matPrefix>home</mat-icon>
-          <textarea matInput formControlName="address" rows="3"
-                    placeholder="House / Street, Village, District"></textarea>
-          <mat-error *ngIf="form.get('address')?.hasError('maxlength')">Max 500 characters</mat-error>
-        </mat-form-field>
+          <!-- Email -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email Address</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput formControlName="email" type="email" placeholder="you@example.com" />
+            <mat-error *ngIf="form.get('email')?.hasError('email')">Enter a valid email address</mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('maxlength')">Max 200 characters</mat-error>
+          </mat-form-field>
 
-        <div class="actions">
-          <button mat-stroked-button type="button" (click)="cancel()">
-            <mat-icon>cancel</mat-icon>
-            Cancel
-          </button>
-          <button mat-flat-button color="primary" type="submit"
-                  [disabled]="form.invalid || saving">
-            <mat-icon>save</mat-icon>
-            {{ saving ? 'Saving…' : 'Save Changes' }}
-          </button>
-        </div>
-      </form>
+          <!-- Address -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Address</mat-label>
+            <mat-icon matPrefix>home</mat-icon>
+            <textarea matInput formControlName="address" rows="3"
+                      placeholder="House / Street, Village, District"></textarea>
+            <mat-error *ngIf="form.get('address')?.hasError('maxlength')">Max 500 characters</mat-error>
+          </mat-form-field>
+
+          <div class="actions">
+            <button mat-stroked-button type="button" (click)="cancel()">
+              <mat-icon>cancel</mat-icon>
+              Cancel
+            </button>
+            <button mat-flat-button color="primary" type="submit"
+                    [disabled]="form.invalid || saving">
+              <mat-icon>save</mat-icon>
+              {{ saving ? 'Saving…' : 'Save Changes' }}
+            </button>
+          </div>
+        </form>
+
+        <!-- PIN Section — only for own profile -->
+        <ng-container *ngIf="!targetUserId">
+          <mat-divider class="pin-divider"></mat-divider>
+
+          <mat-expansion-panel class="pin-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon class="pin-icon">lock</mat-icon>
+                PIN
+              </mat-panel-title>
+              <mat-panel-description>
+                <span class="pin-status" [class.pin-set]="profile?.hasPin" [class.pin-unset]="!profile?.hasPin">
+                  <mat-icon>{{ profile?.hasPin ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                  {{ profile?.hasPin ? 'PIN is set' : 'No PIN set' }}
+                </span>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <form [formGroup]="pinForm" (ngSubmit)="savePin()" class="pin-form">
+
+              <mat-form-field appearance="outline" class="full-width" *ngIf="profile?.hasPin">
+                <mat-label>Current PIN</mat-label>
+                <mat-icon matPrefix>lock_open</mat-icon>
+                <input matInput formControlName="currentPin" type="password" placeholder="Enter current PIN" maxlength="6" inputmode="numeric">
+                <mat-error *ngIf="pinForm.get('currentPin')?.hasError('required')">Current PIN is required</mat-error>
+                <mat-error *ngIf="pinForm.get('currentPin')?.hasError('pattern')">PIN must be 4–6 digits</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ profile?.hasPin ? 'New PIN' : 'Set PIN' }}</mat-label>
+                <mat-icon matPrefix>lock</mat-icon>
+                <input matInput formControlName="newPin" type="password" placeholder="4–6 digit PIN" maxlength="6" inputmode="numeric">
+                <mat-error *ngIf="pinForm.get('newPin')?.hasError('required')">PIN is required</mat-error>
+                <mat-error *ngIf="pinForm.get('newPin')?.hasError('pattern')">PIN must be 4–6 digits</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Confirm PIN</mat-label>
+                <mat-icon matPrefix>lock</mat-icon>
+                <input matInput formControlName="confirmPin" type="password" placeholder="Repeat PIN" maxlength="6" inputmode="numeric">
+                <mat-error *ngIf="pinForm.hasError('pinMismatch') && pinForm.get('confirmPin')?.touched">PINs do not match</mat-error>
+              </mat-form-field>
+
+              <div class="actions">
+                <button mat-flat-button color="primary" type="submit"
+                        [disabled]="pinForm.invalid || savingPin">
+                  <mat-icon>save</mat-icon>
+                  {{ savingPin ? 'Saving…' : (profile?.hasPin ? 'Update PIN' : 'Set PIN') }}
+                </button>
+              </div>
+            </form>
+          </mat-expansion-panel>
+        </ng-container>
+
+      </ng-container>
     </mat-card-content>
   </mat-card>
 </div>

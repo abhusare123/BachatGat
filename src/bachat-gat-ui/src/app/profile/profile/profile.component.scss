@@ -35,3 +35,45 @@
     gap: 6px;
   }
 }
+
+.pin-divider {
+  margin: 24px 0 16px;
+}
+
+.pin-panel {
+  box-shadow: none !important;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 8px !important;
+}
+
+.pin-icon {
+  margin-right: 8px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+.pin-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &.pin-set {
+    color: #2e7d32;
+  }
+  &.pin-unset {
+    color: #9e9e9e;
+  }
+}
+
+.pin-form {
+  padding-top: 8px;
+}

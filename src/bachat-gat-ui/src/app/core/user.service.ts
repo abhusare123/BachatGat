@@ -25,4 +25,8 @@ export class UserService {
   updateUserProfile(userId: number, request: UpdateUserProfileRequest): Observable<UserProfile> {
     return this.http.put<UserProfile>(`${this.API}/users/${userId}`, request);
   }
+
+  updatePin(currentPin: string | null, newPin: string): Observable<void> {
+    return this.http.put<void>(`${this.API}/users/me/pin`, { currentPin, newPin });
+  }
 }

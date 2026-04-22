@@ -33,7 +33,8 @@ export interface GroupMember {
 
 export enum InterestRateType {
   Fixed = 1,
-  Reducing = 2
+  Reducing = 2,
+  EqualPrincipal = 3
 }
 
 export enum GroupMemberRole {
@@ -183,6 +184,7 @@ export interface UserProfile {
   email: string | null;
   address: string | null;
   createdAt: string;
+  hasPin: boolean;
 }
 
 export interface UpdateUserProfileRequest {

@@ -22,7 +22,14 @@ public class UserService(IAppDbContext db) : IUserService
         var user = await db.Users.FindAsync(userId)
             ?? throw new NotFoundException($"User {userId} not found");
 
+        if (request.PhoneNumber != null && request.PhoneNumber != user.PhoneNumber)
+        {
+            bool taken = await db.Users.AnyAsync(u => u.Id != userId && u.PhoneNumber == request.PhoneNumber);
+            if (taken) throw new BadRequestException("This mobile number is already registered to another account.");
+        }
+
         user.FullName = request.FullName;
+        user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
         user.Email = request.Email;
         user.Address = request.Address;
 
@@ -44,12 +51,34 @@ public class UserService(IAppDbContext db) : IUserService
         var user = await db.Users.FindAsync(targetUserId)
             ?? throw new NotFoundException($"User {targetUserId} not found");
 
+        if (request.PhoneNumber != null && request.PhoneNumber != user.PhoneNumber)
+        {
+            bool taken = await db.Users.AnyAsync(u => u.Id != targetUserId && u.PhoneNumber == request.PhoneNumber);
+            if (taken) throw new BadRequestException("This mobile number is already registered to another account.");
+        }
+
         user.FullName = request.FullName;
+        user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
         user.Email = request.Email;
         user.Address = request.Address;
 
         await db.SaveChangesAsync();
         return ToDto(user);
+    }
+
+    public async Task UpdatePinAsync(int userId, UpdatePinRequest request)
+    {
+        var user = await db.Users.FindAsync(userId)
+            ?? throw new NotFoundException($"User {userId} not found");
+
+        if (user.PinHash != null)
+        {
+            if (string.IsNullOrEmpty(request.CurrentPin) || !BCrypt.Net.BCrypt.Verify(request.CurrentPin, user.PinHash))
+                throw new BadRequestException("Current PIN is incorrect.");
+        }
+
+        user.PinHash = BCrypt.Net.BCrypt.HashPassword(request.NewPin);
+        await db.SaveChangesAsync();
     }
 
     // ── helpers ──────────────────────────────────────────────────────────────
@@ -63,5 +92,5 @@ public class UserService(IAppDbContext db) : IUserService
     }
 
     private static UserProfileDto ToDto(User u) =>
-        new(u.Id, u.FullName, u.PhoneNumber, u.Email, u.Address, u.CreatedAt);
+        new(u.Id, u.FullName, u.PhoneNumber, u.Email, u.Address, u.CreatedAt, u.PinHash != null);
 }

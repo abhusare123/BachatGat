@@ -149,6 +149,41 @@ public class AuthService(IAppDbContext db, ISmsService sms, IJwtService jwt, IFi
         return await IssueTokensAsync(user);
     }
 
+    public async Task<AuthResponse?> RegisterWithPinAsync(RegisterWithPinRequest request)
+    {
+        bool exists = await db.Users.AnyAsync(u => u.PhoneNumber == request.PhoneNumber);
+        if (exists)
+        {
+            logger.LogWarning("PIN registration rejected — phone {PhoneNumber} already registered", request.PhoneNumber);
+            return null;
+        }
+
+        var user = new User
+        {
+            PhoneNumber = request.PhoneNumber,
+            FullName = request.FullName,
+            PinHash = BCrypt.Net.BCrypt.HashPassword(request.Pin)
+        };
+        db.Users.Add(user);
+        await db.SaveChangesAsync();
+
+        logger.LogInformation("New user registered via PIN — UserId {UserId}, Phone {PhoneNumber}", user.Id, request.PhoneNumber);
+        return await IssueTokensAsync(user);
+    }
+
+    public async Task<AuthResponse?> LoginWithPinAsync(LoginWithPinRequest request)
+    {
+        var user = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
+        if (user == null || user.PinHash == null || !BCrypt.Net.BCrypt.Verify(request.Pin, user.PinHash))
+        {
+            logger.LogWarning("PIN login failed for {PhoneNumber}", request.PhoneNumber);
+            return null;
+        }
+
+        logger.LogInformation("User {UserId} authenticated via PIN", user.Id);
+        return await IssueTokensAsync(user);
+    }
+
     // ── helpers ──────────────────────────────────────────────────────────────
 
     private async Task<AuthResponse> IssueTokensAsync(User user)

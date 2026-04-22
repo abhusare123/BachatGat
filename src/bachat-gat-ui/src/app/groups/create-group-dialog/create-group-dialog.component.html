@@ -25,10 +25,13 @@
         </mat-option>
       </mat-select>
       <mat-hint *ngIf="form.get('interestRateType')?.value === InterestRateType.Reducing">
-        Interest calculated on outstanding balance — lower total cost
+        Fixed EMI · Interest on outstanding balance · e.g. ₹40K / 10 months → EMI stays same, interest part shrinks
+      </mat-hint>
+      <mat-hint *ngIf="form.get('interestRateType')?.value === InterestRateType.EqualPrincipal">
+        Fixed principal each month · Interest on outstanding · e.g. ₹40K / 10 months → ₹4000 principal + decreasing interest
       </mat-hint>
       <mat-hint *ngIf="form.get('interestRateType')?.value === InterestRateType.Fixed">
-        Interest calculated on original principal — same every month
+        Interest on original principal every month · Same total EMI throughout
       </mat-hint>
     </mat-form-field>
   </form>

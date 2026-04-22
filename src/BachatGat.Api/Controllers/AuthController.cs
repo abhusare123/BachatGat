@@ -56,4 +56,22 @@ public class AuthController(IAuthService authService) : ControllerBase
             return Unauthorized(new { Message = "Phone number not registered. Contact your group admin to be added." });
         return Ok(result);
     }
+
+    [HttpPost("register-pin")]
+    public async Task<IActionResult> RegisterWithPin([FromBody] RegisterWithPinRequest request)
+    {
+        var result = await authService.RegisterWithPinAsync(request);
+        if (result == null)
+            return Conflict(new { Message = "This phone number is already registered." });
+        return Ok(result);
+    }
+
+    [HttpPost("login-pin")]
+    public async Task<IActionResult> LoginWithPin([FromBody] LoginWithPinRequest request)
+    {
+        var result = await authService.LoginWithPinAsync(request);
+        if (result == null)
+            return Unauthorized(new { Message = "Invalid phone number or PIN." });
+        return Ok(result);
+    }
 }

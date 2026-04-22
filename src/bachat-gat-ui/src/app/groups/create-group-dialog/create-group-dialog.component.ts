@@ -19,8 +19,9 @@ export class CreateGroupDialogComponent {
   InterestRateType = InterestRateType;
 
   rateTypes = [
-    { value: InterestRateType.Reducing, label: 'Reducing Balance', hint: 'Interest on outstanding principal (lower total interest)' },
-    { value: InterestRateType.Fixed, label: 'Fixed (Flat Rate)', hint: 'Interest on original principal each month' }
+    { value: InterestRateType.Reducing, label: 'Reducing Balance (Fixed EMI)', hint: 'Fixed EMI; interest on outstanding balance — lower total cost' },
+    { value: InterestRateType.EqualPrincipal, label: 'Equal Principal (Decreasing EMI)', hint: 'Fixed principal each month; interest on outstanding — EMI reduces over time' },
+    { value: InterestRateType.Fixed, label: 'Flat Rate (Fixed Interest)', hint: 'Interest on original principal every month — same EMI' }
   ];
 
   constructor(

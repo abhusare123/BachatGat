@@ -12,4 +12,7 @@ public interface IUserService
 
     /// <summary>Admin-only: update any user's profile.</summary>
     Task<UserProfileDto> UpdateProfileByIdAsync(int requestingUserId, int targetUserId, UpdateUserProfileRequest request);
+
+    /// <summary>Set or update the PIN for the current user.</summary>
+    Task UpdatePinAsync(int userId, UpdatePinRequest request);
 }
