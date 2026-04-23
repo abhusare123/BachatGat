@@ -272,3 +272,13 @@ mat-card {
 
   p { margin: 0; font-size: var(--text-md); }
 }
+
+/* ── Footer ── */
+.app-footer {
+  text-align: center;
+  padding: 12px 16px;
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+  border-top: 1px solid var(--clr-border);
+  background: var(--clr-surface);
+}

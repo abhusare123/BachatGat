@@ -24,4 +24,8 @@ export class AppComponent {
     const match = this.router.url.match(/\/groups\/(\d+)/);
     return match ? +match[1] : null;
   }
+
+  get currentYear(): number {
+    return new Date().getFullYear();
+  }
 }
