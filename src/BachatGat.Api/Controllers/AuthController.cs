@@ -29,7 +29,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         var result = await authService.RegisterWithPinAsync(request);
         if (result == null)
-            return Conflict(new { Message = "This phone number is already registered." });
+            return Conflict(new { Message = "This phone number is already registered. Please log in instead." });
         return Ok(result);
     }
 

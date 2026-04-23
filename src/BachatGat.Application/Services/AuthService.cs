@@ -74,11 +74,24 @@ public class AuthService(IAppDbContext db, IJwtService jwt, IFirebaseTokenValida
 
     public async Task<AuthResponse?> RegisterWithPinAsync(RegisterWithPinRequest request)
     {
-        bool exists = await db.Users.AnyAsync(u => u.PhoneNumber == request.PhoneNumber);
-        if (exists)
+        var existing = await db.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
+
+        if (existing != null)
         {
-            logger.LogWarning("PIN registration rejected — phone {PhoneNumber} already registered", request.PhoneNumber);
-            return null;
+            // Account pre-created by admin (no PIN set) — allow the user to complete registration
+            if (existing.PinHash != null)
+            {
+                logger.LogWarning("PIN registration rejected — phone {PhoneNumber} already has a PIN set", request.PhoneNumber);
+                return null;
+            }
+
+            existing.PinHash = BCrypt.Net.BCrypt.HashPassword(request.Pin);
+            if (string.IsNullOrWhiteSpace(existing.FullName))
+                existing.FullName = request.FullName;
+            await db.SaveChangesAsync();
+
+            logger.LogInformation("Admin-created user completed PIN registration — UserId {UserId}, Phone {PhoneNumber}", existing.Id, request.PhoneNumber);
+            return await IssueTokensAsync(existing);
         }
 
         var user = new User
