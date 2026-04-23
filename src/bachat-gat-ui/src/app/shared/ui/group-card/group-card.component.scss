@@ -1,0 +1,58 @@
+:host { display: block; }
+
+.group-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  transition: translate 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    translate: 0 -2px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--clr-primary-600);
+    outline-offset: 2px;
+  }
+
+  .accent {
+    height: 4px;
+    background: linear-gradient(90deg,
+      var(--clr-primary-700),
+      var(--clr-primary-400));
+  }
+
+  .body { padding: 18px 18px 16px; }
+
+  .name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--clr-primary-800);
+    margin: 0 0 2px;
+  }
+  .members {
+    font-size: 12px;
+    color: var(--clr-text-muted);
+    margin-bottom: 12px;
+  }
+  .line {
+    margin: 4px 0;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .desc {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: var(--clr-text-muted);
+    line-height: 1.4;
+  }
+}

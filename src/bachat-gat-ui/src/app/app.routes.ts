@@ -22,5 +22,12 @@ export const routes: Routes = [
     loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)
   },
 
+  {
+    path: 'dashboard',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
+  },
+
   { path: '**', redirectTo: 'groups' }
 ];

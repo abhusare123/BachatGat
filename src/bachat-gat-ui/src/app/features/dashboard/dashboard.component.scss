@@ -1,0 +1,30 @@
+:host { display: block; }
+
+.dashboard {
+  padding: clamp(12px, 2vw, 24px);
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+.section-title {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--clr-primary-800);
+  letter-spacing: -0.2px;
+}
+
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: var(--sp-5);
+}
+
+.loans-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}

@@ -1,0 +1,40 @@
+<div class="dashboard">
+
+  <bg-brand-hero
+    eyebrow="Dashboard · डॅशबोर्ड"
+    caption="Your group's money at a glance"
+  >
+    <span slot="title">Welcome back</span>
+  </bg-brand-hero>
+
+  <section>
+    <h2 class="section-title">Fund Summary / निधी सारांश</h2>
+    <bg-fund-summary-card [summary]="summary()" />
+  </section>
+
+  <section>
+    <h2 class="section-title">My Groups / माझे गट</h2>
+    <div class="groups-grid">
+      @for (g of groups(); track g.id) {
+        <bg-group-card [group]="g" (open)="null" />
+      }
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Active Loans / सक्रिय कर्ज</h2>
+    <div class="loans-list">
+      @for (l of loans(); track l.id) {
+        <bg-loan-card
+          [loan]="l"
+          (vote)="onVote($event)"
+          (approve)="setStatus($event, 'approved')"
+          (reject)="setStatus($event, 'rejected')"
+          (disburse)="setStatus($event, 'active')"
+          (close)="setStatus($event, 'closed')"
+        />
+      }
+    </div>
+  </section>
+
+</div>

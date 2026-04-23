@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════════════════════
+   BachatGat — SCSS Token Mixins
+   ───────────────────────────────────────────────────────────────
+   All colour/spacing/radius/shadow tokens are already exposed as
+   CSS custom properties in src/styles.scss at :root level.
+   This file provides **SCSS variables + mixins** for build-time
+   use (e.g. Angular Material M3 theming, which needs static
+   values not CSS vars).
+
+   Usage:
+     @use 'app/shared/tokens/tokens' as bg;
+     .foo { color: bg.$clr-primary-700; }
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Colour ramp (mirrors :root CSS custom properties) ── */
+$clr-primary-900: oklch(25% 0.09 148);
+$clr-primary-800: oklch(31% 0.11 148);
+$clr-primary-700: oklch(37% 0.13 148);
+$clr-primary-600: oklch(46% 0.15 148);
+$clr-primary-400: oklch(60% 0.16 148);
+$clr-primary-100: oklch(93% 0.04 148);
+$clr-primary-50:  oklch(97% 0.015 148);
+
+$clr-amber: oklch(75% 0.17 75);
+$clr-red:   oklch(46% 0.19 25);
+$clr-blue:  oklch(44% 0.14 252);
+$clr-teal:  oklch(47% 0.12 192);
+
+$clr-surface:    #ffffff;
+$clr-bg:         oklch(98% 0.004 148);
+$clr-border:     oklch(88% 0.01 148);
+$clr-text:       oklch(18% 0.02 148);
+$clr-text-muted: oklch(52% 0.02 148);
+
+/* ── Radii ── */
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+
+/* ── Spacing (4-based scale) ── */
+$sp-1: 4px;  $sp-2: 8px;  $sp-3: 12px;
+$sp-4: 16px; $sp-5: 20px; $sp-6: 24px; $sp-8: 32px;
+
+/* ── Type stack ── */
+$font-sans: 'Google Sans', 'Noto Sans Devanagari', Roboto, 'Helvetica Neue', sans-serif;
+$font-devanagari: 'Noto Sans Devanagari', 'Google Sans', Roboto, sans-serif;
+$font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+/* ── Mixin: signature brand gradient hero ── */
+@mixin brand-hero-bg {
+  background:
+    radial-gradient(circle at 85% 0%,
+      oklch(55% 0.16 148 / 0.25), transparent 60%),
+    linear-gradient(160deg, #{$clr-primary-800} 0%, oklch(22% 0.08 148) 100%);
+  color: #fff;
+}
+
+/* ── Mixin: card shell ── */
+@mixin card-shell {
+  background: #{$clr-surface};
+  border: 1px solid #{$clr-border};
+  border-radius: #{$radius-lg};
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease;
+
+  &:hover { box-shadow: var(--shadow-md); }
+}
+
+/* ── Mixin: tabular numerals (currency) ── */
+@mixin tabular-currency($size: 24px) {
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+  font-size: #{$size};
+  line-height: 1;
+}

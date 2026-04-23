@@ -1,0 +1,38 @@
+<section class="fsc-wrap">
+
+  <!-- HERO: the showpiece figure -->
+  <div class="fsc-hero">
+    <div class="eyebrow">{{ eyebrow() }}</div>
+    <div class="amount">
+      <span class="sym">₹</span>{{ summary().collected | inr }}
+    </div>
+    <div class="caption">{{ caption() }}</div>
+
+    <div class="grid-demo">
+      <div class="col">
+        <div class="h">Align</div>
+        500<br />1,000<br />12,500
+      </div>
+      <div class="col">
+        <div class="h">Regular</div>
+        0123456789
+      </div>
+      <div class="col">
+        <div class="h">Bold</div>
+        <b>0123456789</b>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: status colors in action -->
+  <div class="fsc-tiles">
+    @for (t of tiles(); track t.label) {
+      <bg-stat-tile
+        [label]="t.label"
+        [value]="t.value"
+        [color]="t.color"
+      />
+    }
+  </div>
+
+</section>

@@ -1,0 +1,71 @@
+:host { display: block; }
+
+.stat-tile {
+  position: relative;
+  padding: 14px 16px 12px;
+  border-radius: var(--radius-md);
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 76px;
+  height: 100%;
+  box-shadow: var(--shadow-xs);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+  }
+
+  .lbl {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--clr-text-muted);
+    margin-bottom: 6px;
+  }
+
+  .val {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
+    font-size: 24px;
+    line-height: 1;
+
+    .sym {
+      font-weight: 500;
+      opacity: 0.6;
+      font-size: 0.73em;
+      margin-right: 1px;
+    }
+  }
+}
+
+.tile-green::before { background: linear-gradient(90deg,
+  var(--clr-primary-700), var(--clr-primary-400)); }
+.tile-green .val { color: var(--clr-primary-700); }
+
+.tile-blue::before { background: linear-gradient(90deg,
+  var(--clr-blue), oklch(62% 0.14 252)); }
+.tile-blue .val { color: var(--clr-blue); }
+
+.tile-teal::before { background: linear-gradient(90deg,
+  var(--clr-teal), oklch(62% 0.12 185)); }
+.tile-teal .val { color: var(--clr-teal); }
+
+.tile-amber::before { background: linear-gradient(90deg,
+  oklch(48% 0.17 55), oklch(72% 0.17 60)); }
+.tile-amber .val { color: oklch(48% 0.17 55); }
+
+.tile-red::before { background: linear-gradient(90deg,
+  oklch(40% 0.20 25), oklch(55% 0.20 25)); }
+.tile-red .val { color: oklch(40% 0.20 25); }
+
+.tile-purple::before { background: linear-gradient(90deg,
+  oklch(40% 0.16 300), oklch(55% 0.16 300)); }
+.tile-purple .val { color: oklch(42% 0.16 300); }

@@ -3,6 +3,21 @@
    Uses modern CSS: oklch(), @property, @starting-style, clamp()
    ═══════════════════════════════════════════════════════════════ */
 
+/* ── Material M3 theme (BachatGat green palette) ── */
+@use '@angular/material' as mat;
+@use 'app/shared/tokens/m3-theme' as m3;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: m3.$bg-primary-palette,
+      theme-type: light,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
 /* ── Typed custom properties (animatable) ── */
 @property --card-shadow-alpha {
   syntax: '<number>';

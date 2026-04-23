@@ -1,0 +1,97 @@
+@let l = loan();
+
+<article class="loan-card" [class]="'status-' + l.status">
+
+  <header class="loan-hdr">
+    <div class="who">
+      <div class="name">{{ l.memberName }}</div>
+      <div class="dt">
+        Requested: {{ l.requestedAt | date: 'mediumDate' }}
+        @if (l.closedAt) {
+          · Closed: {{ l.closedAt | date: 'mediumDate' }}
+        }
+      </div>
+    </div>
+    <span class="status-pill" [class]="'pill-' + l.status">{{ statusLabel() }}</span>
+  </header>
+
+  <div class="loan-body">
+    <dl class="loan-details">
+      <div>
+        <dt>Amount</dt>
+        <dd><span class="sym">₹</span>{{ l.amount | inr }}</dd>
+      </div>
+      <div>
+        <dt>Tenure</dt>
+        <dd>{{ l.tenureMonths }} months</dd>
+      </div>
+      <div>
+        <dt>Interest</dt>
+        <dd>{{ l.interestRate }}% / mo</dd>
+      </div>
+      @if (l.purpose) {
+        <div class="purpose">
+          <dt>Purpose</dt>
+          <dd>{{ l.purpose }}</dd>
+        </div>
+      }
+    </dl>
+
+    @if (l.status === 'pending') {
+      <div class="vote-bar">
+        <div class="vote-info">
+          <mat-icon class="up">thumb_up</mat-icon> {{ l.approveVotes }}
+          <span class="sep">|</span>
+          <mat-icon class="down">thumb_down</mat-icon> {{ l.rejectVotes }}
+          <span class="eligible">of {{ l.eligibleVoters }} eligible</span>
+        </div>
+        <div class="vote-actions">
+          <button
+            mat-flat-button
+            [class.accent]="l.myVote === 1"
+            [color]="l.myVote === 1 ? 'primary' : undefined"
+            (click)="onVote(1)"
+          >
+            <mat-icon>thumb_up</mat-icon>
+            <span>Approve</span>
+          </button>
+          <button
+            mat-stroked-button
+            [color]="l.myVote === 2 ? 'warn' : undefined"
+            (click)="onVote(2)"
+          >
+            <mat-icon>thumb_down</mat-icon>
+            <span>Reject</span>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <footer class="loan-actions">
+    @if (isAdmin() && l.status === 'pending') {
+      <button mat-flat-button color="primary" (click)="approve.emit(l.id)">
+        <mat-icon>check_circle</mat-icon><span>Approve</span>
+      </button>
+      <button mat-flat-button color="warn" (click)="reject.emit(l.id)">
+        <mat-icon>cancel</mat-icon><span>Reject</span>
+      </button>
+    }
+    @if (isAdmin() && l.status === 'approved') {
+      <button mat-flat-button color="primary" (click)="disburse.emit(l.id)">
+        <mat-icon>payments</mat-icon><span>Disburse</span>
+      </button>
+    }
+    @if (l.status === 'active' || l.status === 'closed') {
+      <button mat-stroked-button (click)="viewRepayments.emit(l.id)">
+        <mat-icon>receipt_long</mat-icon><span>Repayments / हप्ते</span>
+      </button>
+    }
+    @if (isAdmin() && l.status === 'active') {
+      <button mat-stroked-button color="warn" (click)="close.emit(l.id)">
+        <mat-icon>lock</mat-icon><span>Close Loan</span>
+      </button>
+    }
+  </footer>
+
+</article>
