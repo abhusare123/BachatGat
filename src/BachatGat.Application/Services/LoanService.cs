@@ -200,10 +200,9 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
             throw new BadRequestException("Only approved loans can be disbursed");
 
         loan.Status = LoanStatus.Active;
-        var disbursedAt = DateTime.UtcNow;
-        loan.DisbursedAt = disbursedAt;
+        loan.DisbursedAt = DateTime.UtcNow;
 
-        var firstEmiMonth = disbursedAt.AddMonths(1);
+        var firstEmiMonth = loan.RequestedAt.AddMonths(1);
         string startPeriod = $"{firstEmiMonth.Year:D4}-{firstEmiMonth.Month:D2}";
 
         var schedule = calc.GenerateSchedule(loan.Amount, loan.InterestRatePercent, loan.TenureMonths, startPeriod, loan.InterestRateType);

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { FundSummary, LoanLedgerItem } from './models';
+import { FundSummary, LoanLedgerItem, MonthlyReport } from './models';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -19,5 +19,10 @@ export class ReportService {
 
   getMemberStatement(groupId: number) {
     return this.http.get<any>(`${this.API}/users/me/reports/statement?groupId=${groupId}`);
+  }
+
+  getMonthlyReport(groupId: number, period?: string) {
+    const qs = period ? `?period=${period}` : '';
+    return this.http.get<MonthlyReport>(`${this.API}/groups/${groupId}/reports/monthly${qs}`);
   }
 }

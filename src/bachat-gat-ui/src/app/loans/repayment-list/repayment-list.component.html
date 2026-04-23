@@ -35,6 +35,12 @@
           <div class="summary-value">{{ paidCount }} / {{ repayments.length }}</div>
         </mat-card-content>
       </mat-card>
+      <mat-card class="summary-card">
+        <mat-card-content>
+          <div class="summary-label">Total Interest Paid / एकूण व्याज</div>
+          <div class="summary-value">{{ totalInterestPaid | currency:'INR':'symbol':'1.0-0' }}</div>
+        </mat-card-content>
+      </mat-card>
     </div>
 
     <!-- Repayment Table -->

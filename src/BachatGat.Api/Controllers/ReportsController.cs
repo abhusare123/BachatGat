@@ -22,4 +22,8 @@ public class ReportsController(IReportService reportService) : ControllerBase
     [HttpGet("api/users/me/reports/statement")]
     public async Task<IActionResult> MemberStatement([FromQuery] int groupId)
         => Ok(await reportService.GetMemberStatementAsync(groupId, CurrentUserId));
+
+    [HttpGet("api/groups/{groupId:int}/reports/monthly")]
+    public async Task<IActionResult> MonthlyReport(int groupId, [FromQuery] string? period)
+        => Ok(await reportService.GetMonthlyReportAsync(groupId, CurrentUserId, period));
 }

@@ -213,3 +213,30 @@ export interface GroupRulesResponse {
 export interface UpdateRuleRequest {
   value: string;
 }
+
+export interface MonthlyReportMemberRow {
+  serial: number;
+  memberName: string;
+  totalContributions: number;
+  monthlyContribution: number;
+  loanDisbursed: number;
+  monthlyPrincipal: number;
+  monthlyInterest: number;
+  outstandingLoan: number;
+  monthlyPenalty: number;
+  totalDue: number;
+}
+
+export interface MonthlyReport {
+  period: string;
+  groupName: string;
+  members: MonthlyReportMemberRow[];
+  totalContributions: number;
+  totalMonthlyContributions: number;
+  totalLoanDisbursed: number;
+  totalMonthlyPrincipal: number;
+  totalMonthlyInterest: number;
+  totalOutstandingLoan: number;
+  totalMonthlyPenalties: number;
+  grandTotalDue: number;
+}

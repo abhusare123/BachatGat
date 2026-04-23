@@ -88,6 +88,7 @@ export class RepaymentListComponent implements OnInit {
   }
 
   get paidCount(): number { return this.repayments.filter(r => r.isPaid).length; }
+  get totalInterestPaid(): number { return this.repayments.filter(r => r.isPaid).reduce((s, r) => s + r.interestAmount, 0); }
   get isForeclosed(): boolean { return this.repayments.some(r => r.isForeclosed); }
 
   get totalEmi(): number {

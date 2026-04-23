@@ -4,6 +4,7 @@ using BachatGat.Application.Exceptions;
 using BachatGat.Application.Interfaces;
 using BachatGat.Core.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BachatGat.Application.Services;
 
@@ -100,6 +101,87 @@ public class ReportService(IAppDbContext db) : IReportService
         return new MemberStatementDto(
             membership.User.FullName, membership.User.PhoneNumber,
             contributions, totalContributed, loanDtos);
+    }
+
+    public async Task<MonthlyReportDto> GetMonthlyReportAsync(int groupId, int currentUserId, string? period)
+    {
+        if (!await IsMemberAsync(groupId, currentUserId)) throw new NotFoundException();
+
+        var effectivePeriod = period ?? DateTime.UtcNow.ToString("yyyy-MM");
+        if (!DateTime.TryParseExact(effectivePeriod + "-01", "yyyy-MM-dd",
+                null, System.Globalization.DateTimeStyles.None, out var periodDate))
+            throw new BadRequestException("Period must be in YYYY-MM format.");
+
+        var group = await db.Groups.FindAsync(groupId) ?? throw new NotFoundException();
+
+        var members = await db.GroupMembers
+            .Include(m => m.User)
+            .Where(m => m.GroupId == groupId && m.IsActive)
+            .OrderBy(m => m.Id)
+            .ToListAsync();
+
+        var contributions = await db.Contributions
+            .Where(c => c.GroupMember.GroupId == groupId)
+            .ToListAsync();
+
+        var loans = await db.Loans
+            .Include(l => l.Repayments)
+            .Where(l => l.GroupId == groupId &&
+                        (l.Status == LoanStatus.Active || l.Status == LoanStatus.Closed))
+            .ToListAsync();
+
+        var penalties = await db.GroupIncomes
+            .Where(e => e.GroupId == groupId
+                     && e.GroupMemberId.HasValue
+                     && e.Category == GroupIncomeCategory.Penalty
+                     && e.Date.Year == periodDate.Year
+                     && e.Date.Month == periodDate.Month)
+            .ToListAsync();
+
+        int serial = 0;
+        var rows = members.Select(m =>
+        {
+            serial++;
+            var memberContribs = contributions.Where(c => c.GroupMemberId == m.Id);
+            var totalContribs = memberContribs.Sum(c => c.AmountPaid);
+
+            var memberLoans = loans.Where(l => l.RequestedByUserId == m.UserId).ToList();
+            var totalLoanDisbursed = memberLoans.Sum(l => l.Amount);
+
+            var periodRepayments = memberLoans
+                .SelectMany(l => l.Repayments.Where(r => r.Period == effectivePeriod))
+                .ToList();
+            var monthlyPrincipal = periodRepayments.Sum(r => r.PrincipalAmount);
+            var monthlyInterest  = periodRepayments.Sum(r => r.InterestAmount);
+
+            var outstanding = memberLoans
+                .Where(l => l.Status == LoanStatus.Active)
+                .Sum(l => l.Amount - l.Repayments.Where(r => r.IsPaid).Sum(r => r.PrincipalAmount));
+            outstanding = Math.Max(0, outstanding);
+
+            var monthlyPenalty = penalties
+                .Where(e => e.GroupMemberId == m.Id)
+                .Sum(e => e.Amount);
+
+            var totalDue = group.MonthlyAmount + monthlyPrincipal + monthlyInterest + monthlyPenalty;
+
+            return new MonthlyReportMemberRow(
+                serial, m.User.FullName,
+                totalContribs, group.MonthlyAmount,
+                totalLoanDisbursed, monthlyPrincipal, monthlyInterest,
+                outstanding, monthlyPenalty, totalDue);
+        }).ToList();
+
+        return new MonthlyReportDto(
+            effectivePeriod, group.Name, rows,
+            rows.Sum(r => r.TotalContributions),
+            rows.Sum(r => r.MonthlyContribution),
+            rows.Sum(r => r.LoanDisbursed),
+            rows.Sum(r => r.MonthlyPrincipal),
+            rows.Sum(r => r.MonthlyInterest),
+            rows.Sum(r => r.OutstandingLoan),
+            rows.Sum(r => r.MonthlyPenalty),
+            rows.Sum(r => r.TotalDue));
     }
 
     private Task<bool> IsMemberAsync(int groupId, int userId) =>
