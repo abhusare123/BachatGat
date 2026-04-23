@@ -45,25 +45,27 @@
           <mat-icon class="down">thumb_down</mat-icon> {{ l.rejectVotes }}
           <span class="eligible">of {{ l.eligibleVoters }} eligible</span>
         </div>
-        <div class="vote-actions">
-          <button
-            mat-flat-button
-            [class.accent]="l.myVote === 1"
-            [color]="l.myVote === 1 ? 'primary' : undefined"
-            (click)="onVote(1)"
-          >
-            <mat-icon>thumb_up</mat-icon>
-            <span>Approve</span>
-          </button>
-          <button
-            mat-stroked-button
-            [color]="l.myVote === 2 ? 'warn' : undefined"
-            (click)="onVote(2)"
-          >
-            <mat-icon>thumb_down</mat-icon>
-            <span>Reject</span>
-          </button>
-        </div>
+        @if (canVote()) {
+          <div class="vote-actions">
+            <button
+              mat-flat-button
+              [class.accent]="l.myVote === 1"
+              [color]="l.myVote === 1 ? 'primary' : undefined"
+              (click)="onVote(1)"
+            >
+              <mat-icon>thumb_up</mat-icon>
+              <span>Approve</span>
+            </button>
+            <button
+              mat-stroked-button
+              [color]="l.myVote === 2 ? 'warn' : undefined"
+              (click)="onVote(2)"
+            >
+              <mat-icon>thumb_down</mat-icon>
+              <span>Reject</span>
+            </button>
+          </div>
+        }
       </div>
     }
   </div>

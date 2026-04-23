@@ -38,6 +38,8 @@ export class LoanCardComponent {
   loan = input.required<Loan>();
   /** Show admin-only actions: Approve, Reject, Disburse, Close Loan */
   isAdmin = input<boolean>(false);
+  /** Whether the current user can cast a vote (false for own loan requests) */
+  canVote = input<boolean>(true);
 
   vote = output<{ id: number; vote: LoanVote }>();
   approve = output<number>();

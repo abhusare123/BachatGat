@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoanService } from '../../core/loan.service';
@@ -14,12 +11,12 @@ import { GroupService } from '../../core/group.service';
 import { AuthService } from '../../core/auth.service';
 import { GroupMemberRole, Loan, LoanStatus } from '../../core/models';
 import { CloseLoanDialogComponent } from '../close-loan-dialog/close-loan-dialog.component';
+import { LoanCardComponent, Loan as DsLoan, LoanVote } from '../../shared/ui/loan-card/loan-card.component';
 
 @Component({
   selector: 'app-loan-list',
-  imports: [CommonModule, RouterLink, MatTableModule, MatButtonModule, MatIconModule,
-    MatChipsModule, MatProgressSpinnerModule, MatCardModule, CurrencyPipe, DatePipe,
-    MatDialogModule, MatSnackBarModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule,
+    MatProgressSpinnerModule, MatDialogModule, MatSnackBarModule, LoanCardComponent],
   templateUrl: './loan-list.component.html',
   styleUrl: './loan-list.component.scss'
 })
@@ -27,8 +24,6 @@ export class LoanListComponent implements OnInit {
   groupId!: number;
   loans: Loan[] = [];
   loading = true;
-  displayedColumns = ['member', 'amount', 'tenure', 'purpose', 'status', 'votes', 'actions'];
-  LoanStatus = LoanStatus;
   currentUserId!: number;
   isAdminOrTreasurer = false;
 
@@ -66,8 +61,34 @@ export class LoanListComponent implements OnInit {
     this.router.navigate([`/groups/${this.groupId}/loans/request`]);
   }
 
-  vote(loan: Loan, choice: number) {
-    this.loanSvc.vote(loan.id, choice).subscribe(() => this.load());
+  /** Map app Loan model → design-system Loan model */
+  toCardLoan(l: Loan): DsLoan {
+    const statusMap: Record<LoanStatus, DsLoan['status']> = {
+      [LoanStatus.Pending]:  'pending',
+      [LoanStatus.Approved]: 'approved',
+      [LoanStatus.Rejected]: 'rejected',
+      [LoanStatus.Active]:   'active',
+      [LoanStatus.Closed]:   'closed',
+    };
+    return {
+      id:             l.id,
+      memberName:     l.requestedByName,
+      status:         statusMap[l.status],
+      amount:         l.amount,
+      tenureMonths:   l.tenureMonths,
+      interestRate:   l.interestRatePercent,
+      purpose:        l.purpose,
+      requestedAt:    l.requestedAt,
+      closedAt:       l.closedAt,
+      approveVotes:   l.approveVotes,
+      rejectVotes:    l.rejectVotes,
+      eligibleVoters: l.totalEligibleVoters,
+      myVote:         (l.currentUserVote ?? 0) as LoanVote,
+    };
+  }
+
+  vote(loanId: number, choice: LoanVote) {
+    this.loanSvc.vote(loanId, choice).subscribe(() => this.load());
   }
 
   approveLoan(loanId: number) {
@@ -85,8 +106,10 @@ export class LoanListComponent implements OnInit {
     this.loanSvc.disburse(loanId).subscribe(() => this.load());
   }
 
-  closeLoan(loan: Loan) {
-    this.loanSvc.getForeclosurePreview(loan.id).subscribe({
+  closeLoanById(loanId: number) {
+    const loan = this.loans.find(l => l.id === loanId);
+    if (!loan) return;
+    this.loanSvc.getForeclosurePreview(loanId).subscribe({
       next: summary => {
         const ref = this.dialog.open(CloseLoanDialogComponent, {
           width: '420px',
@@ -94,7 +117,7 @@ export class LoanListComponent implements OnInit {
         });
         ref.afterClosed().subscribe(confirmed => {
           if (!confirmed) return;
-          this.loanSvc.closeLoan(loan.id).subscribe({
+          this.loanSvc.closeLoan(loanId).subscribe({
             next: s => {
               this.snackBar.open(
                 `Loan closed. Collected ₹${s.totalAmount.toFixed(2)} (Principal ₹${s.outstandingPrincipal.toFixed(2)} + Interest ₹${s.foreclosureInterest.toFixed(2)})`,
@@ -110,14 +133,11 @@ export class LoanListComponent implements OnInit {
     });
   }
 
-  statusColor(status: LoanStatus): string {
-    switch (status) {
-      case LoanStatus.Pending: return 'accent';
-      case LoanStatus.Approved: return 'primary';
-      case LoanStatus.Active: return 'primary';
-      case LoanStatus.Closed: return '';
-      case LoanStatus.Rejected: return 'warn';
-      default: return '';
-    }
+  goToRepayments(loanId: number) {
+    this.router.navigate(['/groups', this.groupId, 'loans', loanId, 'repayments']);
+  }
+
+  canVoteOnLoan(loan: Loan): boolean {
+    return loan.requestedByUserId !== this.currentUserId;
   }
 }

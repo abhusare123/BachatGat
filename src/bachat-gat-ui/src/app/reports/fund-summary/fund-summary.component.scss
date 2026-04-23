@@ -10,96 +10,9 @@
   margin-bottom: var(--sp-5);
 }
 
-@keyframes stat-in {
-  from { opacity: 0; translate: 0 12px; }
-  to   { opacity: 1; translate: 0 0; }
-}
-
-.summary-card {
-  border-radius: var(--radius-lg) !important;
-  border: 1px solid var(--clr-border) !important;
-  overflow: hidden;
-  position: relative;
-  animation: stat-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
-
-  @starting-style { opacity: 0; translate: 0 12px; }
-
-  /* Gradient accent strip at top */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 3px;
-  }
-
-  &.green  {
-    &::before { background: linear-gradient(90deg, var(--clr-primary-700), var(--clr-primary-400)); }
-    .stat-value { color: var(--clr-primary-700); }
-    mat-icon    { color: var(--clr-primary-600); }
-  }
-  &.blue   {
-    &::before { background: linear-gradient(90deg, var(--clr-blue), oklch(62% 0.14 252)); }
-    .stat-value { color: var(--clr-blue); }
-    mat-icon    { color: var(--clr-blue); }
-  }
-  &.orange {
-    &::before { background: linear-gradient(90deg, var(--clr-amber), oklch(72% 0.17 60)); }
-    .stat-value { color: oklch(48% 0.17 55); }
-    mat-icon    { color: oklch(52% 0.17 55); }
-  }
-  &.teal   {
-    &::before { background: linear-gradient(90deg, var(--clr-teal), oklch(62% 0.12 185)); }
-    .stat-value { color: var(--clr-teal); }
-    mat-icon    { color: var(--clr-teal); }
-  }
-  &.red {
-    &::before { background: linear-gradient(90deg, oklch(40% 0.20 25), oklch(55% 0.20 25)); }
-    .stat-value { color: oklch(40% 0.20 25); }
-    mat-icon    { color: oklch(45% 0.20 25); }
-  }
-  &.amber {
-    &::before { background: linear-gradient(90deg, oklch(50% 0.18 45), oklch(65% 0.18 45)); }
-    .stat-value { color: oklch(45% 0.18 45); }
-    mat-icon    { color: oklch(50% 0.18 45); }
-  }
-  &.purple {
-    &::before { background: linear-gradient(90deg, oklch(40% 0.16 300), oklch(55% 0.16 300)); }
-    .stat-value { color: oklch(42% 0.16 300); }
-    mat-icon    { color: oklch(45% 0.16 300); }
-    &.highlight { background: oklch(96% 0.025 300); }
-  }
-
-  mat-card-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 18px 16px 16px;
-    gap: var(--sp-1);
-
-    mat-icon {
-      font-size: 30px;
-      width: 30px;
-      height: 30px;
-      margin-bottom: var(--sp-2);
-      opacity: 0.85;
-    }
-  }
-
-  .stat-label {
-    font-size: var(--text-xs);
-    color: var(--clr-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-
-  .stat-value {
-    font-size: clamp(18px, 2.5vw, 26px);
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    font-variant-numeric: tabular-nums;
-  }
+/* Available balance spans the full row to stand out */
+.balance-tile {
+  grid-column: 1 / -1;
 }
 
 /* ── Ledger table ── */

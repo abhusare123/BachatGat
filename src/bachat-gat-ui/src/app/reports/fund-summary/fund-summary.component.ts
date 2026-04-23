@@ -2,21 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ReportService } from '../../core/report.service';
 import { GroupService } from '../../core/group.service';
 import { FundSummary, LoanLedgerItem, MonthlyReport } from '../../core/models';
+import { StatTileComponent } from '../../shared/ui/stat-tile/stat-tile.component';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-fund-summary',
-  imports: [CommonModule, FormsModule, MatCardModule, MatTableModule, MatProgressSpinnerModule, MatIconModule, CurrencyPipe, MatButtonModule, MatInputModule],
+  imports: [CommonModule, FormsModule, MatTableModule, MatProgressSpinnerModule, CurrencyPipe, MatButtonModule, MatIconModule, MatInputModule, StatTileComponent],
   templateUrl: './fund-summary.component.html',
   styleUrl: './fund-summary.component.scss'
 })

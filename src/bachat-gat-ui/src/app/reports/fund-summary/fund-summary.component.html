@@ -15,61 +15,13 @@
   <div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>
 
   <div *ngIf="!loading && summary" class="summary-grid">
-    <mat-card class="summary-card green">
-      <mat-card-content>
-        <mat-icon>savings</mat-icon>
-        <div class="stat-label">Total Collected / एकूण भरणा</div>
-        <div class="stat-value">{{ summary.totalContributionsCollected | currency:'INR':'symbol':'1.0-0' }}</div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="summary-card blue">
-      <mat-card-content>
-        <mat-icon>account_balance</mat-icon>
-        <div class="stat-label">Total Loans Disbursed / एकूण कर्ज</div>
-        <div class="stat-value">{{ summary.totalLoansDisbursed | currency:'INR':'symbol':'1.0-0' }}</div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="summary-card orange">
-      <mat-card-content>
-        <mat-icon>pending</mat-icon>
-        <div class="stat-label">Loan Outstanding / बाकी कर्ज</div>
-        <div class="stat-value">{{ summary.totalLoanOutstanding | currency:'INR':'symbol':'1.0-0' }}</div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="summary-card teal">
-      <mat-card-content>
-        <mat-icon>trending_up</mat-icon>
-        <div class="stat-label">Interest Collected / व्याज</div>
-        <div class="stat-value">{{ summary.totalInterestCollected | currency:'INR':'symbol':'1.0-0' }}</div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="summary-card red">
-      <mat-card-content>
-        <mat-icon>payments</mat-icon>
-        <div class="stat-label">Total Expenses / एकूण खर्च</div>
-        <div class="stat-value">{{ summary.totalExpenses | currency:'INR':'symbol':'1.0-0' }}</div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="summary-card amber">
-      <mat-card-content>
-        <mat-icon>account_balance</mat-icon>
-        <div class="stat-label">Other Income / इतर उत्पन्न</div>
-        <div class="stat-value">{{ summary.totalOtherIncome | currency:'INR':'symbol':'1.0-0' }}</div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="summary-card purple highlight">
-      <mat-card-content>
-        <mat-icon>account_balance_wallet</mat-icon>
-        <div class="stat-label">Remaining Balance / निव्वळ शिल्लक</div>
-        <div class="stat-value">{{ summary.availableBalance | currency:'INR':'symbol':'1.0-0' }}</div>
-      </mat-card-content>
-    </mat-card>
+    <bg-stat-tile label="Total Collected / एकूण भरणा"       [value]="summary.totalContributionsCollected" color="green"  [isCurrency]="true" />
+    <bg-stat-tile label="Total Loans Disbursed / एकूण कर्ज" [value]="summary.totalLoansDisbursed"         color="blue"   [isCurrency]="true" />
+    <bg-stat-tile label="Loan Outstanding / बाकी कर्ज"      [value]="summary.totalLoanOutstanding"        color="amber"  [isCurrency]="true" />
+    <bg-stat-tile label="Interest Collected / व्याज"        [value]="summary.totalInterestCollected"      color="teal"   [isCurrency]="true" />
+    <bg-stat-tile label="Total Expenses / एकूण खर्च"        [value]="summary.totalExpenses"               color="red"    [isCurrency]="true" />
+    <bg-stat-tile label="Other Income / इतर उत्पन्न"        [value]="summary.totalOtherIncome"            color="purple" [isCurrency]="true" />
+    <bg-stat-tile label="Available Balance / निव्वळ शिल्लक" [value]="summary.availableBalance"            color="green"  [isCurrency]="true" class="balance-tile" />
   </div>
 
   <h3 style="margin-top:32px">Loan Ledger / कर्ज खातेवही</h3>

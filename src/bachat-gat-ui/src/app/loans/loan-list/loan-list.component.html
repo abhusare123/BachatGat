@@ -1,7 +1,7 @@
 <div class="page-container">
   <div class="page-header">
     <h2>Loans / कर्ज</h2>
-    <button mat-raised-button color="primary" (click)="requestLoan()">
+    <button mat-flat-button color="primary" (click)="requestLoan()">
       <mat-icon>add</mat-icon> Request Loan
     </button>
   </div>
@@ -9,91 +9,18 @@
   <div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>
 
   <div *ngIf="!loading" class="loans-list">
-    <mat-card *ngFor="let loan of loans" class="loan-card">
-      <mat-card-header>
-        <mat-card-title>{{ loan.requestedByName }}</mat-card-title>
-        <mat-card-subtitle>
-        Requested: {{ loan.requestedAt | date:'mediumDate' }}
-        <span *ngIf="loan.closedAt"> &nbsp;·&nbsp; Closed: {{ loan.closedAt | date:'mediumDate' }}</span>
-      </mat-card-subtitle>
-        <div class="status-chip">
-          <mat-chip [color]="statusColor(loan.status)">{{ LoanStatus[loan.status] }}</mat-chip>
-        </div>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="loan-details">
-          <div class="detail">
-            <span class="label">Amount</span>
-            <span class="value">{{ loan.amount | currency:'INR':'symbol':'1.0-0' }}</span>
-          </div>
-          <div class="detail">
-            <span class="label">Tenure</span>
-            <span class="value">{{ loan.tenureMonths }} months</span>
-          </div>
-          <div class="detail">
-            <span class="label">Interest</span>
-            <span class="value">{{ loan.interestRatePercent }}% / mo</span>
-          </div>
-          <div class="detail" *ngIf="loan.purpose">
-            <span class="label">Purpose</span>
-            <span class="value">{{ loan.purpose }}</span>
-          </div>
-        </div>
-
-        <div class="vote-bar" *ngIf="loan.status === LoanStatus.Pending">
-          <span class="vote-info">
-            <mat-icon class="approve-icon">thumb_up</mat-icon> {{ loan.approveVotes }}
-            &nbsp;|&nbsp;
-            <mat-icon class="reject-icon">thumb_down</mat-icon> {{ loan.rejectVotes }}
-            &nbsp; out of {{ loan.totalEligibleVoters }} eligible
-          </span>
-          <div class="vote-actions" *ngIf="loan.requestedByUserId !== currentUserId">
-            <button *ngIf="loan.currentUserVote === 1; else approveOutline" mat-flat-button color="primary" (click)="vote(loan, 1)">
-              <mat-icon>thumb_up</mat-icon> Approve
-            </button>
-            <ng-template #approveOutline>
-              <button mat-stroked-button color="primary" (click)="vote(loan, 1)">
-                <mat-icon>thumb_up</mat-icon> Approve
-              </button>
-            </ng-template>
-
-            <button *ngIf="loan.currentUserVote === 2; else rejectOutline" mat-flat-button color="warn" (click)="vote(loan, 2)">
-              <mat-icon>thumb_down</mat-icon> Reject
-            </button>
-            <ng-template #rejectOutline>
-              <button mat-stroked-button color="warn" (click)="vote(loan, 2)">
-                <mat-icon>thumb_down</mat-icon> Reject
-              </button>
-            </ng-template>
-
-            <span class="change-vote-hint" *ngIf="loan.currentUserVote">You voted — click to change</span>
-          </div>
-        </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <ng-container *ngIf="isAdminOrTreasurer && loan.status === LoanStatus.Pending">
-          <button mat-raised-button color="primary" (click)="approveLoan(loan.id)">
-            <mat-icon>check_circle</mat-icon> Approve
-          </button>
-          <button mat-raised-button color="warn" (click)="rejectLoan(loan.id)">
-            <mat-icon>cancel</mat-icon> Reject
-          </button>
-        </ng-container>
-        <button mat-button color="primary" *ngIf="isAdminOrTreasurer && loan.status === LoanStatus.Approved" (click)="disburse(loan.id)">
-          <mat-icon>payments</mat-icon> Disburse
-        </button>
-        <button mat-stroked-button color="primary"
-          *ngIf="loan.status === LoanStatus.Active || loan.status === LoanStatus.Closed"
-          [routerLink]="['/groups', groupId, 'loans', loan.id, 'repayments']">
-          <mat-icon>receipt_long</mat-icon> Repayments / हप्ते
-        </button>
-        <button mat-stroked-button color="warn"
-          *ngIf="isAdminOrTreasurer && loan.status === LoanStatus.Active"
-          (click)="closeLoan(loan)">
-          <mat-icon>lock</mat-icon> Close Loan
-        </button>
-      </mat-card-actions>
-    </mat-card>
+    <bg-loan-card
+      *ngFor="let loan of loans"
+      [loan]="toCardLoan(loan)"
+      [isAdmin]="isAdminOrTreasurer"
+      [canVote]="canVoteOnLoan(loan)"
+      (vote)="vote(loan.id, $event.vote)"
+      (approve)="approveLoan($event)"
+      (reject)="rejectLoan($event)"
+      (disburse)="disburse($event)"
+      (close)="closeLoanById($event)"
+      (viewRepayments)="goToRepayments($event)"
+    />
 
     <div *ngIf="loans.length === 0" class="empty-state">
       <mat-icon>account_balance_wallet</mat-icon>

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule, CurrencyPipe } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
+import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -9,10 +8,12 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { GroupService } from '../../core/group.service';
 import { Group } from '../../core/models';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
+import { GroupCardComponent, Group as DsGroup } from '../../shared/ui/group-card/group-card.component';
+import { BrandHeroComponent } from '../../shared/ui/brand-hero/brand-hero.component';
 
 @Component({
   selector: 'app-group-list',
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatDialogModule, CurrencyPipe],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatDialogModule, GroupCardComponent, BrandHeroComponent],
   templateUrl: './group-list.component.html',
   styleUrl: './group-list.component.scss'
 })
@@ -29,7 +30,6 @@ export class GroupListComponent implements OnInit {
     this.groupSvc.getGroups().subscribe({
       next: groups => {
         this.loading = false;
-        // Auto-navigate if only one group — skip the list screen entirely
         if (groups.length === 1 && !history.state?.showAll) {
           this.router.navigate(['/groups', groups[0].id, 'reports'], { replaceUrl: true });
           return;
@@ -38,6 +38,17 @@ export class GroupListComponent implements OnInit {
       },
       error: () => this.loading = false
     });
+  }
+
+  toCardGroup(g: Group): DsGroup {
+    return {
+      id:           g.id,
+      name:         g.name,
+      memberCount:  g.memberCount,
+      monthlyAmount: g.monthlyAmount,
+      interestRate:  g.interestRatePercent,
+      description:   g.description,
+    };
   }
 
   openGroup(id: number) { this.router.navigate(['/groups', id, 'reports']); }
