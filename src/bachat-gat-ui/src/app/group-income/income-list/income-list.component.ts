@@ -6,41 +6,45 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { PenaltyService } from '../../core/penalty.service';
+import { GroupIncomeService } from '../../core/group-income.service';
 import { GroupService } from '../../core/group.service';
 import { AuthService } from '../../core/auth.service';
-import { PenaltyDto, GroupMemberRole } from '../../core/models';
-import { AddPenaltyDialogComponent } from '../add-penalty-dialog/add-penalty-dialog.component';
+import { GroupIncomeDto, GroupMemberRole } from '../../core/models';
+import { AddIncomeDialogComponent } from '../add-income-dialog/add-income-dialog.component';
 
 @Component({
-  selector: 'app-penalty-list',
+  selector: 'app-income-list',
   imports: [
     CommonModule, CurrencyPipe, DatePipe,
     MatTableModule, MatButtonModule, MatIconModule,
     MatProgressSpinnerModule, MatDialogModule
   ],
-  templateUrl: './penalty-list.component.html',
-  styleUrl: './penalty-list.component.scss'
+  templateUrl: './income-list.component.html',
+  styleUrl: './income-list.component.scss'
 })
-export class PenaltyListComponent implements OnInit {
+export class IncomeListComponent implements OnInit {
   groupId!: number;
-  penalties: PenaltyDto[] = [];
+  entries: GroupIncomeDto[] = [];
   loading = true;
   currentUserRole?: GroupMemberRole;
-  displayedColumns = ['date', 'member', 'purpose', 'amount', 'addedBy'];
+  displayedColumns = ['date', 'category', 'description', 'member', 'amount', 'recordedBy', 'actions'];
 
   get canAdd(): boolean {
     return this.currentUserRole !== undefined
       && this.currentUserRole <= GroupMemberRole.Treasurer;
   }
 
+  get canDelete(): boolean {
+    return this.currentUserRole === GroupMemberRole.Admin;
+  }
+
   get totalAmount(): number {
-    return this.penalties.reduce((s, p) => s + p.amount, 0);
+    return this.entries.reduce((s, e) => s + e.amount, 0);
   }
 
   constructor(
     private route: ActivatedRoute,
-    private penaltySvc: PenaltyService,
+    private incomeSvc: GroupIncomeService,
     private groupSvc: GroupService,
     private authSvc: AuthService,
     private dialog: MatDialog
@@ -57,20 +61,33 @@ export class PenaltyListComponent implements OnInit {
       if (me) this.currentUserRole = me.role;
     });
 
-    this.loadPenalties();
+    this.loadEntries();
   }
 
-  loadPenalties() {
+  loadEntries() {
     this.loading = true;
-    this.penaltySvc.getPenalties(this.groupId).subscribe({
-      next: data => { this.penalties = data; this.loading = false; },
+    this.incomeSvc.getEntries(this.groupId).subscribe({
+      next: data => { this.entries = data; this.loading = false; },
       error: () => this.loading = false
     });
   }
 
   openAddDialog() {
-    const ref = this.dialog.open(AddPenaltyDialogComponent, { width: '420px' });
+    const ref = this.dialog.open(AddIncomeDialogComponent, { width: '420px' });
     ref.componentInstance.setGroupId(this.groupId);
-    ref.afterClosed().subscribe(added => { if (added) this.loadPenalties(); });
+    ref.afterClosed().subscribe(added => { if (added) this.loadEntries(); });
+  }
+
+  deleteEntry(id: number) {
+    if (!confirm('Delete this entry?')) return;
+    this.incomeSvc.deleteEntry(this.groupId, id).subscribe(() => this.loadEntries());
+  }
+
+  categoryLabel(cat: string): string {
+    switch (cat) {
+      case 'Penalty':      return 'Penalty / दंड';
+      case 'BankInterest': return 'Bank Interest / बँक व्याज';
+      default:             return 'Other / इतर';
+    }
   }
 }

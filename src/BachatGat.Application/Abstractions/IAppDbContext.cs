@@ -14,7 +14,7 @@ public interface IAppDbContext
     DbSet<LoanRepayment> LoanRepayments { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
     DbSet<Expense> Expenses { get; }
-    DbSet<Penalty> Penalties { get; }
+    DbSet<GroupIncome> GroupIncomes { get; }
     DbSet<GroupRuleConfig> GroupRuleConfigs { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

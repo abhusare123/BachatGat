@@ -31,7 +31,7 @@ export class GroupShellComponent implements OnInit {
     { label: 'Contributions', labelMr: 'बचत',    icon: 'savings',         path: 'contributions' },
     { label: 'Loans',         labelMr: 'कर्ज',   icon: 'account_balance', path: 'loans'         },
     { label: 'Expenses',      labelMr: 'खर्च',   icon: 'receipt_long',    path: 'expenses'      },
-    { label: 'Penalties',     labelMr: 'दंड',    icon: 'gavel',           path: 'penalties'     },
+    { label: 'Other Income',  labelMr: 'इतर उत्पन्न', icon: 'account_balance', path: 'income'    },
   ];
 
   constructor(private route: ActivatedRoute, private router: Router, private groupSvc: GroupService) {}

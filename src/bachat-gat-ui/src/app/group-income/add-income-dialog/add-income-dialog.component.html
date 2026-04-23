@@ -1,12 +1,26 @@
-<h2 mat-dialog-title>Add Penalty / दंड नोंदवा</h2>
+<h2 mat-dialog-title>Add Income Entry / उत्पन्न नोंद</h2>
 <mat-dialog-content>
   <div *ngIf="error" class="error-msg">{{ error }}</div>
   <form [formGroup]="form" class="dialog-form">
+
     <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Category / प्रकार</mat-label>
+      <mat-select formControlName="category">
+        <mat-option *ngFor="let c of categories" [value]="c.value">{{ c.label }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isPenalty" appearance="outline" class="full-width">
       <mat-label>Member / सदस्य</mat-label>
-      <mat-select formControlName="memberId">
+      <mat-select formControlName="groupMemberId">
         <mat-option *ngFor="let m of members" [value]="m.id">{{ m.fullName }}</mat-option>
       </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description / वर्णन</mat-label>
+      <input matInput formControlName="description"
+             [placeholder]="isPenalty ? 'e.g. Late attendance' : 'e.g. SB account interest'">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
@@ -15,14 +29,10 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Purpose / कारण</mat-label>
-      <input matInput formControlName="purpose" placeholder="e.g. Late attendance">
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Date / तारीख</mat-label>
       <input matInput type="date" formControlName="date">
     </mat-form-field>
+
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

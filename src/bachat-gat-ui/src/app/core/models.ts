@@ -128,26 +128,28 @@ export interface FundSummary {
   totalLoanOutstanding: number;
   totalInterestCollected: number;
   totalExpenses: number;
-  totalPenalties: number;
+  totalOtherIncome: number;
   availableBalance: number;
 }
 
-export interface PenaltyDto {
+export interface GroupIncomeDto {
   id: number;
-  groupMemberId: number;
-  memberName: string;
+  category: string;
+  description: string;
   amount: number;
-  purpose: string;
   date: string;
-  createdAt: string;
-  addedByName: string;
+  recordedAt: string;
+  recordedByName: string;
+  groupMemberId?: number;
+  memberName?: string;
 }
 
-export interface AddPenaltyRequest {
-  memberId: number;
+export interface AddGroupIncomeRequest {
+  category: number;   // 1=Penalty, 2=BankInterest, 3=Other
+  description: string;
   amount: number;
-  purpose: string;
   date: string;
+  groupMemberId?: number;
 }
 
 export interface LoanLedgerItem {

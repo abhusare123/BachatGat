@@ -80,7 +80,7 @@ export class FundSummaryComponent implements OnInit {
         ['Loan Outstanding',              inr(s.totalLoanOutstanding)],
         ['Interest Collected',            inr(s.totalInterestCollected)],
         ['Total Expenses',                inr(s.totalExpenses)],
-        ['Total Penalties',               inr(s.totalPenalties)],
+        ['Other Income',                  inr(s.totalOtherIncome)],
         ['Remaining Balance',             inr(s.availableBalance)],
       ],
       headStyles: { fillColor: [27, 94, 32], textColor: 255, fontStyle: 'bold' },

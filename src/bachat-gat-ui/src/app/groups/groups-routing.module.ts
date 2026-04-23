@@ -32,8 +32,8 @@ const routes: Routes = [
       },
       { path: 'members', component: GroupDetailComponent },
       {
-        path: 'penalties',
-        loadChildren: () => import('../penalties/penalties.module').then(m => m.PenaltiesModule)
+        path: 'income',
+        loadChildren: () => import('../group-income/group-income.module').then(m => m.GroupIncomeModule)
       },
       {
         path: 'rules',
