@@ -8,8 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ReportService } from '../../core/report.service';
 import { GroupService } from '../../core/group.service';
-import { ContributionService } from '../../core/contribution.service';
-import { FundSummary, LoanLedgerItem, MemberTrackerRow } from '../../core/models';
+import { FundSummary, LoanLedgerItem } from '../../core/models';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -24,15 +23,13 @@ export class FundSummaryComponent implements OnInit {
   groupName = '';
   summary?: FundSummary;
   ledger: LoanLedgerItem[] = [];
-  memberRows: MemberTrackerRow[] = [];
   loading = true;
   ledgerColumns = ['member', 'original', 'outstanding', 'interestPaid', 'status'];
 
   constructor(
     private route: ActivatedRoute,
     private reportSvc: ReportService,
-    private groupSvc: GroupService,
-    private contributionSvc: ContributionService
+    private groupSvc: GroupService
   ) {}
 
   ngOnInit() {
@@ -42,7 +39,6 @@ export class FundSummaryComponent implements OnInit {
     this.groupSvc.getGroup(this.groupId).subscribe(g => this.groupName = g.name);
     this.reportSvc.getFundSummary(this.groupId).subscribe(s => { this.summary = s; this.loading = false; });
     this.reportSvc.getLoanLedger(this.groupId).subscribe(l => this.ledger = l);
-    this.contributionSvc.getTracker(this.groupId).subscribe(t => this.memberRows = t.rows);
   }
 
   exportPdf() {
@@ -100,32 +96,6 @@ export class FundSummaryComponent implements OnInit {
       },
       margin: { left: 14, right: 14 },
     });
-
-    // ── Member Contributions ──────────────────────────────────
-    if (this.memberRows.length > 0) {
-      const afterSummary = (doc as any).lastAutoTable.finalY + 12;
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Member Contributions', 14, afterSummary);
-
-      autoTable(doc, {
-        startY: afterSummary + 4,
-        head: [['#', 'Member', 'Total Contributed']],
-        body: this.memberRows.map((row, i) => [
-          String(i + 1),
-          row.memberName,
-          inr(row.runningTotal),
-        ]),
-        headStyles: { fillColor: [27, 94, 32], textColor: 255, fontStyle: 'bold' },
-        columnStyles: {
-          0: { cellWidth: 12, halign: 'center' },
-          1: { cellWidth: 110 },
-          2: { cellWidth: 60, halign: 'right', fontStyle: 'bold' },
-        },
-        alternateRowStyles: { fillColor: [240, 248, 240] },
-        margin: { left: 14, right: 14 },
-      });
-    }
 
     // ── Loan Ledger ───────────────────────────────────────────
     if (this.ledger.length > 0) {

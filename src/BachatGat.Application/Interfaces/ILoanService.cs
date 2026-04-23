@@ -14,6 +14,7 @@ public interface ILoanService
     Task DisburseAsync(int id, int currentUserId);
     Task<List<LoanRepaymentDto>> GetRepaymentsAsync(int id, int currentUserId);
     Task<LoanStatus> MarkRepaymentPaidAsync(int loanId, int repaymentId, int currentUserId);
+    Task UnmarkRepaymentPaidAsync(int loanId, int repaymentId, int currentUserId);
     Task<ForeclosureSummaryDto> GetForeclosurePreviewAsync(int id, int currentUserId);
     Task<ForeclosureSummaryDto> CloseLoanEarlyAsync(int id, int currentUserId);
 }

@@ -142,11 +142,14 @@ public class ContributionService(IAppDbContext db, ILogger<ContributionService> 
 
         var group = await db.Groups.FindAsync(groupId);
 
-        // Load active loans with repayments for NextEmi calculation
+        // Load active loans with repayments for current-month EMI calculation
         var activeLoans = await db.Loans
             .Include(l => l.Repayments)
             .Where(l => l.GroupId == groupId && l.Status == LoanStatus.Active)
             .ToListAsync();
+
+        var now = DateTime.UtcNow;
+        var currentPeriod = $"{now.Year:D4}-{now.Month:D2}";
 
         var rows = members.Select(member =>
         {
@@ -161,16 +164,14 @@ public class ContributionService(IAppDbContext db, ILogger<ContributionService> 
                 return new ContributionCell(contrib?.Id, period, paid, cumulative, contrib != null, isApproved);
             }).ToList();
 
-            // Calculate Next EMI
+            // Calculate current month EMI (saving + loan repayment due this month)
             var memberLoan = activeLoans.FirstOrDefault(l => l.RequestedByUserId == member.UserId);
-            var nextRepayment = memberLoan?.Repayments
-                .Where(r => !r.IsPaid)
-                .OrderBy(r => r.Period)
-                .FirstOrDefault();
+            var currentRepayment = memberLoan?.Repayments
+                .FirstOrDefault(r => r.Period == currentPeriod);
 
             decimal saving = group!.MonthlyAmount;
-            decimal loanPrincipal = nextRepayment?.PrincipalAmount ?? 0;
-            decimal loanInterest = nextRepayment?.InterestAmount ?? 0;
+            decimal loanPrincipal = currentRepayment?.PrincipalAmount ?? 0;
+            decimal loanInterest = currentRepayment?.InterestAmount ?? 0;
             decimal nextEmi = saving + loanPrincipal + loanInterest;
 
             return new MemberTrackerRow(

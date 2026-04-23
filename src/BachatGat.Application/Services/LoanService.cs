@@ -200,9 +200,11 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
             throw new BadRequestException("Only approved loans can be disbursed");
 
         loan.Status = LoanStatus.Active;
-        loan.DisbursedAt = DateTime.UtcNow;
+        var disbursedAt = DateTime.UtcNow;
+        loan.DisbursedAt = disbursedAt;
 
-        string startPeriod = $"{loan.RequestedAt.Year:D4}-{loan.RequestedAt.Month:D2}";
+        var firstEmiMonth = disbursedAt.AddMonths(1);
+        string startPeriod = $"{firstEmiMonth.Year:D4}-{firstEmiMonth.Month:D2}";
 
         var schedule = calc.GenerateSchedule(loan.Amount, loan.InterestRatePercent, loan.TenureMonths, startPeriod, loan.InterestRateType);
         foreach (var entry in schedule)
@@ -273,6 +275,40 @@ public class LoanService(IAppDbContext db, ILoanCalculatorService calc, ILogger<
             logger.LogInformation("LoanId {LoanId} fully repaid — status set to Closed", loanId);
 
         return loan.Status;
+    }
+
+    public async Task UnmarkRepaymentPaidAsync(int loanId, int repaymentId, int currentUserId)
+    {
+        var loan = await db.Loans.FindAsync(loanId)
+            ?? throw new NotFoundException();
+
+        var membership = await db.GroupMembers
+            .FirstOrDefaultAsync(m => m.GroupId == loan.GroupId && m.UserId == currentUserId && m.IsActive);
+        if (membership == null || membership.Role > GroupMemberRole.Treasurer)
+            throw new ForbiddenException();
+
+        var repayment = await db.LoanRepayments
+            .FirstOrDefaultAsync(r => r.Id == repaymentId && r.LoanId == loanId)
+            ?? throw new NotFoundException();
+
+        if (!repayment.IsPaid) throw new BadRequestException("Repayment is not marked as paid");
+        if (repayment.IsForeclosed) throw new BadRequestException("Cannot undo a foreclosed repayment");
+
+        repayment.IsPaid = false;
+        repayment.PaidAt = null;
+        repayment.RecordedByUserId = null;
+
+        if (loan.Status == LoanStatus.Closed)
+        {
+            loan.Status = LoanStatus.Active;
+            loan.ClosedAt = null;
+        }
+
+        await db.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Repayment {RepaymentId} for LoanId {LoanId} unmarked paid by UserId {UserId} (period {Period})",
+            repaymentId, loanId, currentUserId, repayment.Period);
     }
 
     public async Task<ForeclosureSummaryDto> GetForeclosurePreviewAsync(int id, int currentUserId)

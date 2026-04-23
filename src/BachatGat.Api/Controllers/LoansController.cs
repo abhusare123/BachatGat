@@ -66,6 +66,13 @@ public class LoansController(ILoanService loanService) : ControllerBase
         return Ok(new { Message = "Repayment recorded", LoanStatus = status });
     }
 
+    [HttpDelete("api/loans/{id:int}/repayments/{repaymentId:int}/pay")]
+    public async Task<IActionResult> UnmarkRepaymentPaid(int id, int repaymentId)
+    {
+        await loanService.UnmarkRepaymentPaidAsync(id, repaymentId, CurrentUserId);
+        return Ok(new { Message = "Repayment unmarked" });
+    }
+
     [HttpGet("api/loans/{id:int}/foreclosure-preview")]
     public async Task<IActionResult> ForeclosurePreview(int id)
         => Ok(await loanService.GetForeclosurePreviewAsync(id, CurrentUserId));

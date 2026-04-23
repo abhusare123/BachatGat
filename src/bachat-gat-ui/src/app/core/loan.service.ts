@@ -41,6 +41,10 @@ export class LoanService {
     return this.http.post(`${this.API}/loans/${loanId}/repayments/${repaymentId}/pay`, {});
   }
 
+  unmarkRepaymentPaid(loanId: number, repaymentId: number) {
+    return this.http.delete(`${this.API}/loans/${loanId}/repayments/${repaymentId}/pay`);
+  }
+
   getForeclosurePreview(loanId: number) {
     return this.http.get<ForeclosureSummary>(`${this.API}/loans/${loanId}/foreclosure-preview`);
   }

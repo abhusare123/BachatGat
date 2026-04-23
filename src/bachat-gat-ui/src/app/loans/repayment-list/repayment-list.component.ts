@@ -27,6 +27,7 @@ export class RepaymentListComponent implements OnInit {
   repayments: LoanRepayment[] = [];
   loading = true;
   payingId: number | null = null;
+  undoingId: number | null = null;
   isAdminOrTreasurer = false;
   displayedColumns = ['period', 'emiAmount', 'principalAmount', 'interestAmount', 'status', 'action'];
 
@@ -69,6 +70,14 @@ export class RepaymentListComponent implements OnInit {
     this.loanSvc.markRepaymentPaid(this.loanId, repaymentId).subscribe({
       next: () => { this.payingId = null; this.load(); },
       error: () => { this.payingId = null; }
+    });
+  }
+
+  undoMarkPaid(repaymentId: number) {
+    this.undoingId = repaymentId;
+    this.loanSvc.unmarkRepaymentPaid(this.loanId, repaymentId).subscribe({
+      next: () => { this.undoingId = null; this.load(); },
+      error: () => { this.undoingId = null; }
     });
   }
 

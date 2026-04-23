@@ -83,6 +83,13 @@
               <mat-icon>payments</mat-icon>
               {{ payingId === row.id ? 'Saving...' : 'Mark Paid' }}
             </button>
+            <button mat-icon-button color="warn"
+              *ngIf="isAdminOrTreasurer && row.isPaid && !row.isForeclosed"
+              [disabled]="undoingId === row.id"
+              title="Undo Mark Paid"
+              (click)="undoMarkPaid(row.id)">
+              <mat-icon>undo</mat-icon>
+            </button>
           </td>
         </ng-container>
 

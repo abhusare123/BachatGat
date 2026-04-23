@@ -110,6 +110,17 @@ export class TrackerComponent implements OnInit {
     return new Date(+y, +m - 1).toLocaleString('default', { month: 'short', year: '2-digit' });
   }
 
+  get currentMonthTotal(): number {
+    return this.tracker?.rows.reduce((sum, row) => {
+      const cell = this.getLastCell(row);
+      return sum + (cell?.isPaid ? cell.amountPaid : 0);
+    }, 0) ?? 0;
+  }
+
+  get totalNextEmi(): number {
+    return this.tracker?.rows.reduce((sum, row) => sum + row.nextEmi, 0) ?? 0;
+  }
+
   emiTooltip(row: { nextEmiSaving: number; nextEmiLoanPrincipal: number; nextEmiLoanInterest: number }): string {
     let tip = `बचत: ₹${row.nextEmiSaving}`;
     if (row.nextEmiLoanPrincipal > 0) {
