@@ -7,7 +7,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartConfiguration, ChartData } from 'chart.js';
 import { ReportService } from '../../core/report.service';
 import { GroupService } from '../../core/group.service';
 import { FundSummary, LoanLedgerItem, MonthlyReport } from '../../core/models';
@@ -17,7 +19,7 @@ import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-fund-summary',
-  imports: [CommonModule, FormsModule, MatTableModule, MatProgressSpinnerModule, CurrencyPipe, MatButtonModule, MatIconModule, MatInputModule, StatTileComponent, TranslateModule],
+  imports: [CommonModule, FormsModule, MatTableModule, MatProgressSpinnerModule, CurrencyPipe, MatButtonModule, MatIconModule, MatInputModule, StatTileComponent, TranslateModule, BaseChartDirective],
   templateUrl: './fund-summary.component.html',
   styleUrl: './fund-summary.component.scss'
 })
@@ -30,11 +32,47 @@ export class FundSummaryComponent implements OnInit {
   selectedPeriod = new Date().toISOString().slice(0, 7);
   loading = true;
   ledgerColumns = ['member', 'original', 'outstanding', 'interestPaid', 'status'];
+  Math = Math;
+
+  compositionChartData?: ChartData<'doughnut', number[], string>;
+  ledgerChartData?: ChartData<'bar', number[], string>;
+
+  compositionChartOptions: ChartConfiguration<'doughnut'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, font: { size: 11 } } },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.label}: ${this.inrShort(ctx.parsed as number)}`
+        }
+      }
+    }
+  };
+
+  ledgerChartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, font: { size: 11 } } },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.dataset.label}: ${this.inrShort(ctx.parsed.x as number)}`
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { callback: (v) => this.inrShort(v as number) } },
+      y: { ticks: { font: { size: 11 } } }
+    }
+  };
 
   constructor(
     private route: ActivatedRoute,
     private reportSvc: ReportService,
-    private groupSvc: GroupService
+    private groupSvc: GroupService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -42,9 +80,73 @@ export class FundSummaryComponent implements OnInit {
     while (r && !r.paramMap.has('id')) r = r.parent!;
     this.groupId = +(r?.paramMap.get('id') ?? 0);
     this.groupSvc.getGroup(this.groupId).subscribe(g => this.groupName = g.name);
-    this.reportSvc.getFundSummary(this.groupId).subscribe(s => { this.summary = s; this.loading = false; });
-    this.reportSvc.getLoanLedger(this.groupId).subscribe(l => this.ledger = l);
+    this.reportSvc.getFundSummary(this.groupId).subscribe(s => {
+      this.summary = s;
+      this.loading = false;
+      this.buildCompositionChart(s);
+    });
+    this.reportSvc.getLoanLedger(this.groupId).subscribe(l => {
+      this.ledger = l;
+      this.buildLedgerChart(l);
+    });
     this.loadMonthlyReport();
+    this.translate.onLangChange.subscribe(() => {
+      if (this.summary) this.buildCompositionChart(this.summary);
+      if (this.ledger.length) this.buildLedgerChart(this.ledger);
+    });
+  }
+
+  private buildCompositionChart(s: FundSummary) {
+    const t = (k: string) => this.translate.instant(k);
+    this.compositionChartData = {
+      labels: [
+        t('labels.totalCollected'),
+        t('labels.interestCollected'),
+        t('labels.otherIncome'),
+        t('labels.totalExpenses'),
+        t('labels.loanOutstanding'),
+      ],
+      datasets: [{
+        data: [
+          s.totalContributionsCollected,
+          s.totalInterestCollected,
+          s.totalOtherIncome,
+          s.totalExpenses,
+          s.totalLoanOutstanding,
+        ],
+        backgroundColor: ['#2e7d32', '#00897b', '#8e24aa', '#e53935', '#fb8c00'],
+        borderColor: '#fff',
+        borderWidth: 2,
+      }],
+    };
+  }
+
+  private buildLedgerChart(ledger: LoanLedgerItem[]) {
+    const t = (k: string) => this.translate.instant(k);
+    this.ledgerChartData = {
+      labels: ledger.map(l => l.memberName),
+      datasets: [
+        {
+          label: t('labels.outstanding'),
+          data: ledger.map(l => l.outstandingBalance),
+          backgroundColor: '#fb8c00',
+          borderRadius: 4,
+        },
+        {
+          label: t('labels.interestPaid'),
+          data: ledger.map(l => l.totalInterestPaid),
+          backgroundColor: '#00897b',
+          borderRadius: 4,
+        },
+      ],
+    };
+  }
+
+  private inrShort(n: number): string {
+    if (n >= 10000000) return '₹' + (n / 10000000).toFixed(1) + 'Cr';
+    if (n >= 100000) return '₹' + (n / 100000).toFixed(1) + 'L';
+    if (n >= 1000) return '₹' + (n / 1000).toFixed(1) + 'K';
+    return '₹' + Math.round(n);
   }
 
   loadMonthlyReport() {

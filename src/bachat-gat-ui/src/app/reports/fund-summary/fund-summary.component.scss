@@ -15,6 +15,53 @@
   grid-column: 1 / -1;
 }
 
+@media (max-width: 640px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-3);
+  }
+
+  .summary-grid ::ng-deep .stat-tile {
+    padding: 10px 12px;
+    min-height: 64px;
+
+    .val { font-size: 18px; }
+    .lbl { font-size: 9px; margin-bottom: 4px; }
+  }
+}
+
+/* ── Charts ── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: var(--sp-4);
+  margin-top: var(--sp-5);
+  margin-bottom: var(--sp-5);
+}
+
+.chart-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-title {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--clr-text-muted);
+  font-weight: 700;
+}
+
+.chart-canvas-wrap {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
 /* ── Ledger table ── */
 .table-scroll {
   overflow-x: auto;

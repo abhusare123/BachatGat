@@ -108,6 +108,10 @@
   "forms": {
     "month": "Month"
   },
+  "charts": {
+    "fundComposition": "Fund Composition",
+    "loansByMember": "Loans by Member"
+  },
   "labels": {
     "totalCollected": "Total Collected",
     "totalLoansDisbursed": "Total Loans Disbursed",

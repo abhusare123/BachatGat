@@ -108,6 +108,10 @@
   "forms": {
     "month": "महिना"
   },
+  "charts": {
+    "fundComposition": "निधी रचना",
+    "loansByMember": "सदस्यनिहाय कर्ज"
+  },
   "labels": {
     "totalCollected": "एकूण भरणा",
     "totalLoansDisbursed": "एकूण कर्ज",

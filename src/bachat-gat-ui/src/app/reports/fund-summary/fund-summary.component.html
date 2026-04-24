@@ -24,6 +24,31 @@
     <bg-stat-tile [label]="'labels.availableBalance' | translate"     [value]="summary.availableBalance"            color="green"  [isCurrency]="true" class="balance-tile" />
   </div>
 
+  <div *ngIf="!loading && summary" class="charts-grid">
+    <div class="chart-card">
+      <h3 class="chart-title">{{ 'charts.fundComposition' | translate }}</h3>
+      <div class="chart-canvas-wrap">
+        <canvas *ngIf="compositionChartData"
+          baseChart
+          [type]="'doughnut'"
+          [data]="compositionChartData"
+          [options]="compositionChartOptions">
+        </canvas>
+      </div>
+    </div>
+    <div class="chart-card" *ngIf="ledger.length">
+      <h3 class="chart-title">{{ 'charts.loansByMember' | translate }}</h3>
+      <div class="chart-canvas-wrap" [style.height.px]="Math.max(220, ledger.length * 36 + 80)">
+        <canvas *ngIf="ledgerChartData"
+          baseChart
+          [type]="'bar'"
+          [data]="ledgerChartData"
+          [options]="ledgerChartOptions">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
   <h3 style="margin-top:32px">{{ 'labels.loanLedger' | translate }}</h3>
   <div class="table-scroll" *ngIf="ledger.length">
     <table mat-table [dataSource]="ledger" class="ledger-table">
