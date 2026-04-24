@@ -7,7 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { ReportService } from '../../core/report.service';
 import { GroupService } from '../../core/group.service';
 import { FundSummary, LoanLedgerItem, MonthlyReport } from '../../core/models';
@@ -34,8 +34,7 @@ export class FundSummaryComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private reportSvc: ReportService,
-    private groupSvc: GroupService,
-    private translate: TranslateService
+    private groupSvc: GroupService
   ) {}
 
   ngOnInit() {
@@ -52,10 +51,6 @@ export class FundSummaryComponent implements OnInit {
     this.monthlyReport = undefined;
     this.reportSvc.getMonthlyReport(this.groupId, this.selectedPeriod)
       .subscribe({ next: r => this.monthlyReport = r, error: err => console.error('Monthly report error', err) });
-  }
-
-  getLabel(key: string): string {
-    return this.translate.instant(key);
   }
 
   exportPdf() {

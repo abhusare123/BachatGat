@@ -21,17 +21,16 @@ export class LanguageService {
    * Load translation files for both languages synchronously
    */
   private setupTranslations(): void {
-    // Load English translations
+    // Load English translations first
     this.http.get<any>('assets/i18n/en.json').subscribe({
       next: (data) => {
-        this.translate.setTranslation('en', data, true);
+        this.translate.setTranslation('en', data);
         this.translate.setDefaultLang('en');
         // Initialize language after English is loaded
         this.initializeLanguage();
       },
       error: (err) => {
         console.error('Failed to load English translations:', err);
-        // Still initialize if loading fails
         this.initializeLanguage();
       }
     });
@@ -39,7 +38,7 @@ export class LanguageService {
     // Load Marathi translations
     this.http.get<any>('assets/i18n/mr.json').subscribe({
       next: (data) => {
-        this.translate.setTranslation('mr', data, true);
+        this.translate.setTranslation('mr', data);
       },
       error: (err) => {
         console.error('Failed to load Marathi translations:', err);
@@ -56,9 +55,11 @@ export class LanguageService {
     const stored = urlLang || this.getStoredLanguage();
     const lang = stored || this.getBrowserLanguage() || 'en';
 
-    // Use the language with TranslateService
-    this.translate.use(lang);
-    this.currentLanguage.set(lang as Language);
+    // Only change language if it's different from current
+    if (lang !== this.currentLanguage()) {
+      this.translate.use(lang);
+      this.currentLanguage.set(lang as Language);
+    }
   }
 
   /**
