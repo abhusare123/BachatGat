@@ -44,7 +44,11 @@
       "Bash(npx tsc *)",
       "Bash(npm uninstall *)",
       "Bash(Get-ChildItem -Recurse -Path \"C:\\\\Users\\\\Dell\\\\source\\\\repos\\\\abhusare123\\\\BachatGat\\\\src\\\\BachatGat.Infrastructure\" -Filter \"*Sms*\")",
-      "Bash(Select-Object FullName)"
+      "Bash(Select-Object FullName)",
+      "Bash(curl -s http://localhost:4200/)",
+      "Bash(curl -s -I http://localhost:4200/)",
+      "Bash(curl -s http://localhost:4200/en/)",
+      "Bash(pkill -f \"ng serve\")"
     ]
   }
 }

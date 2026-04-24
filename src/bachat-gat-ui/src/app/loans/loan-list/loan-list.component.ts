@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { TranslateModule } from '@ngx-translate/core';
 import { LoanService } from '../../core/loan.service';
 import { GroupService } from '../../core/group.service';
 import { AuthService } from '../../core/auth.service';
@@ -16,7 +17,7 @@ import { LoanCardComponent, Loan as DsLoan, LoanVote } from '../../shared/ui/loa
 @Component({
   selector: 'app-loan-list',
   imports: [CommonModule, MatButtonModule, MatIconModule,
-    MatProgressSpinnerModule, MatDialogModule, MatSnackBarModule, LoanCardComponent],
+    MatProgressSpinnerModule, MatDialogModule, MatSnackBarModule, LoanCardComponent, TranslateModule],
   templateUrl: './loan-list.component.html',
   styleUrl: './loan-list.component.scss'
 })

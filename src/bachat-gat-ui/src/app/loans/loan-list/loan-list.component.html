@@ -1,8 +1,8 @@
 <div class="page-container">
   <div class="page-header">
-    <h2>Loans / कर्ज</h2>
+    <h2>{{ 'nav.loans' | translate }}</h2>
     <button mat-flat-button color="primary" (click)="requestLoan()">
-      <mat-icon>add</mat-icon> Request Loan
+      <mat-icon>add</mat-icon> {{ 'buttons.requestLoan' | translate }}
     </button>
   </div>
 
@@ -24,7 +24,7 @@
 
     <div *ngIf="loans.length === 0" class="empty-state">
       <mat-icon>account_balance_wallet</mat-icon>
-      <p>No loans yet.</p>
+      <p>{{ 'messages.noLoansYet' | translate }}</p>
     </div>
   </div>
 </div>

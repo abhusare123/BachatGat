@@ -1,10 +1,10 @@
 <div class="page-container">
   <div class="page-header">
-    <bg-brand-hero eyebrow="BachatGat" caption="Manage your savings groups and track contributions." [compact]="true">
-      <span slot="title">My Groups / माझे गट</span>
+    <bg-brand-hero eyebrow="BachatGat" [caption]="'nav.caption' | translate" [compact]="true">
+      <span slot="title">{{ 'nav.myGroups' | translate }}</span>
     </bg-brand-hero>
     <button mat-flat-button color="primary" (click)="openCreate()">
-      <mat-icon>add</mat-icon> New Group
+      <mat-icon>add</mat-icon> {{ 'buttons.newGroup' | translate }}
     </button>
   </div>
 
@@ -19,7 +19,7 @@
 
     <div *ngIf="groups.length === 0" class="empty-state">
       <mat-icon>group_off</mat-icon>
-      <p>No groups yet. Create one to get started.</p>
+      <p>{{ 'messages.noGroupsYet' | translate }}</p>
     </div>
   </div>
 </div>

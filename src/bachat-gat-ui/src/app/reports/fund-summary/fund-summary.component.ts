@@ -7,6 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { TranslateModule } from '@ngx-translate/core';
 import { ReportService } from '../../core/report.service';
 import { GroupService } from '../../core/group.service';
 import { FundSummary, LoanLedgerItem, MonthlyReport } from '../../core/models';
@@ -16,7 +17,7 @@ import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-fund-summary',
-  imports: [CommonModule, FormsModule, MatTableModule, MatProgressSpinnerModule, CurrencyPipe, MatButtonModule, MatIconModule, MatInputModule, StatTileComponent],
+  imports: [CommonModule, FormsModule, MatTableModule, MatProgressSpinnerModule, CurrencyPipe, MatButtonModule, MatIconModule, MatInputModule, StatTileComponent, TranslateModule],
   templateUrl: './fund-summary.component.html',
   styleUrl: './fund-summary.component.scss'
 })

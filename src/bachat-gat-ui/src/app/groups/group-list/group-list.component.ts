@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 import { GroupService } from '../../core/group.service';
 import { Group } from '../../core/models';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
@@ -13,7 +14,7 @@ import { BrandHeroComponent } from '../../shared/ui/brand-hero/brand-hero.compon
 
 @Component({
   selector: 'app-group-list',
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatDialogModule, GroupCardComponent, BrandHeroComponent],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatDialogModule, GroupCardComponent, BrandHeroComponent, TranslateModule],
   templateUrl: './group-list.component.html',
   styleUrl: './group-list.component.scss'
 })

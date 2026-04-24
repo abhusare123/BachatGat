@@ -1,13 +1,13 @@
 <div class="page-container">
   <div class="page-header">
-    <h2>Reports / अहवाल</h2>
+    <h2>{{ 'nav.reports' | translate }}</h2>
     <div style="display:flex;gap:8px;align-items:center">
       <mat-form-field appearance="outline" style="width:160px;margin-bottom:-1.25em">
-        <mat-label>Month</mat-label>
+        <mat-label>{{ 'forms.month' | translate }}</mat-label>
         <input matInput type="month" [(ngModel)]="selectedPeriod" (change)="loadMonthlyReport()">
       </mat-form-field>
       <button mat-raised-button color="primary" [disabled]="!monthlyReport" (click)="exportMonthlyPdf()">
-        <mat-icon>download</mat-icon> Monthly Report PDF
+        <mat-icon>download</mat-icon> {{ 'buttons.monthlyPdf' | translate }}
       </button>
     </div>
   </div>
@@ -15,36 +15,36 @@
   <div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>
 
   <div *ngIf="!loading && summary" class="summary-grid">
-    <bg-stat-tile label="Total Collected / एकूण भरणा"       [value]="summary.totalContributionsCollected" color="green"  [isCurrency]="true" />
-    <bg-stat-tile label="Total Loans Disbursed / एकूण कर्ज" [value]="summary.totalLoansDisbursed"         color="blue"   [isCurrency]="true" />
-    <bg-stat-tile label="Loan Outstanding / बाकी कर्ज"      [value]="summary.totalLoanOutstanding"        color="amber"  [isCurrency]="true" />
-    <bg-stat-tile label="Interest Collected / व्याज"        [value]="summary.totalInterestCollected"      color="teal"   [isCurrency]="true" />
-    <bg-stat-tile label="Total Expenses / एकूण खर्च"        [value]="summary.totalExpenses"               color="red"    [isCurrency]="true" />
-    <bg-stat-tile label="Other Income / इतर उत्पन्न"        [value]="summary.totalOtherIncome"            color="purple" [isCurrency]="true" />
-    <bg-stat-tile label="Available Balance / निव्वळ शिल्लक" [value]="summary.availableBalance"            color="green"  [isCurrency]="true" class="balance-tile" />
+    <bg-stat-tile [label]="'labels.totalCollected' | translate"       [value]="summary.totalContributionsCollected" color="green"  [isCurrency]="true" />
+    <bg-stat-tile [label]="'labels.totalLoansDisbursed' | translate" [value]="summary.totalLoansDisbursed"         color="blue"   [isCurrency]="true" />
+    <bg-stat-tile [label]="'labels.loanOutstanding' | translate"      [value]="summary.totalLoanOutstanding"        color="amber"  [isCurrency]="true" />
+    <bg-stat-tile [label]="'labels.interestCollected' | translate"    [value]="summary.totalInterestCollected"      color="teal"   [isCurrency]="true" />
+    <bg-stat-tile [label]="'labels.totalExpenses' | translate"        [value]="summary.totalExpenses"               color="red"    [isCurrency]="true" />
+    <bg-stat-tile [label]="'labels.otherIncome' | translate"          [value]="summary.totalOtherIncome"            color="purple" [isCurrency]="true" />
+    <bg-stat-tile [label]="'labels.availableBalance' | translate"     [value]="summary.availableBalance"            color="green"  [isCurrency]="true" class="balance-tile" />
   </div>
 
-  <h3 style="margin-top:32px">Loan Ledger / कर्ज खातेवही</h3>
+  <h3 style="margin-top:32px">{{ 'labels.loanLedger' | translate }}</h3>
   <div class="table-scroll" *ngIf="ledger.length">
     <table mat-table [dataSource]="ledger" class="ledger-table">
       <ng-container matColumnDef="member">
-        <th mat-header-cell *matHeaderCellDef>Member</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'labels.member' | translate }}</th>
         <td mat-cell *matCellDef="let l">{{ l.memberName }}</td>
       </ng-container>
       <ng-container matColumnDef="original">
-        <th mat-header-cell *matHeaderCellDef>Loan Amount</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'labels.loanAmount' | translate }}</th>
         <td mat-cell *matCellDef="let l">{{ l.originalAmount | currency:'INR':'symbol':'1.0-0' }}</td>
       </ng-container>
       <ng-container matColumnDef="outstanding">
-        <th mat-header-cell *matHeaderCellDef>Outstanding</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'labels.outstanding' | translate }}</th>
         <td mat-cell *matCellDef="let l">{{ l.outstandingBalance | currency:'INR':'symbol':'1.0-0' }}</td>
       </ng-container>
       <ng-container matColumnDef="interestPaid">
-        <th mat-header-cell *matHeaderCellDef>Interest Paid</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'labels.interestPaid' | translate }}</th>
         <td mat-cell *matCellDef="let l">{{ l.totalInterestPaid | currency:'INR':'symbol':'1.0-0' }}</td>
       </ng-container>
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'labels.status' | translate }}</th>
         <td mat-cell *matCellDef="let l">{{ l.status }}</td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="ledgerColumns"></tr>

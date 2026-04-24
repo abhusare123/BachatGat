@@ -1,0 +1,56 @@
+{
+  "app_title": "Bachat Gat",
+  "app_subtitle": "Savings Group Management",
+  "nav": {
+    "home": "Home",
+    "myGroups": "My Groups",
+    "loans": "Loans",
+    "contributions": "Contributions",
+    "reports": "Reports",
+    "profile": "Profile",
+    "logout": "Logout",
+    "members": "Members",
+    "rules": "Rules",
+    "caption": "Manage your savings groups and track contributions."
+  },
+  "buttons": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "newGroup": "New Group",
+    "requestLoan": "Request Loan",
+    "monthlyPdf": "Monthly Report PDF"
+  },
+  "messages": {
+    "welcome": "Welcome to Bachat Gat",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Operation successful",
+    "noGroupsYet": "No groups yet. Create one to get started.",
+    "noLoansYet": "No loans yet."
+  },
+  "footer": {
+    "copyright": "© 2026 All rights reserved by Abhijit Bhusare",
+    "contact": "Contact Us"
+  },
+  "forms": {
+    "month": "Month"
+  },
+  "labels": {
+    "totalCollected": "Total Collected",
+    "totalLoansDisbursed": "Total Loans Disbursed",
+    "loanOutstanding": "Loan Outstanding",
+    "interestCollected": "Interest Collected",
+    "totalExpenses": "Total Expenses",
+    "otherIncome": "Other Income",
+    "availableBalance": "Available Balance",
+    "loanLedger": "Loan Ledger",
+    "member": "Member",
+    "loanAmount": "Loan Amount",
+    "outstanding": "Outstanding",
+    "interestPaid": "Interest Paid",
+    "status": "Status"
+  }
+}

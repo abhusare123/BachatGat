@@ -6,13 +6,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from './core/auth.service';
+import { LanguageToggleComponent } from './shared/components/language-toggle/language-toggle.component';
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet, RouterLink, CommonModule,
-    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, MatDividerModule
+    MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, MatDividerModule,
+    TranslateModule, LanguageToggleComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
