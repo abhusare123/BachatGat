@@ -7,7 +7,7 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <div *ngIf="!loading && tracker" class="table-scroll">
+  <div *ngIf="!loading && tracker" class="table-scroll desktop-only">
     <table mat-table [dataSource]="tracker.rows" multiTemplateDataRows class="tracker-table">
 
       <!-- Expand toggle column -->
@@ -143,6 +143,99 @@
       <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: false" class="footer-row"></tr>
     </table>
   </div>
+
+  <!-- Mobile card layout -->
+  <ul *ngIf="!loading && tracker && tracker.rows.length" class="member-cards mobile-only">
+    <li *ngFor="let row of tracker.rows" class="member-card"
+        [class.expanded]="isExpanded(row.groupMemberId)">
+      <div class="mc-summary" (click)="toggleExpand(row.groupMemberId)">
+        <div class="mc-top">
+          <span class="mc-name">{{ row.memberName }}</span>
+          <div class="mc-top-actions">
+            <button mat-icon-button class="mc-add-btn"
+                    *ngIf="currentUserRole === GroupMemberRole.Admin || currentUserRole === GroupMemberRole.Treasurer"
+                    (click)="openRecordPayment(row.groupMemberId, row.memberName); $event.stopPropagation()"
+                    aria-label="Record payment">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+            <mat-icon class="mc-chevron">{{ isExpanded(row.groupMemberId) ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </div>
+        </div>
+        <div class="mc-stats">
+          <div class="mc-stat">
+            <span class="mc-label">{{ getLastPeriod() }}</span>
+            <span class="mc-value"
+                  [class.paid]="getLastCell(row)?.isPaid && getLastCell(row)?.isApproved"
+                  [class.pending]="getLastCell(row)?.isPaid && !getLastCell(row)?.isApproved"
+                  [class.unpaid]="!getLastCell(row)?.isPaid">
+              {{ getLastCell(row)?.isPaid ? (getLastCell(row)!.amountPaid | currency:'INR':'symbol':'1.0-0') : '—' }}
+            </span>
+          </div>
+          <div class="mc-stat">
+            <span class="mc-label">{{ 'contributions.totalApproved' | translate }}</span>
+            <span class="mc-value total">{{ row.runningTotal | currency:'INR':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="mc-stat">
+            <span class="mc-label">{{ 'contributions.currentMonthEmi' | translate }}</span>
+            <span class="mc-value emi">{{ row.nextEmi | currency:'INR':'symbol':'1.0-0' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mc-detail" *ngIf="isExpanded(row.groupMemberId)">
+        <ul class="mc-period-list">
+          <li *ngFor="let cell of row.cells" class="mc-period-row"
+              [class.tx-paid]="cell.isPaid && cell.isApproved"
+              [class.tx-pending]="cell.isPaid && !cell.isApproved"
+              [class.tx-unpaid]="!cell.isPaid">
+            <div class="mc-period-main">
+              <span class="mc-period-label">{{ formatPeriod(cell.period) }}</span>
+              <span class="mc-period-amount">
+                {{ cell.isPaid ? (cell.amountPaid | currency:'INR':'symbol':'1.0-0') : '—' }}
+              </span>
+            </div>
+            <div class="mc-period-meta">
+              <span *ngIf="cell.isPaid && cell.isApproved"  class="chip approved">{{ 'contributions.approved' | translate }}</span>
+              <span *ngIf="cell.isPaid && !cell.isApproved" class="chip pending">{{ 'contributions.pending' | translate }}</span>
+              <span *ngIf="!cell.isPaid"                    class="chip unpaid">{{ 'contributions.notPaid' | translate }}</span>
+              <span class="mc-period-actions">
+                <button *ngIf="cell.isPaid && !cell.isApproved && currentUserRole === GroupMemberRole.Admin"
+                        mat-icon-button class="approve-btn" aria-label="Approve"
+                        (click)="approveContribution(cell.contributionId!)">
+                  <mat-icon>check_circle</mat-icon>
+                </button>
+                <button *ngIf="cell.isPaid && cell.contributionId"
+                        mat-icon-button class="edit-btn" aria-label="Edit"
+                        (click)="openEditPayment(row.groupMemberId, row.memberName, cell.contributionId!, cell.period, cell.amountPaid)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="member-card totals-card">
+      <div class="mc-summary">
+        <div class="mc-top"><span class="mc-name">{{ 'contributions.total' | translate }}</span></div>
+        <div class="mc-stats">
+          <div class="mc-stat">
+            <span class="mc-label">{{ getLastPeriod() }}</span>
+            <span class="mc-value total">{{ currentMonthTotal | currency:'INR':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="mc-stat">
+            <span class="mc-label">{{ 'contributions.totalApproved' | translate }}</span>
+            <span class="mc-value total">{{ tracker.grandTotal | currency:'INR':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="mc-stat">
+            <span class="mc-label">{{ 'contributions.currentMonthEmi' | translate }}</span>
+            <span class="mc-value emi">{{ totalNextEmi | currency:'INR':'symbol':'1.0-0' }}</span>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
 
   <div *ngIf="!loading && !tracker?.rows?.length" class="empty-state">
     {{ 'contributions.emptyState' | translate }}

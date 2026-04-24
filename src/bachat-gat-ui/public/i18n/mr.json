@@ -15,6 +15,17 @@
     "amount": "रक्कम",
     "recordedBy": "नोंद केली"
   },
+  "group": {
+    "members": "सदस्य",
+    "monthlyAmount": "मासिक रक्कम",
+    "interestRate": "व्याज दर",
+    "addMember": "सदस्य जोडा",
+    "role": "भूमिका",
+    "phone": "फोन",
+    "name": "नाव",
+    "joined": "सामील तारीख",
+    "confirmRemove": "या सदस्याला गटातून काढायचे?"
+  },
   "contributions": {
     "member": "सदस्य",
     "total": "एकूण",

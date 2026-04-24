@@ -185,8 +185,190 @@
   color: var(--clr-text-muted);
 }
 
-/* ── Mobile ── */
-@media (max-width: 600px) {
+/* ── Mobile card list ── */
+.member-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.member-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+
+  &.expanded { box-shadow: var(--shadow-sm); }
+
+  &.totals-card {
+    background: color-mix(in oklch, var(--clr-primary-100) 60%, white);
+    border-color: transparent;
+    .mc-name { color: var(--clr-primary-800); }
+  }
+}
+
+.mc-summary {
+  padding: var(--sp-3) var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  cursor: pointer;
+}
+
+.mc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+
+  .mc-name {
+    font-weight: 700;
+    color: var(--clr-primary-900);
+    font-size: var(--text-md);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mc-chevron {
+    color: var(--clr-text-muted);
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.mc-top-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+
+  .mc-add-btn {
+    color: var(--clr-primary-700);
+    width: 40px;
+    height: 40px;
+
+    mat-icon { font-size: 24px; width: 24px; height: 24px; }
+  }
+}
+
+.mc-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+}
+
+.mc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  .mc-label {
+    font-size: var(--text-xs);
+    color: var(--clr-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mc-value {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-size: var(--text-sm);
+
+    &.total { color: var(--clr-amber); }
+    &.emi   { color: var(--clr-blue); }
+    &.paid  { color: var(--clr-primary-700); }
+    &.pending { color: var(--clr-amber); }
+    &.unpaid  { color: var(--clr-text-muted); }
+  }
+}
+
+/* Expanded detail */
+.mc-detail {
+  border-top: 1px solid var(--clr-border);
+  background: var(--clr-primary-50);
+  padding: var(--sp-2);
+}
+
+.mc-period-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.mc-period-row {
+  background: var(--clr-surface);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-2) var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &.tx-pending { background: var(--clr-amber-bg); }
+  &.tx-unpaid  { color: var(--clr-text-muted); }
+}
+
+.mc-period-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .mc-period-label { font-weight: 600; font-size: var(--text-sm); }
+  .mc-period-amount { font-weight: 700; font-variant-numeric: tabular-nums; }
+}
+
+.mc-period-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: var(--text-xs);
+    font-weight: 600;
+
+    &.approved { background: var(--clr-primary-100); color: var(--clr-primary-800); }
+    &.pending  { background: color-mix(in oklch, var(--clr-amber) 20%, white); color: var(--clr-amber); }
+    &.unpaid   { background: oklch(93% 0.01 148); color: var(--clr-text-muted); }
+  }
+}
+
+.mc-period-actions {
+  display: inline-flex;
+  gap: 2px;
+
+  .approve-btn { color: var(--clr-primary-700); }
+  .edit-btn    { color: var(--clr-text-muted); }
+
+  button {
+    width: 36px;
+    height: 36px;
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  }
+}
+
+/* Display toggles — placed last so they win over other rules */
+.member-cards.mobile-only { display: none; }
+
+@media (max-width: 640px) {
   .tracker-container { padding: 8px; }
   .tracker-header h2  { font-size: var(--text-lg); }
+
+  .table-scroll.desktop-only { display: none; }
+  .member-cards.mobile-only  { display: flex; }
 }

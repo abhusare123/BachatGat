@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 import { GroupService } from '../../core/group.service';
 import { AuthService } from '../../core/auth.service';
 import { GroupDetail, GroupMemberRole } from '../../core/models';
@@ -17,7 +18,8 @@ import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog
   selector: 'app-group-detail',
   imports: [
     CommonModule, MatTabsModule, MatTableModule, MatButtonModule,
-    MatIconModule, MatChipsModule, MatProgressSpinnerModule, MatDialogModule
+    MatIconModule, MatChipsModule, MatProgressSpinnerModule, MatDialogModule,
+    TranslateModule
   ],
   templateUrl: './group-detail.component.html',
   styleUrl: './group-detail.component.scss'

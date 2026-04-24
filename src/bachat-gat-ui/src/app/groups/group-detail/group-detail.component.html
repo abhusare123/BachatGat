@@ -4,52 +4,42 @@
       <h2>{{ group.name }}</h2>
       <p class="subtitle">{{ group.description }}</p>
     </div>
-    <div class="header-actions">
-      <button mat-stroked-button (click)="goTo('contributions')">
-        <mat-icon>savings</mat-icon> Contributions
-      </button>
-      <button mat-stroked-button (click)="goTo('loans')">
-        <mat-icon>account_balance</mat-icon> Loans
-      </button>
-      <button mat-stroked-button (click)="goTo('reports')">
-        <mat-icon>bar_chart</mat-icon> Reports
-      </button>
-    </div>
   </div>
 
   <div class="info-cards">
     <div class="info-card">
-      <span class="label">Monthly Amount</span>
+      <span class="label">{{ 'group.monthlyAmount' | translate }}</span>
       <span class="value">₹{{ group.monthlyAmount | number }}</span>
     </div>
     <div class="info-card">
-      <span class="label">Interest Rate</span>
+      <span class="label">{{ 'group.interestRate' | translate }}</span>
       <span class="value">{{ group.interestRatePercent }}% / month</span>
     </div>
     <div class="info-card">
-      <span class="label">Members</span>
+      <span class="label">{{ 'group.members' | translate }}</span>
       <span class="value">{{ group.members.length }}</span>
     </div>
   </div>
 
   <div class="section-header">
-    <h3>Members / सदस्य</h3>
+    <h3>{{ 'group.members' | translate }}</h3>
     <button *ngIf="isAdmin" mat-raised-button color="primary" (click)="openAddMember()">
-      <mat-icon>person_add</mat-icon> Add Member
+      <mat-icon>person_add</mat-icon> {{ 'group.addMember' | translate }}
     </button>
   </div>
 
-  <table mat-table [dataSource]="group.members" class="members-table">
+  <!-- Desktop table -->
+  <table mat-table [dataSource]="group.members" class="members-table desktop-only">
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <th mat-header-cell *matHeaderCellDef>{{ 'group.name' | translate }}</th>
       <td mat-cell *matCellDef="let m">{{ m.fullName }}</td>
     </ng-container>
     <ng-container matColumnDef="phone">
-      <th mat-header-cell *matHeaderCellDef>Phone</th>
+      <th mat-header-cell *matHeaderCellDef>{{ 'group.phone' | translate }}</th>
       <td mat-cell *matCellDef="let m">{{ m.phoneNumber }}</td>
     </ng-container>
     <ng-container matColumnDef="role">
-      <th mat-header-cell *matHeaderCellDef>Role</th>
+      <th mat-header-cell *matHeaderCellDef>{{ 'group.role' | translate }}</th>
       <td mat-cell *matCellDef="let m">
         <mat-chip [color]="m.role === GroupMemberRole.Admin ? 'primary' : 'default'">
           {{ roleLabel(m.role) }}
@@ -57,7 +47,7 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="joined">
-      <th mat-header-cell *matHeaderCellDef>Joined</th>
+      <th mat-header-cell *matHeaderCellDef>{{ 'group.joined' | translate }}</th>
       <td mat-cell *matCellDef="let m">{{ m.joinedAt | date:'mediumDate' }}</td>
     </ng-container>
     <ng-container matColumnDef="actions">
@@ -74,6 +64,40 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <!-- Mobile card list -->
+  <ul class="member-cards mobile-only">
+    <li *ngFor="let m of group.members" class="member-card"
+        [class.is-admin]="m.role === GroupMemberRole.Admin">
+      <div class="mc-avatar">
+        <mat-icon>{{ m.role === GroupMemberRole.Admin ? 'admin_panel_settings' : 'person' }}</mat-icon>
+      </div>
+      <div class="mc-info">
+        <div class="mc-name-row">
+          <span class="mc-name">{{ m.fullName }}</span>
+          <span class="mc-role-chip" [class.admin]="m.role === GroupMemberRole.Admin">
+            {{ roleLabel(m.role) }}
+          </span>
+        </div>
+        <div class="mc-meta">
+          <a *ngIf="m.phoneNumber" class="mc-meta-item" [href]="'tel:' + m.phoneNumber">
+            <mat-icon>phone</mat-icon>{{ m.phoneNumber }}
+          </a>
+          <span class="mc-meta-item">
+            <mat-icon>event</mat-icon>{{ m.joinedAt | date:'dd MMM yyyy' }}
+          </span>
+        </div>
+      </div>
+      <div class="mc-actions" *ngIf="isAdmin">
+        <button mat-icon-button (click)="viewProfile(m.userId)" aria-label="View profile">
+          <mat-icon>manage_accounts</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="removeMember(m.id)" aria-label="Remove member">
+          <mat-icon>person_remove</mat-icon>
+        </button>
+      </div>
+    </li>
+  </ul>
 </div>
 
 <div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>

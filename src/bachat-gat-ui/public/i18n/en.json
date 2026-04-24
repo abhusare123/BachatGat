@@ -15,6 +15,17 @@
     "amount": "Amount",
     "recordedBy": "Recorded By"
   },
+  "group": {
+    "members": "Members",
+    "monthlyAmount": "Monthly Amount",
+    "interestRate": "Interest Rate",
+    "addMember": "Add Member",
+    "role": "Role",
+    "phone": "Phone",
+    "name": "Name",
+    "joined": "Joined",
+    "confirmRemove": "Remove this member from the group?"
+  },
   "contributions": {
     "member": "Member",
     "total": "Total",
