@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 import { GroupIncomeService } from '../../core/group-income.service';
 import { GroupService } from '../../core/group.service';
 import { AuthService } from '../../core/auth.service';
@@ -17,7 +18,7 @@ import { AddIncomeDialogComponent } from '../add-income-dialog/add-income-dialog
   imports: [
     CommonModule, CurrencyPipe, DatePipe,
     MatTableModule, MatButtonModule, MatIconModule,
-    MatProgressSpinnerModule, MatDialogModule
+    MatProgressSpinnerModule, MatDialogModule, TranslateModule
   ],
   templateUrl: './income-list.component.html',
   styleUrl: './income-list.component.scss'

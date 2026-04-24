@@ -47,4 +47,33 @@
     background: color-mix(in oklch, var(--clr-primary-100) 50%, white) !important;
     transition: background 0.1s;
   }
+
+  .status-col {
+    white-space: nowrap;
+    width: 1%;
+    text-align: center;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}
+
+.status-pill {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  line-height: 1.6;
+
+  &.status-active {
+    background: color-mix(in oklch, var(--clr-primary-400) 20%, white);
+    color: var(--clr-primary-700);
+  }
+
+  &.status-closed {
+    background: oklch(92% 0.015 148);
+    color: var(--clr-text-muted);
+  }
 }

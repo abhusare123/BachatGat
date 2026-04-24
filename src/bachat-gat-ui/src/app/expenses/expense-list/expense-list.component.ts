@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 import { ExpenseService } from '../../core/expense.service';
 import { GroupService } from '../../core/group.service';
 import { AuthService } from '../../core/auth.service';
@@ -17,7 +18,7 @@ import { AddExpenseDialogComponent } from '../add-expense-dialog/add-expense-dia
   imports: [
     CommonModule, CurrencyPipe, DatePipe,
     MatTableModule, MatButtonModule, MatIconModule,
-    MatProgressSpinnerModule, MatDialogModule
+    MatProgressSpinnerModule, MatDialogModule, TranslateModule
   ],
   templateUrl: './expense-list.component.html',
   styleUrl: './expense-list.component.scss'

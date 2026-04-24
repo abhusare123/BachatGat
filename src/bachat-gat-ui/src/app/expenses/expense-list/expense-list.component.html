@@ -1,6 +1,6 @@
 <div class="page-container">
   <div class="page-header">
-    <h2>Expenses / खर्च</h2>
+    <h2>{{ 'pages.expenses' | translate }}</h2>
     <button *ngIf="canAdd" mat-raised-button color="primary" (click)="openAddDialog()">
       <mat-icon>add</mat-icon> Add Expense
     </button>
@@ -19,7 +19,8 @@
         Total: <strong>{{ totalAmount | currency:'INR':'symbol':'1.2-2' }}</strong>
       </div>
 
-      <div class="table-scroll">
+      <!-- Desktop table -->
+      <div class="table-scroll desktop-only">
         <table mat-table [dataSource]="expenses" class="expenses-table">
 
           <ng-container matColumnDef="date">
@@ -61,6 +62,27 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
       </div>
+
+      <!-- Mobile card list -->
+      <ul class="expense-cards mobile-only">
+        <li *ngFor="let e of expenses" class="expense-card">
+          <div class="card-row-top">
+            <span class="chip category-chip">{{ e.category }}</span>
+            <span class="amount">{{ e.amount | currency:'INR':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="card-desc" *ngIf="e.description">{{ e.description }}</div>
+          <div class="card-meta">
+            <span class="meta-item"><mat-icon>event</mat-icon>{{ e.date | date:'dd MMM yyyy' }}</span>
+          </div>
+          <div class="card-footer">
+            <span class="recorded-by">By {{ e.recordedByName }}</span>
+            <button *ngIf="canDelete" mat-icon-button color="warn"
+                    (click)="deleteExpense(e.id)" aria-label="Delete expense">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

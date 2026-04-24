@@ -1,6 +1,11 @@
 {
   "app_title": "Bachat Gat",
   "app_subtitle": "Savings Group Management",
+  "pages": {
+    "contributionTracker": "Monthly Contribution Tracker",
+    "expenses": "Expenses",
+    "otherIncome": "Other Income"
+  },
   "nav": {
     "home": "Home",
     "myGroups": "My Groups",

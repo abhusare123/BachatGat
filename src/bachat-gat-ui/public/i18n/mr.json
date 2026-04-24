@@ -1,6 +1,11 @@
 {
   "app_title": "बचत गट",
   "app_subtitle": "बचत गटाचे व्यवस्थापन",
+  "pages": {
+    "contributionTracker": "मासिक बचत नोंद",
+    "expenses": "खर्च",
+    "otherIncome": "इतर उत्पन्न"
+  },
   "nav": {
     "home": "मुखपृष्ठ",
     "myGroups": "माझे गट",

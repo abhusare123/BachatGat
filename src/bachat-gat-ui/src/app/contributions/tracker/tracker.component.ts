@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import { ContributionService } from '../../core/contribution.service';
 import { GroupService } from '../../core/group.service';
 import { AuthService } from '../../core/auth.service';
@@ -17,7 +18,8 @@ import { RecordPaymentDialogComponent } from '../record-payment-dialog/record-pa
   selector: 'app-tracker',
   imports: [
     CommonModule, MatTableModule, MatButtonModule, MatIconModule,
-    MatDialogModule, MatProgressSpinnerModule, MatTooltipModule, CurrencyPipe
+    MatDialogModule, MatProgressSpinnerModule, MatTooltipModule, CurrencyPipe,
+    TranslateModule
   ],
   templateUrl: './tracker.component.html',
   styleUrl: './tracker.component.scss'
