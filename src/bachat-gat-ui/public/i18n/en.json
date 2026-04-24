@@ -6,6 +6,36 @@
     "expenses": "Expenses",
     "otherIncome": "Other Income"
   },
+  "tables": {
+    "date": "Date",
+    "type": "Type",
+    "category": "Category",
+    "description": "Description",
+    "member": "Member",
+    "amount": "Amount",
+    "recordedBy": "Recorded By"
+  },
+  "contributions": {
+    "member": "Member",
+    "total": "Total",
+    "totalApproved": "Total (Approved)",
+    "currentMonthEmi": "This Month's EMI",
+    "savingsPlusLoan": "(Savings + Loan)",
+    "period": "Period",
+    "amount": "Amount",
+    "status": "Status",
+    "actions": "Actions",
+    "approved": "Approved",
+    "pending": "Pending",
+    "notPaid": "Not Paid",
+    "emptyState": "No contributions recorded yet."
+  },
+  "income": {
+    "addTitle": "Add Income Entry",
+    "categoryPenalty": "Penalty",
+    "categoryBankInterest": "Bank Interest",
+    "categoryOther": "Other"
+  },
   "nav": {
     "home": "Home",
     "myGroups": "My Groups",

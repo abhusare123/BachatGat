@@ -24,32 +24,32 @@
         <table mat-table [dataSource]="entries" class="income-table">
 
           <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef>Date / तारीख</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'tables.date' | translate }}</th>
             <td mat-cell *matCellDef="let e">{{ e.date | date:'dd MMM yyyy' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef>Type / प्रकार</th>
-            <td mat-cell *matCellDef="let e">{{ categoryLabel(e.category) }}</td>
+            <th mat-header-cell *matHeaderCellDef>{{ 'tables.type' | translate }}</th>
+            <td mat-cell *matCellDef="let e">{{ categoryKey(e.category) | translate }}</td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef>Description / वर्णन</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'tables.description' | translate }}</th>
             <td mat-cell *matCellDef="let e">{{ e.description }}</td>
           </ng-container>
 
           <ng-container matColumnDef="member">
-            <th mat-header-cell *matHeaderCellDef>Member / सदस्य</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'tables.member' | translate }}</th>
             <td mat-cell *matCellDef="let e">{{ e.memberName ?? '—' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="amount">
-            <th mat-header-cell *matHeaderCellDef>Amount / रक्कम</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'tables.amount' | translate }}</th>
             <td mat-cell *matCellDef="let e">{{ e.amount | currency:'INR':'symbol':'1.2-2' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="recordedBy">
-            <th mat-header-cell *matHeaderCellDef>Recorded By</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'tables.recordedBy' | translate }}</th>
             <td mat-cell *matCellDef="let e">{{ e.recordedByName }}</td>
           </ng-container>
 
@@ -72,7 +72,7 @@
       <ul class="income-cards mobile-only">
         <li *ngFor="let e of entries" class="income-card">
           <div class="card-row-top">
-            <span class="chip category-chip">{{ categoryLabel(e.category) }}</span>
+            <span class="chip category-chip">{{ categoryKey(e.category) | translate }}</span>
             <span class="amount">{{ e.amount | currency:'INR':'symbol':'1.0-0' }}</span>
           </div>
           <div class="card-desc" *ngIf="e.description">{{ e.description }}</div>

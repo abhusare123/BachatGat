@@ -1,43 +1,43 @@
-<h2 mat-dialog-title>Add Income Entry / उत्पन्न नोंद</h2>
+<h2 mat-dialog-title>{{ 'income.addTitle' | translate }}</h2>
 <mat-dialog-content>
   <div *ngIf="error" class="error-msg">{{ error }}</div>
   <form [formGroup]="form" class="dialog-form">
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Category / प्रकार</mat-label>
+      <mat-label>{{ 'tables.category' | translate }}</mat-label>
       <mat-select formControlName="category">
-        <mat-option *ngFor="let c of categories" [value]="c.value">{{ c.label }}</mat-option>
+        <mat-option *ngFor="let c of categories" [value]="c.value">{{ c.labelKey | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field *ngIf="isPenalty" appearance="outline" class="full-width">
-      <mat-label>Member / सदस्य</mat-label>
+      <mat-label>{{ 'tables.member' | translate }}</mat-label>
       <mat-select formControlName="groupMemberId">
         <mat-option *ngFor="let m of members" [value]="m.id">{{ m.fullName }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Description / वर्णन</mat-label>
+      <mat-label>{{ 'tables.description' | translate }}</mat-label>
       <input matInput formControlName="description"
              [placeholder]="isPenalty ? 'e.g. Late attendance' : 'e.g. SB account interest'">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Amount (₹) / रक्कम</mat-label>
+      <mat-label>{{ 'tables.amount' | translate }} (₹)</mat-label>
       <input matInput type="number" formControlName="amount" min="0.01">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Date / तारीख</mat-label>
+      <mat-label>{{ 'tables.date' | translate }}</mat-label>
       <input matInput type="date" formControlName="date">
     </mat-form-field>
 
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button mat-dialog-close>{{ 'buttons.cancel' | translate }}</button>
   <button mat-raised-button color="primary" [disabled]="form.invalid || saving" (click)="save()">
-    Save
+    {{ 'buttons.save' | translate }}
   </button>
 </mat-dialog-actions>

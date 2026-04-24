@@ -6,6 +6,36 @@
     "expenses": "खर्च",
     "otherIncome": "इतर उत्पन्न"
   },
+  "tables": {
+    "date": "तारीख",
+    "type": "प्रकार",
+    "category": "प्रकार",
+    "description": "वर्णन",
+    "member": "सदस्य",
+    "amount": "रक्कम",
+    "recordedBy": "नोंद केली"
+  },
+  "contributions": {
+    "member": "सदस्य",
+    "total": "एकूण",
+    "totalApproved": "एकूण (मंजूर)",
+    "currentMonthEmi": "या महिन्याचा हप्ता",
+    "savingsPlusLoan": "(बचत + कर्ज)",
+    "period": "महिना",
+    "amount": "रक्कम",
+    "status": "स्थिती",
+    "actions": "क्रिया",
+    "approved": "मंजूर",
+    "pending": "प्रलंबित",
+    "notPaid": "न भरलेले",
+    "emptyState": "अद्याप कोणतीही नोंद नाही."
+  },
+  "income": {
+    "addTitle": "उत्पन्न नोंद",
+    "categoryPenalty": "दंड",
+    "categoryBankInterest": "बँक व्याज",
+    "categoryOther": "इतर"
+  },
   "nav": {
     "home": "मुखपृष्ठ",
     "myGroups": "माझे गट",

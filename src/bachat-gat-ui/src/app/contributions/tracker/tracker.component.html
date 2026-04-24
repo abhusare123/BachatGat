@@ -23,9 +23,9 @@
 
       <!-- Member name -->
       <ng-container matColumnDef="member">
-        <th mat-header-cell *matHeaderCellDef>सदस्य / Member</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'contributions.member' | translate }}</th>
         <td mat-cell *matCellDef="let row" class="member-name-cell">{{ row.memberName }}</td>
-        <td mat-footer-cell *matFooterCellDef class="footer-label">एकूण / Total</td>
+        <td mat-footer-cell *matFooterCellDef class="footer-label">{{ 'contributions.total' | translate }}</td>
       </ng-container>
 
       <!-- Last period payment -->
@@ -49,7 +49,7 @@
 
       <!-- Running total -->
       <ng-container matColumnDef="total">
-        <th mat-header-cell *matHeaderCellDef class="right-align">एकूण (मंजूर)</th>
+        <th mat-header-cell *matHeaderCellDef class="right-align">{{ 'contributions.totalApproved' | translate }}</th>
         <td mat-cell *matCellDef="let row" class="right-align total-cell">
           {{ row.runningTotal | currency:'INR':'symbol':'1.0-0' }}
         </td>
@@ -60,11 +60,11 @@
 
       <!-- Next EMI -->
       <ng-container matColumnDef="nextEmi">
-        <th mat-header-cell *matHeaderCellDef class="right-align">या महिन्याचा EMI</th>
+        <th mat-header-cell *matHeaderCellDef class="right-align">{{ 'contributions.currentMonthEmi' | translate }}</th>
         <td mat-cell *matCellDef="let row" class="right-align emi-cell"
             [matTooltip]="emiTooltip(row)">
           {{ row.nextEmi | currency:'INR':'symbol':'1.0-0' }}
-          <small *ngIf="row.nextEmiLoanPrincipal > 0" class="emi-sub">(बचत + कर्ज)</small>
+          <small *ngIf="row.nextEmiLoanPrincipal > 0" class="emi-sub">{{ 'contributions.savingsPlusLoan' | translate }}</small>
         </td>
         <td mat-footer-cell *matFooterCellDef class="right-align total-cell">
           {{ totalNextEmi | currency:'INR':'symbol':'1.0-0' }}
@@ -92,10 +92,10 @@
             <table class="tx-table">
               <thead>
                 <tr>
-                  <th>Period</th>
-                  <th class="right-align">Amount</th>
-                  <th class="right-align">Status</th>
-                  <th class="right-align">Actions</th>
+                  <th>{{ 'contributions.period' | translate }}</th>
+                  <th class="right-align">{{ 'contributions.amount' | translate }}</th>
+                  <th class="right-align">{{ 'contributions.status' | translate }}</th>
+                  <th class="right-align">{{ 'contributions.actions' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -108,9 +108,9 @@
                     {{ cell.isPaid ? (cell.amountPaid | currency:'INR':'symbol':'1.0-0') : '—' }}
                   </td>
                   <td class="tx-status right-align">
-                    <span *ngIf="cell.isPaid && cell.isApproved"  class="chip approved">Approved</span>
-                    <span *ngIf="cell.isPaid && !cell.isApproved" class="chip pending">Pending</span>
-                    <span *ngIf="!cell.isPaid"                    class="chip unpaid">Not Paid</span>
+                    <span *ngIf="cell.isPaid && cell.isApproved"  class="chip approved">{{ 'contributions.approved' | translate }}</span>
+                    <span *ngIf="cell.isPaid && !cell.isApproved" class="chip pending">{{ 'contributions.pending' | translate }}</span>
+                    <span *ngIf="!cell.isPaid"                    class="chip unpaid">{{ 'contributions.notPaid' | translate }}</span>
                   </td>
                   <td class="tx-actions right-align">
                     <button *ngIf="cell.isPaid && !cell.isApproved && currentUserRole === GroupMemberRole.Admin"
@@ -145,6 +145,6 @@
   </div>
 
   <div *ngIf="!loading && !tracker?.rows?.length" class="empty-state">
-    No contributions recorded yet.
+    {{ 'contributions.emptyState' | translate }}
   </div>
 </div>

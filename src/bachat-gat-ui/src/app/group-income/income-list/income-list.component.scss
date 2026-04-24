@@ -35,8 +35,6 @@
   tr:nth-child(even) td { background: var(--clr-primary-50); }
 }
 
-.mobile-only { display: none; }
-
 /* ── Mobile card list ── */
 .income-cards {
   list-style: none;
@@ -124,7 +122,11 @@
   }
 }
 
+/* Desktop: hide mobile card list; Mobile: hide desktop table.
+   Placed at end so these rules win over .income-cards { display: flex }. */
+.income-cards.mobile-only { display: none; }
+
 @media (max-width: 640px) {
-  .desktop-only { display: none; }
-  .mobile-only  { display: flex; }
+  .table-scroll.desktop-only { display: none; }
+  .income-cards.mobile-only  { display: flex; }
 }

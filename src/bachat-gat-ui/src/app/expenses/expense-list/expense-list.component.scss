@@ -35,8 +35,6 @@
   tr:nth-child(even) td { background: var(--clr-primary-50); }
 }
 
-.mobile-only { display: none; }
-
 /* ── Mobile card list ── */
 .expense-cards {
   list-style: none;
@@ -124,7 +122,9 @@
   }
 }
 
+.expense-cards.mobile-only { display: none; }
+
 @media (max-width: 640px) {
-  .desktop-only { display: none; }
-  .mobile-only  { display: flex; }
+  .table-scroll.desktop-only { display: none; }
+  .expense-cards.mobile-only  { display: flex; }
 }

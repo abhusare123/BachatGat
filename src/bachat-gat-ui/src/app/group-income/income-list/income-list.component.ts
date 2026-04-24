@@ -84,11 +84,11 @@ export class IncomeListComponent implements OnInit {
     this.incomeSvc.deleteEntry(this.groupId, id).subscribe(() => this.loadEntries());
   }
 
-  categoryLabel(cat: string): string {
+  categoryKey(cat: string): string {
     switch (cat) {
-      case 'Penalty':      return 'Penalty / दंड';
-      case 'BankInterest': return 'Bank Interest / बँक व्याज';
-      default:             return 'Other / इतर';
+      case 'Penalty':      return 'income.categoryPenalty';
+      case 'BankInterest': return 'income.categoryBankInterest';
+      default:             return 'income.categoryOther';
     }
   }
 }

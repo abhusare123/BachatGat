@@ -5,19 +5,20 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { GroupIncomeService } from '../../core/group-income.service';
 import { GroupService } from '../../core/group.service';
 import { GroupMember } from '../../core/models';
 
 export const INCOME_CATEGORIES = [
-  { value: 1, label: 'Penalty / दंड' },
-  { value: 2, label: 'Bank Interest / बँक व्याज' },
-  { value: 3, label: 'Other / इतर' },
+  { value: 1, labelKey: 'income.categoryPenalty' },
+  { value: 2, labelKey: 'income.categoryBankInterest' },
+  { value: 3, labelKey: 'income.categoryOther' },
 ];
 
 @Component({
   selector: 'app-add-income-dialog',
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatInputModule, MatSelectModule, MatButtonModule, TranslateModule],
   templateUrl: './add-income-dialog.component.html'
 })
 export class AddIncomeDialogComponent implements OnInit {
