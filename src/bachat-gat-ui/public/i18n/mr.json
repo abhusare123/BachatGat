@@ -1,0 +1,60 @@
+{
+  "app_title": "बचत गट",
+  "app_subtitle": "बचत गटाचे व्यवस्थापन",
+  "nav": {
+    "home": "मुखपृष्ठ",
+    "myGroups": "माझे गट",
+    "loans": "कर्ज",
+    "contributions": "भरणा",
+    "reports": "अहवाल",
+    "profile": "प्रोफाइल",
+    "logout": "लॉगआउट",
+    "members": "सदस्य",
+    "rules": "नियम",
+    "expenses": "खर्च",
+    "otherIncome": "इतर उत्पन्न",
+    "allGroups": "सर्व गट",
+    "back": "परत",
+    "caption": "आपल्या बचत गटांचे व्यवस्थापन करा आणि भरणा ट्रॅक करा."
+  },
+  "buttons": {
+    "submit": "सबमिट करा",
+    "cancel": "रद्द करा",
+    "save": "जतन करा",
+    "delete": "हटवा",
+    "edit": "संपादित करा",
+    "newGroup": "नवीन गट",
+    "requestLoan": "कर्ज मागा",
+    "monthlyPdf": "मासिक अहवाल PDF"
+  },
+  "messages": {
+    "welcome": "बचत गटमध्ये आपले स्वागत आहे",
+    "loading": "लोड होत आहे...",
+    "error": "एक त्रुटी घडली",
+    "success": "ऑपरेशन यशस्वी",
+    "noGroupsYet": "अद्याप कोणतेही गट नाहीत. सुरू करण्यासाठी एक तयार करा.",
+    "noLoansYet": "अद्याप कोणतेही कर्ज नाहीत."
+  },
+  "footer": {
+    "copyright": "© 2026 सर्व अधिकार अभिजित भुसारे यांचे",
+    "contact": "आमच्याशी संपर्क साधा"
+  },
+  "forms": {
+    "month": "महिना"
+  },
+  "labels": {
+    "totalCollected": "एकूण भरणा",
+    "totalLoansDisbursed": "एकूण कर्ज",
+    "loanOutstanding": "बाकी कर्ज",
+    "interestCollected": "व्याज",
+    "totalExpenses": "एकूण खर्च",
+    "otherIncome": "इतर उत्पन्न",
+    "availableBalance": "निव्वळ शिल्लक",
+    "loanLedger": "कर्ज खातेवही",
+    "member": "सदस्य",
+    "loanAmount": "कर्ज रक्कम",
+    "outstanding": "बाकी",
+    "interestPaid": "व्याज दिली",
+    "status": "स्थिती"
+  }
+}

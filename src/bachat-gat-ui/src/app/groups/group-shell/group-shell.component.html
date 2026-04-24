@@ -13,17 +13,14 @@
            [routerLink]="['/groups', groupId, item.path]"
            routerLinkActive="active">
           <mat-icon>{{ item.icon }}</mat-icon>
-          <span class="nav-label">
-            <span class="label-mr">{{ item.labelMr }}</span>
-            <span class="label-en">{{ item.label }}</span>
-          </span>
+          <span class="nav-label">{{ item.labelKey | translate }}</span>
         </a>
       </li>
     </ul>
 
     <a class="back-link" (click)="goToAllGroups()">
       <mat-icon>arrow_back</mat-icon>
-      <span>All Groups</span>
+      <span>{{ 'nav.allGroups' | translate }}</span>
     </a>
   </nav>
 
@@ -41,10 +38,10 @@
      [routerLink]="['/groups', groupId, item.path]"
      routerLinkActive="active">
     <mat-icon>{{ item.icon }}</mat-icon>
-    <span>{{ item.labelMr }}</span>
+    <span>{{ item.labelKey | translate }}</span>
   </a>
   <a class="bottom-nav-item back-item" (click)="goToAllGroups()">
     <mat-icon>arrow_back</mat-icon>
-    <span>परत</span>
+    <span>{{ 'nav.back' | translate }}</span>
   </a>
 </nav>

@@ -10,6 +10,8 @@
 
 .toggle-btn {
   flex: 1;
+  min-height: 40px;
+  min-width: 44px;
   padding: var(--sp-2) var(--sp-3);
   font-size: var(--text-sm);
   font-weight: 600;
@@ -37,9 +39,6 @@
   }
 }
 
-// Mobile: stack vertically if needed
 @media (max-width: 480px) {
-  .language-toggle {
-    flex-direction: column;
-  }
+  .language-toggle { flex-direction: row; }
 }

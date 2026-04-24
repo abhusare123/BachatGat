@@ -1,7 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
 
 export type Language = 'en' | 'mr';
 
@@ -10,56 +9,19 @@ export class LanguageService {
   private readonly LANGUAGE_KEY = 'bachat-gat-lang';
   private readonly LANGUAGE_COOKIE = 'bachat-gat-language';
 
-  // Signal to track current language reactively
   currentLanguage = signal<Language>('en');
 
-  constructor(private router: Router, private translate: TranslateService, private http: HttpClient) {
-    this.setupTranslations();
+  constructor(private router: Router, private translate: TranslateService) {
+    this.initializeLanguage();
   }
 
-  /**
-   * Load translation files for both languages synchronously
-   */
-  private setupTranslations(): void {
-    // Load English translations first
-    this.http.get<any>('assets/i18n/en.json').subscribe({
-      next: (data) => {
-        this.translate.setTranslation('en', data);
-        this.translate.setDefaultLang('en');
-        // Initialize language after English is loaded
-        this.initializeLanguage();
-      },
-      error: (err) => {
-        console.error('Failed to load English translations:', err);
-        this.initializeLanguage();
-      }
-    });
-
-    // Load Marathi translations
-    this.http.get<any>('assets/i18n/mr.json').subscribe({
-      next: (data) => {
-        this.translate.setTranslation('mr', data);
-      },
-      error: (err) => {
-        console.error('Failed to load Marathi translations:', err);
-      }
-    });
-  }
-
-  /**
-   * Initialize language from storage, cookie, or browser detection
-   */
   private initializeLanguage(): void {
-    // Priority: URL path > localStorage > cookie > browser detect > default 'en'
     const urlLang = this.getLanguageFromUrl();
     const stored = urlLang || this.getStoredLanguage();
-    const lang = stored || this.getBrowserLanguage() || 'en';
+    const lang = (stored || this.getBrowserLanguage() || 'en') as Language;
 
-    // Only change language if it's different from current
-    if (lang !== this.currentLanguage()) {
-      this.translate.use(lang);
-      this.currentLanguage.set(lang as Language);
-    }
+    this.currentLanguage.set(lang);
+    this.translate.use(lang);
   }
 
   /**

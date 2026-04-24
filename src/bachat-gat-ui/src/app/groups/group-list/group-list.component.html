@@ -1,12 +1,10 @@
 <div class="page-container">
-  <div class="page-header">
-    <bg-brand-hero eyebrow="BachatGat" [caption]="'nav.caption' | translate" [compact]="true">
-      <span slot="title">{{ 'nav.myGroups' | translate }}</span>
-    </bg-brand-hero>
-    <button mat-flat-button color="primary" (click)="openCreate()">
+  <bg-brand-hero class="page-header" [caption]="'nav.caption' | translate" [compact]="true">
+    <span slot="title">{{ 'nav.myGroups' | translate }}</span>
+    <button mat-flat-button color="primary" class="hero-action" (click)="openCreate()">
       <mat-icon>add</mat-icon> {{ 'buttons.newGroup' | translate }}
     </button>
-  </div>
+  </bg-brand-hero>
 
   <div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>
 

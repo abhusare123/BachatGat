@@ -10,15 +10,17 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <div class="brand-hero" [class.compact]="compact()">
-      @if (eyebrow()) {
-        <div class="eyebrow">{{ eyebrow() }}</div>
-      }
-      <div class="title">
-        <ng-content select="[slot=title]"></ng-content>
+      <div class="hero-text">
+        @if (eyebrow()) {
+          <div class="eyebrow">{{ eyebrow() }}</div>
+        }
+        <div class="title">
+          <ng-content select="[slot=title]"></ng-content>
+        </div>
+        @if (caption()) {
+          <div class="caption">{{ caption() }}</div>
+        }
       </div>
-      @if (caption()) {
-        <div class="caption">{{ caption() }}</div>
-      }
       <ng-content></ng-content>
     </div>
   `,

@@ -90,9 +90,20 @@ body {
   background: var(--clr-bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-wrap: anywhere;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 * { box-sizing: border-box; }
+
+img, video, svg { max-width: 100%; height: auto; }
+
+@media (pointer: coarse) {
+  .mat-mdc-button-base,
+  .mat-mdc-icon-button,
+  .mdc-button { min-height: 44px; }
+}
 
 h1, h2, h3 {
   text-wrap: balance;
@@ -112,6 +123,7 @@ mat-toolbar.app-navbar {
   box-shadow: var(--shadow-md);
   min-height: 60px;
   backdrop-filter: blur(8px);
+  padding-top: env(safe-area-inset-top);
 }
 
 mat-toolbar.app-navbar mat-icon,

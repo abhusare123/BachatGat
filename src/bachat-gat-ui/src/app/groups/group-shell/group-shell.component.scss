@@ -89,21 +89,10 @@ $bottom-nav-height: 64px;
   }
 
   .nav-label {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.25;
-  }
-
-  .label-mr {
     font-size: var(--text-base);
     font-weight: 600;
     color: inherit;
-  }
-
-  .label-en {
-    font-size: var(--text-xs);
-    color: oklch(70% 0.04 148);
-    transition: color 0.15s;
+    line-height: 1.25;
   }
 
   &:hover {
@@ -112,7 +101,6 @@ $bottom-nav-height: 64px;
     border-left-color: oklch(100% 0 0 / 0.3);
 
     mat-icon  { opacity: 1; }
-    .label-en { color: oklch(85% 0.04 148); }
   }
 
   &.active {
@@ -122,8 +110,7 @@ $bottom-nav-height: 64px;
     box-shadow: inset 0 0 0 1px oklch(65% 0.14 148 / 0.2);
 
     mat-icon   { opacity: 1; color: oklch(78% 0.14 148); }
-    .label-mr  { color: #ffffff; font-weight: 700; }
-    .label-en  { color: oklch(80% 0.06 148); }
+    .nav-label { color: #ffffff; font-weight: 700; }
   }
 }
 
