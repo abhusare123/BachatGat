@@ -28,7 +28,7 @@
 
 .login-header {
   background: linear-gradient(135deg, var(--clr-primary-800), var(--clr-primary-700));
-  padding: 28px 24px 24px;
+  padding: var(--sp-6) var(--sp-5) var(--sp-5);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,13 +38,13 @@
     font-size: 44px;
     width: 44px;
     height: 44px;
-    color: oklch(85% 0.12 148);
+    color: var(--clr-primary-100);
     filter: drop-shadow(0 2px 6px oklch(10% 0.05 148 / 0.5));
   }
 
   h1 {
     margin: 0;
-    color: #ffffff;
+    color: var(--clr-surface);
     font-size: var(--text-xl);
     font-weight: 800;
     letter-spacing: -0.5px;
@@ -53,14 +53,14 @@
 
   p {
     margin: 0;
-    color: oklch(82% 0.05 148);
+    color: var(--clr-primary-100);
     font-size: var(--text-sm);
     text-align: center;
   }
 }
 
 .login-body {
-  padding: 24px 24px 28px;
+  padding: var(--sp-6) var(--sp-5) var(--sp-6);
 }
 
 .full-width {
@@ -69,7 +69,7 @@
 
 .error-message {
   color: var(--clr-red);
-  margin-bottom: 16px;
+  margin-bottom: var(--sp-4);
   font-size: var(--text-sm);
   padding: var(--sp-2) var(--sp-3);
   background: var(--clr-red-bg);
@@ -83,17 +83,17 @@
   align-items: center;
   justify-content: center;
   gap: var(--sp-2);
-  min-height: 46px;
+  min-height: 44px;
   font-size: var(--text-md);
   font-weight: 500;
-  background: #ffffff !important;
-  color: #3c4043 !important;
-  border: 1px solid #dadce0 !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,.12) !important;
+  background: var(--clr-surface) !important;
+  color: oklch(18% 0.02 148) !important;
+  border: 1px solid var(--clr-border) !important;
+  box-shadow: var(--shadow-xs) !important;
 
   &:hover:not([disabled]) {
-    background: #f8f9fa !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,.16) !important;
+    background: var(--clr-bg) !important;
+    box-shadow: var(--shadow-sm) !important;
   }
 }
 
@@ -107,9 +107,9 @@
 .or-divider {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 20px 0;
-  color: #9e9e9e;
+  gap: var(--sp-3);
+  margin: var(--sp-5) 0;
+  color: var(--clr-text-muted);
   font-size: var(--text-sm);
 
   &::before,
@@ -117,7 +117,7 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: #e0e0e0;
+    background: var(--clr-border);
   }
 }
 
@@ -132,7 +132,7 @@
 }
 
 .action-btn {
-  margin-top: 8px;
+  margin-top: var(--sp-2);
   min-height: 44px;
   font-size: var(--text-md);
   font-weight: 500;
@@ -140,15 +140,15 @@
 
 /* Switch link (New user? / Already have account?) */
 .switch-link {
-  margin: 16px 0 0;
+  margin: var(--sp-4) 0 0;
   text-align: center;
   font-size: var(--text-sm);
-  color: #666;
+  color: var(--clr-text-muted);
 
   button {
     font-size: var(--text-sm);
     font-weight: 600;
-    padding: 0 4px;
+    padding: 0 var(--sp-1);
     min-width: 0;
     line-height: inherit;
     vertical-align: baseline;
@@ -169,6 +169,6 @@
     box-shadow: none !important;
   }
 
-  .login-header { padding: 40px 20px 28px; }
-  .login-body   { padding: 20px 20px 32px; }
+  .login-header { padding: var(--sp-6) var(--sp-5) var(--sp-5); }
+  .login-body   { padding: var(--sp-5) var(--sp-5) var(--sp-6); }
 }

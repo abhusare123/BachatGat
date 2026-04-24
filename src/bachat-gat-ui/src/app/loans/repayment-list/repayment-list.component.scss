@@ -23,7 +23,7 @@
   background: color-mix(in oklch, var(--clr-red) 10%, white);
   border: 1px solid color-mix(in oklch, var(--clr-red) 30%, white);
   border-radius: var(--radius-md);
-  padding: 10px 16px;
+  padding: var(--sp-2) var(--sp-4);
   margin-bottom: var(--sp-4);
   color: var(--clr-red);
   font-weight: 500;
@@ -53,7 +53,7 @@
     background: linear-gradient(90deg, var(--clr-primary-700), var(--clr-primary-400));
   }
 
-  mat-card-content { padding: 14px 16px 16px !important; }
+  mat-card-content { padding: var(--sp-3) var(--sp-4) var(--sp-4) !important; }
 
   .summary-label {
     font-size: var(--text-xs);
@@ -99,17 +99,17 @@
 
   th {
     background: var(--clr-primary-800) !important;
-    color: #ffffff !important;
+    color: var(--clr-surface) !important;
     font-weight: 600;
     font-size: var(--text-xs);
     text-transform: uppercase;
     letter-spacing: 0.3px;
   }
 
-  td, th { padding: 11px 16px; }
+  td, th { padding: var(--sp-2) var(--sp-4); }
 
   tr:nth-child(even):not(.paid-row) td {
-    background: oklch(99% 0.003 148);
+    background: var(--clr-primary-50);
   }
 
   tr:not(.paid-row):hover td {
@@ -140,7 +140,7 @@
 
 .chip-pending {
   background: var(--clr-amber-bg) !important;
-  color: oklch(42% 0.17 60) !important;
+  color: var(--clr-amber) !important;
   font-weight: 600 !important;
   font-size: var(--text-xs) !important;
 }
@@ -148,7 +148,7 @@
 .paid-date {
   font-size: var(--text-xs);
   color: var(--clr-text-muted);
-  margin-top: 2px;
+  margin-top: var(--sp-1);
 }
 
 .empty-state {
