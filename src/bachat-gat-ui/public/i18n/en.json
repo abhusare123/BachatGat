@@ -15,6 +15,26 @@
     "amount": "Amount",
     "recordedBy": "Recorded By"
   },
+  "repayment": {
+    "title": "Repayment Schedule",
+    "monthlyEmi": "Monthly EMI",
+    "outstandingBalance": "Outstanding Balance",
+    "paid": "Paid",
+    "totalInterestPaid": "Total Interest Paid",
+    "period": "Period",
+    "emi": "EMI",
+    "principal": "Principal",
+    "interest": "Interest",
+    "status": "Status",
+    "pending": "Pending",
+    "paidChip": "Paid",
+    "foreclosed": "Foreclosed",
+    "markPaid": "Mark Paid",
+    "saving": "Saving...",
+    "undoMarkPaid": "Undo Mark Paid",
+    "empty": "No repayment schedule found.",
+    "foreclosedBanner": "This loan was closed early (foreclosed). Remaining instalments were settled at once; future interest was waived."
+  },
   "group": {
     "members": "Members",
     "monthlyAmount": "Monthly Amount",

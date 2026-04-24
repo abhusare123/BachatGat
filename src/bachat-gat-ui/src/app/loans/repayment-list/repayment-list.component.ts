@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 import { LoanService } from '../../core/loan.service';
 import { GroupService } from '../../core/group.service';
 import { AuthService } from '../../core/auth.service';
@@ -16,7 +17,8 @@ import { GroupMemberRole, LoanRepayment } from '../../core/models';
   selector: 'app-repayment-list',
   imports: [
     CommonModule, RouterLink, MatTableModule, MatButtonModule, MatIconModule,
-    MatCardModule, MatChipsModule, MatProgressSpinnerModule, CurrencyPipe, DatePipe
+    MatCardModule, MatChipsModule, MatProgressSpinnerModule, CurrencyPipe, DatePipe,
+    TranslateModule
   ],
   templateUrl: './repayment-list.component.html',
   styleUrl: './repayment-list.component.scss'

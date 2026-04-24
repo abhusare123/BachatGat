@@ -15,6 +15,26 @@
     "amount": "रक्कम",
     "recordedBy": "नोंद केली"
   },
+  "repayment": {
+    "title": "हप्ता वेळापत्रक",
+    "monthlyEmi": "मासिक हप्ता",
+    "outstandingBalance": "थकबाकी",
+    "paid": "भरले",
+    "totalInterestPaid": "एकूण व्याज",
+    "period": "महिना",
+    "emi": "हप्ता",
+    "principal": "मुद्दल",
+    "interest": "व्याज",
+    "status": "स्थिती",
+    "pending": "प्रलंबित",
+    "paidChip": "भरले",
+    "foreclosed": "बंद केले",
+    "markPaid": "भरले म्हणून नोंदवा",
+    "saving": "जतन होत आहे...",
+    "undoMarkPaid": "नोंद रद्द करा",
+    "empty": "हप्ता वेळापत्रक सापडले नाही.",
+    "foreclosedBanner": "हे कर्ज लवकर बंद करण्यात आले. उर्वरित हप्ते एकत्रितपणे भरले गेले; भविष्यातील व्याज माफ केले गेले."
+  },
   "group": {
     "members": "सदस्य",
     "monthlyAmount": "मासिक रक्कम",
