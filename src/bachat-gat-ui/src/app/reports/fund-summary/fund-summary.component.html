@@ -15,13 +15,13 @@
   <div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>
 
   <div *ngIf="!loading && summary" class="summary-grid">
-    <bg-stat-tile [label]="'labels.totalCollected' | translate"       [value]="summary.totalContributionsCollected" color="green"  [isCurrency]="true" />
-    <bg-stat-tile [label]="'labels.totalLoansDisbursed' | translate" [value]="summary.totalLoansDisbursed"         color="blue"   [isCurrency]="true" />
-    <bg-stat-tile [label]="'labels.loanOutstanding' | translate"      [value]="summary.totalLoanOutstanding"        color="amber"  [isCurrency]="true" />
-    <bg-stat-tile [label]="'labels.interestCollected' | translate"    [value]="summary.totalInterestCollected"      color="teal"   [isCurrency]="true" />
-    <bg-stat-tile [label]="'labels.totalExpenses' | translate"        [value]="summary.totalExpenses"               color="red"    [isCurrency]="true" />
-    <bg-stat-tile [label]="'labels.otherIncome' | translate"          [value]="summary.totalOtherIncome"            color="purple" [isCurrency]="true" />
-    <bg-stat-tile [label]="'labels.availableBalance' | translate"     [value]="summary.availableBalance"            color="green"  [isCurrency]="true" class="balance-tile" />
+    <bg-stat-tile [label]="getLabel('labels.totalCollected')"       [value]="summary.totalContributionsCollected" color="green"  [isCurrency]="true" />
+    <bg-stat-tile [label]="getLabel('labels.totalLoansDisbursed')" [value]="summary.totalLoansDisbursed"         color="blue"   [isCurrency]="true" />
+    <bg-stat-tile [label]="getLabel('labels.loanOutstanding')"      [value]="summary.totalLoanOutstanding"        color="amber"  [isCurrency]="true" />
+    <bg-stat-tile [label]="getLabel('labels.interestCollected')"    [value]="summary.totalInterestCollected"      color="teal"   [isCurrency]="true" />
+    <bg-stat-tile [label]="getLabel('labels.totalExpenses')"        [value]="summary.totalExpenses"               color="red"    [isCurrency]="true" />
+    <bg-stat-tile [label]="getLabel('labels.otherIncome')"          [value]="summary.totalOtherIncome"            color="purple" [isCurrency]="true" />
+    <bg-stat-tile [label]="getLabel('labels.availableBalance')"     [value]="summary.availableBalance"            color="green"  [isCurrency]="true" class="balance-tile" />
   </div>
 
   <h3 style="margin-top:32px">{{ 'labels.loanLedger' | translate }}</h3>

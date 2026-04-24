@@ -15,18 +15,35 @@ export class LanguageService {
 
   constructor(private router: Router, private translate: TranslateService, private http: HttpClient) {
     this.setupTranslations();
-    this.initializeLanguage();
   }
 
   /**
-   * Load translation files for both languages
+   * Load translation files for both languages synchronously
    */
   private setupTranslations(): void {
-    this.http.get<any>('assets/i18n/en.json').subscribe(data => {
-      this.translate.setTranslation('en', data, true);
+    // Load English translations
+    this.http.get<any>('assets/i18n/en.json').subscribe({
+      next: (data) => {
+        this.translate.setTranslation('en', data, true);
+        this.translate.setDefaultLang('en');
+        // Initialize language after English is loaded
+        this.initializeLanguage();
+      },
+      error: (err) => {
+        console.error('Failed to load English translations:', err);
+        // Still initialize if loading fails
+        this.initializeLanguage();
+      }
     });
-    this.http.get<any>('assets/i18n/mr.json').subscribe(data => {
-      this.translate.setTranslation('mr', data, true);
+
+    // Load Marathi translations
+    this.http.get<any>('assets/i18n/mr.json').subscribe({
+      next: (data) => {
+        this.translate.setTranslation('mr', data, true);
+      },
+      error: (err) => {
+        console.error('Failed to load Marathi translations:', err);
+      }
     });
   }
 
@@ -38,7 +55,10 @@ export class LanguageService {
     const urlLang = this.getLanguageFromUrl();
     const stored = urlLang || this.getStoredLanguage();
     const lang = stored || this.getBrowserLanguage() || 'en';
-    this.setLanguage(lang, false);
+
+    // Use the language with TranslateService
+    this.translate.use(lang);
+    this.currentLanguage.set(lang as Language);
   }
 
   /**
